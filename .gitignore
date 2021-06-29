@@ -1,0 +1,3 @@
+*.swp
+chart/charts/*
+!chart/charts/.gitkeep

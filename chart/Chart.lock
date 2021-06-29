@@ -1,0 +1,9 @@
+dependencies:
+- name: ucentralgw
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=master
+  version: 0.1.0
+- name: rttys
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=main
+  version: 0.1.0
+digest: sha256:2f047f0b169b0799a834fa7a8e3337cd5018af211b2b85983a9f9536cc3698a9
+generated: "2021-06-29T16:33:33.30230123+03:00"
