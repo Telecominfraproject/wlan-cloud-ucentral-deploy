@@ -477,7 +477,6 @@ kafka:
   enabled: true
 
   fullnameOverride: kafka
-
   image:
     registry: docker.io
     repository: bitnami/kafka
