@@ -2,11 +2,14 @@ dependencies:
 - name: ucentralgw
   repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=master
   version: 0.1.0
+- name: ucentralgwui
+  repository: file:///home/dolan/opsfleet/git/tip/wlan-cloud-ucentralgw-ui/helm
+  version: 0.1.0
 - name: rttys
   repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=main
   version: 0.1.0
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 13.0.2
-digest: sha256:d68efd872901c052efe5dd3abd83b430752fb7892ffade975f92ab985989af21
-generated: "2021-06-30T18:54:13.602979284+03:00"
+digest: sha256:15960ba7186312e17af2dfe77261b92f016ab84fd9af565e7b307ac0b8be46e3
+generated: "2021-07-01T13:35:30.957653339+03:00"
