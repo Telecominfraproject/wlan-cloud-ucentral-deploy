@@ -5,5 +5,8 @@ dependencies:
 - name: rttys
   repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=main
   version: 0.1.0
-digest: sha256:2f047f0b169b0799a834fa7a8e3337cd5018af211b2b85983a9f9536cc3698a9
-generated: "2021-06-29T16:33:33.30230123+03:00"
+- name: kafka
+  repository: https://charts.bitnami.com/bitnami
+  version: 13.0.2
+digest: sha256:d68efd872901c052efe5dd3abd83b430752fb7892ffade975f92ab985989af21
+generated: "2021-06-30T18:54:13.602979284+03:00"

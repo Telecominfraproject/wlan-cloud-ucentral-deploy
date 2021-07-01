@@ -1,3 +1,4 @@
+# uCentralGW
 ucentralgw:
   images:
     ucentralgw:
@@ -71,7 +72,7 @@ ucentralgw:
 
   persistence:
     enabled: true
-    storageClassName: gp2
+    # storageClassName: "-"
     accessModes:
       - ReadWriteOnce
     size: 10Gi
@@ -138,9 +139,9 @@ ucentralgw:
     alb.enable: "true"
     alb.port: 15015
     # Kafka
-    ucentral.kafka.enable: "false"
+    ucentral.kafka.enable: "true"
     ucentral.kafka.group.id: 1
-    ucentral.kafka.brokerlist: localhost:9092
+    ucentral.kafka.brokerlist: kafka:9092
     ucentral.kafka.auto.commit: false
     ucentral.kafka.queue.buffering.max.ms: 50
     # Storage
@@ -379,6 +380,7 @@ ucentralgw:
       5IOM7ItsRmen6u3qu+JXros54e4juQ==
       -----END CERTIFICATE-----
 
+# rttys
 rttys:
   enabled: false
 
@@ -469,3 +471,58 @@ rttys:
   tolerations: []
 
   affinity: {}
+
+# Kafka
+kafka:
+  enabled: true
+
+  fullnameOverride: kafka
+
+  image:
+    registry: docker.io
+    repository: bitnami/kafka
+    tag: 2.8.0-debian-10-r43
+
+  heapOpts: -Xmx1024m -Xms1024m
+
+  replicaCount: 1
+
+  minBrokerId: 100
+
+  auth:
+    clientProtocol: plaintext
+    interBrokerProtocol: plaintext
+
+    sasl:
+      mechanisms: plain,scram-sha-256,scram-sha-512
+      jaas:
+        clientUsers:
+          - user
+        clientPasswords: []
+        interBrokerUser: admin
+        interBrokerPassword: ""
+        zookeeperUser: ""
+        zookeeperPassword: ""
+
+  resources:
+    requests: {}
+    #   cpu: 250m
+    #   memory: 256Mi
+    limits: {}
+    #   cpu: 250m
+    #   memory: 1Gi
+
+  persistence:
+    enabled: true
+    # storageClass: "-"
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+
+  logPersistence:
+    enabled: false
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+    annotations: {}
