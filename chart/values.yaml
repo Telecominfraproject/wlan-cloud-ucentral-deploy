@@ -3,7 +3,9 @@ ucentralgw:
 
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
-  enabled: false
+  enabled: true
+  config:
+    token: 96181c567b4d0d98c50f127230068fa8
 
 # kafka (https://github.com/bitnami/charts/blob/master/bitnami/kafka/)
 kafka:
