@@ -1,5 +1,8 @@
 # uCentralGW (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/)
-ucentralgw: {}
+ucentralgw:
+  configProperties:
+    ucentral.kafka.enable: "true"
+    ucentral.kafka.brokerlist: kafka:9092
 
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
