@@ -1,5 +1,5 @@
 # uCentralGW (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/)
-ucentralgw:
+ucentralgw: {}
 
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
