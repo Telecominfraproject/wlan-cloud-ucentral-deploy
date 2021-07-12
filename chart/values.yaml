@@ -4,6 +4,12 @@ ucentralgw:
     ucentral.kafka.enable: "true"
     ucentral.kafka.brokerlist: kafka:9092
 
+# uCentralSec (https://github.com/Telecominfraproject/wlan-cloud-ucentralsec)
+ucentralsec:
+  configProperties:
+    ucentral.kafka.enable: "true"
+    ucentral.kafka.brokerlist: kafka:9092
+
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
   enabled: true
