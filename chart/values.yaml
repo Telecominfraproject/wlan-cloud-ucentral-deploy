@@ -4,6 +4,9 @@ ucentralgw:
     ucentral.kafka.enable: "true"
     ucentral.kafka.brokerlist: kafka:9092
 
+  initKafkaTopics:
+    enabled: true
+
 # uCentralSec (https://github.com/Telecominfraproject/wlan-cloud-ucentralsec)
 ucentralsec:
   configProperties:
