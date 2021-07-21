@@ -2,6 +2,9 @@ dependencies:
 - name: ucentralgw
   repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=master
   version: 0.1.0
+- name: ucentralsec
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=main
+  version: 0.1.0
 - name: ucentralgwui
   repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=main
   version: 0.1.0
@@ -11,5 +14,5 @@ dependencies:
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 13.0.2
-digest: sha256:4b8cb13562dab937478a65174917dfb748d91aab7fe417161426c1af34c979af
-generated: "2021-07-06T14:46:19.551896482+03:00"
+digest: sha256:53ad7494db63a30c02f01a6d9262efadeb475a51259b0351b90079456baf30cf
+generated: "2021-07-21T15:04:25.34215441+03:00"
