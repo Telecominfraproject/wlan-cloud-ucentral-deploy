@@ -12,7 +12,7 @@ With the provided Docker Compose file you can instantiate a complete deployment 
 10. To use the [curl test script](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/blob/main/TEST_CURL.md) to talk to the API set the following environment variables:
 ```
 export UCENTRALSEC="ucentral.wlan.local:16001"
-export FLAGS="-s --cacert $YOUR_WLAN-CLOUD-UCENTRAL-DEPLOY_LOCATION/certs/restapi-ca.pem"
+export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-compose/certs/restapi-ca.pem"
 ```
 The `--cacert` option is necessary since the REST API certificates are self-signed. Omit the option if you provide your own signed certificates.
 
