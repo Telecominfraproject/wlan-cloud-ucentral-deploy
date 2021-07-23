@@ -3,8 +3,6 @@ version: '3'
 volumes:
   postgresql_data:
     driver: local
-  mysql_data:
-    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -21,15 +19,6 @@ services:
     volumes:
       - postgresql_data:/var/lib/postgresql/data
       - ./init-ucentralsec-db.sh:/docker-entrypoint-initdb.d/init-ucentralsec-db.sh
-
-  mysql:
-    image: "mysql:${MYSQL_TAG}"
-    env_file:
-      - .env_mysql
-    restart: unless-stopped
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    volumes:
-      - mysql_data:/var/lib/mysql
 
   ucentralgw.wlan.local:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw:${UCENTRALGW_TAG}"
@@ -78,9 +67,10 @@ services:
 
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
-    depends_on: 
-      - mysql
     restart: unless-stopped
+    ports:
+    - "127.0.0.1:5912:5912"
+    - "127.0.0.1:5913:5913"
     volumes:
       - ./certs/restapi-cert.pem:/etc/rttys/restapi-cert.pem
       - ./certs/restapi-key.pem:/etc/rttys/restapi-key.pem
