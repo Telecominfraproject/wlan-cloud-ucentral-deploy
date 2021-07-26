@@ -1,0 +1,62 @@
+name: Release chart package
+
+on:
+  push:
+    tags:
+      - '*'
+  # TODO delete for production purposes
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  helm-package:
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_REGISTRY_URL: tip-tip-wlan-cloud-ucentral.jfrog.io
+      DOCKER_REGISTRY_USERNAME: ucentral
+    steps:
+      - name: Checkout uCentral assembly chart repo
+        uses: actions/checkout@v2
+        with:
+          path: wlan-cloud-ucentral-deploy
+          repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+
+      - name: Build package
+        working-directory: wlan-cloud-ucentral-deploy/chart
+        run: |
+          helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0
+
+          # TODO switch to tag-only mode
+          if [[ ${GITHUB_REF} == "refs/heads/"* ]]
+          then
+            REF=$(echo ${GITHUB_REF#refs/heads/})
+            IMAGE_TAG=$(echo $REF | tr '/' '-')
+          else
+            if [[ ${GITHUB_REF} == "refs/tags/"* ]]
+            then
+              REF=$(echo ${GITHUB_REF#refs/tags/})
+              IMAGE_TAG=$(echo $REF | tr '/' '-')
+            else # PR build
+              REF=$(echo ${GITHUB_HEAD_REF#refs/heads/})
+              IMAGE_TAG=$(echo $REF | tr '/' '-')
+            fi
+          fi
+
+          echo $REF
+          echo $IMAGE_TAG
+
+          # TODO versions of applications should be updated here based on tag in the same manner as it is done in wlan-testing
+          # TODO image versions of applications should be updated here based on tag
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+          helm dependency update
+          mkdir dist
+          helm package . -d dist
+          ls -al dist
+
+      # TODO add GitHub release creation
