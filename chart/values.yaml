@@ -1,11 +1,15 @@
 # uCentralGW (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/)
 ucentralgw:
+  fullnameOverride: ucentralgw
+
   configProperties:
     ucentral.kafka.enable: "true"
     ucentral.kafka.brokerlist: kafka:9092
 
 # uCentralSec (https://github.com/Telecominfraproject/wlan-cloud-ucentralsec)
 ucentralsec:
+  fullnameOverride: ucentralsec
+
   configProperties:
     ucentral.kafka.enable: "true"
     ucentral.kafka.brokerlist: kafka:9092
@@ -13,6 +17,9 @@ ucentralsec:
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
   enabled: true
+
+  fullnameOverride: rttys
+
   config:
     token: 96181c567b4d0d98c50f127230068fa8
 
@@ -29,6 +36,11 @@ kafka:
 
   minBrokerId: 100
 
+  zookeeper:
+    fullnameOverride: zookeeper
+
 # uCentral UI (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui/)
 ucentralgwui:
   enabled: true
+
+  fullnameOverride: ucentralgwui
