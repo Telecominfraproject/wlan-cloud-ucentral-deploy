@@ -1,8 +1,6 @@
 version: '3'
 
 volumes:
-  postgresql_data:
-    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -11,26 +9,16 @@ volumes:
     driver: local
 
 services:
-  postgresql:
-    image: "postgres:${POSTGRES_TAG}"
-    env_file:
-      - .env_postgresql
-    restart: unless-stopped
-    volumes:
-      - postgresql_data:/var/lib/postgresql/data
-      - ./init-ucentralsec-db.sh:/docker-entrypoint-initdb.d/init-ucentralsec-db.sh
-
   ucentralgw.wlan.local:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw:${UCENTRALGW_TAG}"
     env_file:
       - .env_ucentralgw
     depends_on: 
-      - postgresql
       - kafka
       - rttys
     restart: unless-stopped
     ports:
-      - "127.0.0.1:15002:15002"
+      - "15002:15002"
       - "127.0.0.1:16002:16002"
       - "127.0.0.1:16003:16003"
       - "127.0.0.1:16102:16102"
@@ -53,7 +41,6 @@ services:
     env_file:
       - .env_ucentralsec
     depends_on: 
-      - postgresql
       - kafka
       - rttys
       - ucentralgw.wlan.local
