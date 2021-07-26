@@ -1,0 +1,76 @@
+name: Release chart package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  helm-package:
+    runs-on: ubuntu-20.04
+    env:
+      HELM_REPO_URL: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
+      HELM_REPO_USERNAME: ucentral
+    steps:
+      - name: Checkout uCentral assembly chart repo
+        uses: actions/checkout@v2
+        with:
+          path: wlan-cloud-ucentral-deploy
+          repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+
+#      - name: Run pre-checks
+#        working-directory: wlan-cloud-ucentral-deploy/chart
+#        run: |
+#          pip3 install yq -q
+#          export CHART_VERSION=$(cat Chart.yaml | yq .version -r)
+#          export GIT_TAG=$(echo ${GITHUB_REF} | sed -e 's/refs\/tags\/[v]//' | tr '/' '-')
+#          if [ "$CHART_VERSION" != "$GIT_TAG" ]; then
+#            echo "Chart version in Chart.yaml ($CHART_VERSION) is different from Git tag ($GIT_TAG)";
+#            exit 1
+#          fi
+#
+#          if [ "$(cat Chart.yaml | yq '.dependencies[].repository' -r | grep -E 'ref=(main|master)' | wc -l)" != "0" ]; then
+#            echo "Some of the dependencies does not have a fixed version set. List of affected dependencies:";
+#            cat Chart.yaml | yq '.dependencies[].repository' -r | grep -E 'ref=(main|master)';
+#            exit 1
+#          fi
+
+      - name: Build package
+        working-directory: wlan-cloud-ucentral-deploy/chart
+        run: |
+          helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+          helm dependency update
+          mkdir dist
+          helm package . -d dist
+
+      - name: Login into Helm repo
+        run: helm repo add remote-repo ${{ env.HELM_REPO_URL }} --username ${{ env.HELM_REPO_USERNAME }} --password ${{ secrets.HELM_REPO_PASSWORD }}
+
+      - name: Push Helm package into Helm repo
+        working-directory: wlan-cloud-ucentral-deploy/chart
+        run: |
+          pip3 install yq -q
+          export CHART_NAME=$(cat Chart.yaml | yq .name -r)
+          export CHART_VERSION=$(cat Chart.yaml | yq .version -r)
+          helm plugin install https://github.com/belitre/helm-push-artifactory-plugin --version v1.0.2
+          helm push-artifactory dist/$CHART_NAME-$CHART_VERSION.tgz remote-repo
+
+      - name: Generate GitHub release body
+        working-directory: wlan-cloud-ucentral-deploy/chart
+        run: |
+          pip3 install yq -q
+          echo "Versions of packages in this release:" > release.txt
+          echo >> release.txt
+          cat Chart.yaml | yq -r '.dependencies[] | "\(.name) - \(.repository) v\(.version)"' >> release.txt
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: wlan-cloud-ucentral-deploy/chart/release.txt
+          files: wlan-cloud-ucentral-deploy/chart/dist/*
