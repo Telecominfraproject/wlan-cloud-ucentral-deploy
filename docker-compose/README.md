@@ -8,8 +8,9 @@ With the provided Docker Compose file you can instantiate a complete deployment 
 6. Spin up the deployment with `docker-compose up -d`.
 7. Add the self-signed certificates to the system trust store of the containers with `./add-ca-cert.sh`.
 8. Either add the `certs/restapi-ca.pem` certificate to your trusted browser certificates or add SSL certificate exceptions in your browser by visiting `https://ucentral.wlan.local:16001` and `https://ucentral.wlan.local:16002` (make sure to visit both and add the exceptions).
-9. Navigate to the UI `http://ucentral.wlan.local` and login with your uCentralGW authentication data.
-10. To use the [curl test script](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/blob/main/TEST_CURL.md) to talk to the API set the following environment variables:
+9. Connect to your AP via SSH and add a static hosts entry in `/etc/hosts` for `ucentral.wlan.local` which points to the address of the host the Compose deployment runs on.
+10. Navigate to the UI `http://ucentral.wlan.local` and login with your uCentralGW authentication data.
+11. To use the [curl test script](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/blob/main/TEST_CURL.md) to talk to the API set the following environment variables:
 ```
 export UCENTRALSEC="ucentral.wlan.local:16001"
 export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-compose/certs/restapi-ca.pem"
