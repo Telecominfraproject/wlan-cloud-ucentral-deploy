@@ -5,13 +5,13 @@ description: A Helm chart for Kubernetes
 version: 2.0.0
 dependencies:
 - name: ucentralgw
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.0.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.0.0"
   version: 0.1.0
 - name: ucentralsec
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=v2.0.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=v2.0.0"
   version: 0.1.0
 - name: ucentralgwui
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=v2.0.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=v2.0.0"
   version: 0.1.0
   condition: ucentralgwui.enabled
 - name: rttys
