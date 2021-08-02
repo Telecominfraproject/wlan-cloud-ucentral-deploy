@@ -5,6 +5,8 @@ ucentralgw:
   configProperties:
     ucentral.kafka.enable: "true"
     ucentral.kafka.brokerlist: kafka:9092
+    logging.formatters.f1.pattern: "%Y-%m-%d %H:%M:%S %s: [%p] %t"
+    logging.loggers.root.channel: c1
 
 # uCentralSec (https://github.com/Telecominfraproject/wlan-cloud-ucentralsec)
 ucentralsec:
@@ -13,6 +15,8 @@ ucentralsec:
   configProperties:
     ucentral.kafka.enable: "true"
     ucentral.kafka.brokerlist: kafka:9092
+    logging.formatters.f1.pattern: "%Y-%m-%d %H:%M:%S %s: [%p] %t"
+    logging.loggers.root.channel: c1
 
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
