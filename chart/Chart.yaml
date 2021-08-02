@@ -10,6 +10,9 @@ dependencies:
 - name: ucentralsec
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=main"
   version: 0.1.0
+- name: ucentralfms
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=main"
+  version: 0.1.0
 - name: ucentralgwui
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=main"
   version: 0.1.0
