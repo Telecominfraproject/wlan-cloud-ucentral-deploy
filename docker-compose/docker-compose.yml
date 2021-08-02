@@ -31,7 +31,9 @@ services:
     env_file:
       - .env_ucentralgw-ui
     depends_on:
+      - ucentralsec.wlan.local
       - ucentralgw.wlan.local
+      - ucentralfms.wlan.local
     restart: unless-stopped
     ports:
       - "127.0.0.1:80:80"
@@ -42,8 +44,6 @@ services:
       - .env_ucentralsec
     depends_on: 
       - kafka
-      - rttys
-      - ucentralgw.wlan.local
     restart: unless-stopped
     ports:
       - "127.0.0.1:16001:16001"
@@ -51,6 +51,20 @@ services:
     volumes:
       - ./ucentralsec-data:/ucentralsec-data
       - ./certs:/ucentralsec-data/certs
+
+  ucentralfms.wlan.local:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralfms:${UCENTRALFMS_TAG}"
+    env_file:
+      - .env_ucentralfms
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:16004:16004"
+      - "127.0.0.1:16104:16104"
+    volumes:
+      - ./ucentralfms-data:/ucentralfms-data
+      - ./certs:/ucentralfms-data/certs
 
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"

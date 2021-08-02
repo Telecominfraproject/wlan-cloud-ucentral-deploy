@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-SERVICES="ucentralgw.wlan.local ucentralsec.wlan.local"
+SERVICES="ucentralgw.wlan.local ucentralsec.wlan.local ucentralfms.wlan.local"
 
 for i in $SERVICES; do
     docker-compose exec -T -u root $i apk add ca-certificates
