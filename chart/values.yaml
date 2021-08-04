@@ -14,6 +14,14 @@ ucentralsec:
     ucentral.kafka.enable: "true"
     ucentral.kafka.brokerlist: kafka:9092
 
+# uCentralFMS (https://github.com/Telecominfraproject/wlan-cloud-ucentralfms)
+ucentralfms:
+  fullnameOverride: ucentralfms
+
+  configProperties:
+    ucentral.kafka.enable: "true"
+    ucentral.kafka.brokerlist: kafka:9092
+
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
   enabled: true
