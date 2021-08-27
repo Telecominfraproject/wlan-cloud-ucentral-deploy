@@ -18,7 +18,7 @@ dependencies:
   version: 0.1.0
   condition: ucentralgwui.enabled
 - name: rttys
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=v0.1.0"
   version: 0.1.0
   condition: rttys.enabled
 - name: kafka
