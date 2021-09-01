@@ -2,7 +2,3 @@
 chart/charts/*
 !chart/charts/.gitkeep
 /docker-compose/certs/
-/docker-compose/*-data/data/
-/docker-compose/*-data/uploads/
-/docker-compose/.env
-/docker-compose/.env_*
