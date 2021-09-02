@@ -1,6 +1,12 @@
 version: '3'
 
 volumes:
+  ucentralgw_data:
+    driver: local
+  ucentralsec_data:
+    driver: local
+  ucentralfms_data:
+    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -13,7 +19,7 @@ services:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw:${UCENTRALGW_TAG}"
     env_file:
       - .env_ucentralgw
-    depends_on: 
+    depends_on:
       - kafka
       - rttys
     restart: unless-stopped
@@ -23,10 +29,10 @@ services:
       - "16003:16003"
       - "127.0.0.1:16102:16102"
     volumes:
-      - ./ucentralgw-data:/ucentralgw-data
+      - ucentralgw_data:/ucentralgw-data/persist
       - ./certs:/ucentralgw-data/certs
 
-  ucentralgw-ui:
+  ucentralgw-ui.wlan.local:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw-ui:${UCENTRALGWUI_TAG}"
     env_file:
       - .env_ucentralgw-ui
@@ -42,14 +48,14 @@ services:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralsec:${UCENTRALSEC_TAG}"
     env_file:
       - .env_ucentralsec
-    depends_on: 
+    depends_on:
       - kafka
     restart: unless-stopped
     ports:
       - "127.0.0.1:16001:16001"
       - "127.0.0.1:16101:16101"
     volumes:
-      - ./ucentralsec-data:/ucentralsec-data
+      - ucentralsec_data:/ucentralsec-data/persist
       - ./certs:/ucentralsec-data/certs
 
   ucentralfms.wlan.local:
@@ -63,7 +69,7 @@ services:
       - "127.0.0.1:16004:16004"
       - "127.0.0.1:16104:16104"
     volumes:
-      - ./ucentralfms-data:/ucentralfms-data
+      - ucentralfms_data:/ucentralfms-data/persist
       - ./certs:/ucentralfms-data/certs
 
   rttys:
