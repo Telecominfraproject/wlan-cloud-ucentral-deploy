@@ -1,6 +1,6 @@
 dependencies:
 - name: ucentralgw
-  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.1.0-RC2
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.1.0-RC3
   version: 0.1.0
 - name: ucentralsec
   repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=v2.1.0-RC1
