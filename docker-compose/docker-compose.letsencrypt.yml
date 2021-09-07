@@ -1,0 +1,64 @@
+version: '3'
+
+volumes:
+  ucentralgw_certs:
+    driver: local
+  ucentralsec_certs:
+    driver: local
+  ucentralfms_certs:
+    driver: local
+  acme_challenge:
+    driver: local
+
+services:
+  ucentralgw:
+    env_file:
+      - .env.letsencrypt
+    ports:
+      - "16002:16002"
+    volumes:
+      - ./certs:${UCENTRALGW_ROOT}/certs_bindmount
+      - ucentralgw_certs:${UCENTRALGW_ROOT}/certs
+
+  ucentralgw-ui:
+    ports:
+      - "80:80"
+    volumes:
+      - ./ucentralgw-ui/default.conf:/etc/nginx/conf.d/default.conf
+      - acme_challenge:/usr/share/nginx/letsencrypt
+
+  ucentralsec:
+    env_file:
+      - .env.letsencrypt
+    ports:
+      - "16001:16001"
+    volumes:
+      - ucentralsec_certs:${UCENTRALSEC_ROOT}/certs
+
+  ucentralfms:
+    env_file:
+      - .env.letsencrypt
+    ports:
+      - "16004:16004"
+    volumes:
+      - ucentralfms_certs:${UCENTRALFMS_ROOT}/certs
+
+  rttys:
+  ports:
+    - "5913:5913"
+
+  acme.sh:
+    image: "neilpang/acme.sh:${ACMESH_TAG}"
+    networks:
+      ucentral:
+    env_file:
+      - .env.letsencrypt
+    depends_on:
+      - ucentralgw-ui
+    entrypoint: /custom_entry.sh
+    volumes:
+      - ucentralgw_certs:/acme.sh/ucentralgw_certs
+      - ucentralsec_certs:/acme.sh/ucentralsec_certs
+      - ucentralfms_certs:/acme.sh/ucentralfms_certs
+      - acme_challenge:/acme.sh/letsencrypt
+      - ./acme.sh/custom_entry.sh:/custom_entry.sh

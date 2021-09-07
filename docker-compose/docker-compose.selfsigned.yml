@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  ucentralgw:
+    env_file:
+      - .env.selfsigned
+    ports:
+      - "127.0.0.1:16002:16002"
+    volumes:
+      - ./certs:/${UCENTRALGW_ROOT}/certs/${UCENTRALGW_HOSTNAME}
+
+  ucentralgw-ui:
+    ports:
+      - "127.0.0.1:80:80"
+
+  ucentralsec:
+    env_file:
+      - .env.selfsigned
+    ports:
+      - "127.0.0.1:16001:16001"
+    volumes:
+      - ./certs:${UCENTRALSEC_ROOT}/certs/${UCENTRALSEC_HOSTNAME}
+
+  ucentralfms:
+    env_file:
+      - .env.selfsigned
+    ports:
+      - "127.0.0.1:16004:16004"
+    volumes:
+      - ./certs:${UCENTRALFMS_ROOT}/certs/${UCENTRALFMS_HOSTNAME}
+
+  rttys:
+    ports:
+      - "127.0.0.1:5913:5913"
