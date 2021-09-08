@@ -44,8 +44,8 @@ services:
       - ucentralfms_certs:${UCENTRALFMS_ROOT}/certs
 
   rttys:
-  ports:
-    - "5913:5913"
+    ports:
+      - "5913:5913"
 
   acme.sh:
     image: "neilpang/acme.sh:${ACMESH_TAG}"
