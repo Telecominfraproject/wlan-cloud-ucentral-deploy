@@ -7,6 +7,8 @@ volumes:
     driver: local
   ucentralfms_certs:
     driver: local
+  rttys_certs:
+    driver: local
   acme_challenge:
     driver: local
 
@@ -46,6 +48,9 @@ services:
   rttys:
     ports:
       - "5913:5913"
+    volumes:
+      - rttys_certs:/etc/rttys/certs
+      - ./rttys/rttys.conf:/rttys/rttys.conf
 
   acme.sh:
     image: "neilpang/acme.sh:${ACMESH_TAG}"
@@ -60,5 +65,6 @@ services:
       - ucentralgw_certs:/acme.sh/ucentralgw_certs
       - ucentralsec_certs:/acme.sh/ucentralsec_certs
       - ucentralfms_certs:/acme.sh/ucentralfms_certs
+      - rttys_certs:/acme.sh/rttys_certs
       - acme_challenge:/acme.sh/letsencrypt
       - ./acme.sh/custom_entry.sh:/custom_entry.sh

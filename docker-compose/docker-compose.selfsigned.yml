@@ -32,3 +32,7 @@ services:
   rttys:
     ports:
       - "127.0.0.1:5913:5913"
+    volumes:
+      - ./certs/restapi-cert.pem:/etc/rttys/certs/restapi-cert.pem
+      - ./certs/restapi-key.pem:/etc/rttys/certs/restapi-key.pem
+      - ./rttys/rttys.conf:/rttys/rttys.conf
