@@ -11,6 +11,8 @@ if [ ! -d /acme.sh/ca ]; then
     acme.sh --issue -d "$UCENTRALFMS_HOSTNAME" --cert-home /acme.sh/ucentralfms_certs --cert-file /acme.sh/ucentralfms_certs/restapi-cert.pem --key-file /acme.sh/ucentralfms_certs/restapi-key.pem --ca-file /acme.sh/ucentralfms_certs/restapi-ca.pem -w /acme.sh/letsencrypt
 
     acme.sh --issue -d "$RTTYS_HOSTNAME" --cert-home /acme.sh/rttys_certs --cert-file /acme.sh/rttys_certs/restapi-cert.pem --key-file /acme.sh/rttys_certs/restapi-key.pem --ca-file /acme.sh/rttys_certs/restapi-ca.pem -w /acme.sh/letsencrypt
+
+    acme.sh --issue -d "$UCENTRALGWUI_HOSTNAME" --cert-home /acme.sh/ucentralgwui_certs --fullchain-file /acme.sh/ucentralgwui_certs/ucentralgw-ui-cert.pem --key-file /acme.sh/ucentralgwui_certs/ucentralgw-ui-key.pem -w /acme.sh/letsencrypt
 fi
 
 echo "Switching into daemon mode."

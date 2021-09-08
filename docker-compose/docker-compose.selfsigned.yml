@@ -12,6 +12,11 @@ services:
   ucentralgw-ui:
     ports:
       - "127.0.0.1:80:80"
+    volumes:
+      - ./ucentralgw-ui/default.conf:/etc/nginx/conf.d/default.conf
+      - ./ucentralgw-ui/default.https.conf:/etc/nginx/conf.d/default.https.conf
+      - ./certs/restapi-cert.pem:/etc/nginx/certs/ucentralgw-ui-cert.pem
+      - ./certs/restapi-key.pem:/etc/nginx/certs/ucentralgw-ui-key.pem
 
   ucentralsec:
     env_file:

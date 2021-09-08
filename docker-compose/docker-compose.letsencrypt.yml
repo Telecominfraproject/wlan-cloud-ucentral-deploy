@@ -3,6 +3,8 @@ version: '3'
 volumes:
   ucentralgw_certs:
     driver: local
+  ucentralgwui_certs:
+    driver: local
   ucentralsec_certs:
     driver: local
   ucentralfms_certs:
@@ -27,6 +29,8 @@ services:
       - "80:80"
     volumes:
       - ./ucentralgw-ui/default.conf:/etc/nginx/conf.d/default.conf
+#      - ./ucentralgw-ui/default.https.conf:/etc/nginx/conf.d/default.https.conf
+      - ucentralgwui_certs:/etc/nginx/certs
       - acme_challenge:/usr/share/nginx/letsencrypt
 
   ucentralsec:
@@ -63,6 +67,7 @@ services:
     entrypoint: /custom_entry.sh
     volumes:
       - ucentralgw_certs:/acme.sh/ucentralgw_certs
+      - ucentralgwui_certs:/acme.sh/ucentralgwui_certs
       - ucentralsec_certs:/acme.sh/ucentralsec_certs
       - ucentralfms_certs:/acme.sh/ucentralfms_certs
       - rttys_certs:/acme.sh/rttys_certs
