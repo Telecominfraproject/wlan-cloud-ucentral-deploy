@@ -21,7 +21,7 @@ services:
       - .env_ucentralgw
     depends_on:
       - kafka
-      - rttys
+      - rttys.wlan.local
     restart: unless-stopped
     volumes:
       - ucentralgw_data:/ucentralgw-data/persist
