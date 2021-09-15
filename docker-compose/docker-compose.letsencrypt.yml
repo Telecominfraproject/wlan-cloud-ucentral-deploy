@@ -1,76 +1,18 @@
 version: '3'
 
-volumes:
-  ucentralgw_certs:
-    driver: local
-  ucentralgwui_certs:
-    driver: local
-  ucentralsec_certs:
-    driver: local
-  ucentralfms_certs:
-    driver: local
-  rttys_certs:
-    driver: local
-  acme_challenge:
-    driver: local
-
 services:
   ucentralgw:
     env_file:
       - .env.letsencrypt
-    ports:
-      - "16002:16002"
-    volumes:
-      - ./certs:${UCENTRALGW_ROOT}/certs_bindmount
-      - ucentralgw_certs:${UCENTRALGW_ROOT}/certs
-
-  ucentralgw-ui:
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./ucentralgw-ui/default.conf:/etc/nginx/conf.d/default.conf
-#      - ./ucentralgw-ui/default.https.conf:/etc/nginx/conf.d/default.https.conf
-      - ucentralgwui_certs:/etc/nginx/certs
-      - acme_challenge:/usr/share/nginx/letsencrypt
 
   ucentralsec:
     env_file:
       - .env.letsencrypt
-    ports:
-      - "16001:16001"
-    volumes:
-      - ucentralsec_certs:${UCENTRALSEC_ROOT}/certs
 
   ucentralfms:
     env_file:
       - .env.letsencrypt
-    ports:
-      - "16004:16004"
-    volumes:
-      - ucentralfms_certs:${UCENTRALFMS_ROOT}/certs
 
-  rttys:
-    ports:
-      - "5913:5913"
+  traefik:
     volumes:
-      - rttys_certs:/etc/rttys/certs
-      - ./rttys/rttys.conf:/rttys/rttys.conf
-
-  acme.sh:
-    image: "neilpang/acme.sh:${ACMESH_TAG}"
-    networks:
-      ucentral:
-    env_file:
-      - .env.letsencrypt
-    depends_on:
-      - ucentralgw-ui
-    entrypoint: /custom_entry.sh
-    volumes:
-      - ucentralgw_certs:/acme.sh/ucentralgw_certs
-      - ucentralgwui_certs:/acme.sh/ucentralgwui_certs
-      - ucentralsec_certs:/acme.sh/ucentralsec_certs
-      - ucentralfms_certs:/acme.sh/ucentralfms_certs
-      - rttys_certs:/acme.sh/rttys_certs
-      - acme_challenge:/acme.sh/letsencrypt
-      - ./acme.sh/custom_entry.sh:/custom_entry.sh
+      - "./traefik/ucentral_letsencrypt.yaml:/etc/traefik/ucentral.yaml"

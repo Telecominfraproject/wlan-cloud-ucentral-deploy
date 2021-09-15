@@ -23,22 +23,23 @@ services:
     networks:
       ucentral:
         aliases:
-          - ${UCENTRALGW_HOSTNAME}
+          - ${INTERNAL_UCENTRALGW_HOSTNAME}
     env_file:
       - ucentralgw.env
     depends_on:
       - kafka
-      - rttys.wlan.local
+      - rttys
     restart: unless-stopped
     volumes:
       - ucentralgw_data:${UCENTRALGW_ROOT}/persist
+      - ./certs:/${UCENTRALGW_ROOT}/certs
 
   ucentralgw-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw-ui:${UCENTRALGWUI_TAG}"
     networks:
       ucentral:
         aliases:
-          - ${UCENTRALGWUI_HOSTNAME}
+          - ${INTERNAL_UCENTRALGWUI_HOSTNAME}
     env_file:
       - ucentralgw-ui.env
     depends_on:
@@ -52,7 +53,7 @@ services:
     networks:
       ucentral:
         aliases:
-          - ${UCENTRALSEC_HOSTNAME}
+          - ${INTERNAL_UCENTRALSEC_HOSTNAME}
     env_file:
       - ucentralsec.env
     depends_on:
@@ -60,13 +61,14 @@ services:
     restart: unless-stopped
     volumes:
       - ucentralsec_data:${UCENTRALSEC_ROOT}/persist
+      - ./certs:/${UCENTRALSEC_ROOT}/certs
 
   ucentralfms:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralfms:${UCENTRALFMS_TAG}"
     networks:
       ucentral:
         aliases:
-          - ${UCENTRALFMS_HOSTNAME}
+          - ${INTERNAL_UCENTRALFMS_HOSTNAME}
     env_file:
       - ucentralfms.env
     depends_on:
@@ -74,8 +76,9 @@ services:
     restart: unless-stopped
     volumes:
       - ucentralfms_data:${UCENTRALFMS_ROOT}/persist
+      - ./certs:/${UCENTRALFMS_ROOT}/certs
 
-  rttys.wlan.local:
+  rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
     networks:
       ucentral:
@@ -108,14 +111,16 @@ services:
 
   traefik:
     image: "traefik:${TRAEFIK_TAG}"
+    networks:
+      ucentral:
     env_file:
-      - .env_traefik
+      - traefik.env
     depends_on:
-      - ucentralsec.wlan.local
-      - ucentralgw.wlan.local
-      - ucentralgw-ui.wlan.local
-      - ucentralfms.wlan.local
-      - rttys.wlan.local
+      - ucentralsec
+      - ucentralgw
+      - ucentralgw-ui
+      - ucentralfms
+      - rttys
     restart: unless-stopped
     ports:
       - "15002:15002"
@@ -125,5 +130,3 @@ services:
       - "127.0.0.1:16001:16001"
       - "127.0.0.1:16004:16004"
       - "127.0.0.1:5913:5913"
-    volumes:
-      - "./traefik/ucentral.yaml:/etc/traefik/ucentral.yaml"

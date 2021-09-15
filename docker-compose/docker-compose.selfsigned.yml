@@ -4,41 +4,15 @@ services:
   ucentralgw:
     env_file:
       - .env.selfsigned
-    ports:
-      - "127.0.0.1:16002:16002"
-    volumes:
-      - ./certs:/${UCENTRALGW_ROOT}/certs
-
-  ucentralgw-ui:
-    ports:
-      - "127.0.0.1:80:80"
-      - "127.0.0.1:443:443"
-    volumes:
-      - ./ucentralgw-ui/default.conf:/etc/nginx/conf.d/default.conf
-      - ./ucentralgw-ui/default.https.conf:/etc/nginx/conf.d/default.https.conf
-      - ./certs/restapi-cert.pem:/etc/nginx/certs/ucentralgw-ui-cert.pem
-      - ./certs/restapi-key.pem:/etc/nginx/certs/ucentralgw-ui-key.pem
 
   ucentralsec:
     env_file:
       - .env.selfsigned
-    ports:
-      - "127.0.0.1:16001:16001"
-    volumes:
-      - ./certs:${UCENTRALSEC_ROOT}/certs
 
   ucentralfms:
     env_file:
       - .env.selfsigned
-    ports:
-      - "127.0.0.1:16004:16004"
-    volumes:
-      - ./certs:${UCENTRALFMS_ROOT}/certs
 
-  rttys:
-    ports:
-      - "127.0.0.1:5913:5913"
+  traefik:
     volumes:
-      - ./certs/restapi-cert.pem:/etc/rttys/certs/restapi-cert.pem
-      - ./certs/restapi-key.pem:/etc/rttys/certs/restapi-key.pem
-      - ./rttys/rttys.conf:/rttys/rttys.conf
+      - "./traefik/ucentral_selfsigned.yaml:/etc/traefik/ucentral.yaml"
