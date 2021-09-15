@@ -23,11 +23,6 @@ services:
       - kafka
       - rttys
     restart: unless-stopped
-    ports:
-      - "15002:15002"
-      - "127.0.0.1:16002:16002"
-      - "16003:16003"
-      - "127.0.0.1:16102:16102"
     volumes:
       - ucentralgw_data:/ucentralgw-data/persist
       - ./certs:/ucentralgw-data/certs
@@ -41,8 +36,6 @@ services:
       - ucentralgw.wlan.local
       - ucentralfms.wlan.local
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:80:80"
 
   ucentralsec.wlan.local:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralsec:${UCENTRALSEC_TAG}"
@@ -51,9 +44,6 @@ services:
     depends_on:
       - kafka
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:16001:16001"
-      - "127.0.0.1:16101:16101"
     volumes:
       - ucentralsec_data:/ucentralsec-data/persist
       - ./certs:/ucentralsec-data/certs
@@ -65,19 +55,13 @@ services:
     depends_on:
       - kafka
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:16004:16004"
-      - "127.0.0.1:16104:16104"
     volumes:
       - ucentralfms_data:/ucentralfms-data/persist
       - ./certs:/ucentralfms-data/certs
 
-  rttys:
+  rttys.wlan.local:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
     restart: unless-stopped
-    ports:
-    - "127.0.0.1:5912:5912"
-    - "127.0.0.1:5913:5913"
     volumes:
       - ./certs/restapi-cert.pem:/etc/rttys/restapi-cert.pem
       - ./certs/restapi-key.pem:/etc/rttys/restapi-key.pem
@@ -99,3 +83,25 @@ services:
       - zookeeper
     volumes:
       - kafka_data:/bitnami/kafka
+
+  traefik:
+    image: "traefik:${TRAEFIK_TAG}"
+    env_file:
+      - .env_traefik
+    depends_on:
+      - ucentralsec.wlan.local
+      - ucentralgw.wlan.local
+      - ucentralgw-ui.wlan.local
+      - ucentralfms.wlan.local
+      - rttys.wlan.local
+    restart: unless-stopped
+    ports:
+      - "15002:15002"
+      - "127.0.0.1:16002:16002"
+      - "16003:16003"
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:16001:16001"
+      - "127.0.0.1:16004:16004"
+      - "127.0.0.1:5913:5913"
+    volumes:
+      - "./traefik/ucentral.yaml:/etc/traefik/ucentral.yaml"
