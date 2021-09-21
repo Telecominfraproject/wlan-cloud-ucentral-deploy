@@ -16,5 +16,6 @@ services:
   traefik:
     volumes:
       - "./traefik/ucentral_selfsigned.yaml:/etc/traefik/ucentral.yaml"
+      - "./certs/restapi-ca.pem:/certs/restapi-ca.pem"
       - "./certs/restapi-cert.pem:/certs/restapi-cert.pem"
       - "./certs/restapi-key.pem:/certs/restapi-key.pem"
