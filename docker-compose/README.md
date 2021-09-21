@@ -69,5 +69,6 @@ alias docker-compose-letsencrypt="docker-compose -f docker-compose.yml -f docker
 Spin up the deployment with `docker-compose-letsencrypt up -d` and make sure to always use the alias when executing `docker-compose` commands. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-letsencrypt up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
 
 4. Check if the containers are up and running with `docker-compose-letsencrypt ps`.
+5. Navigate to the UI and login with your uCentralSec authentication data.
 
 **Note**: Both deployments create local volumes to persist mostly application, database and certificate data. In addition to that the `certs/` directory is bind mounted into the microservice containers. Be aware that for the bind mounts the host directories and files will be owned by the user in the container. Since the files are under version control, you may have to change the ownership to your user again before pulling changes.
