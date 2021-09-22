@@ -1,0 +1,26 @@
+version: '3'
+
+volumes:
+  letsencrypt_certs:
+    driver: local
+
+services:
+  ucentralgw:
+    env_file:
+      - .env.letsencrypt
+
+  ucentralsec:
+    env_file:
+      - .env.letsencrypt
+
+  ucentralfms:
+    env_file:
+      - .env.letsencrypt
+
+  traefik:
+    env_file:
+      - .env.letsencrypt
+    volumes:
+      - "./traefik/ucentral_letsencrypt.yaml:/etc/traefik/ucentral.yaml"
+      - "./certs/restapi-ca.pem:/certs/restapi-ca.pem"
+      - "letsencrypt_certs:/letsencrypt"

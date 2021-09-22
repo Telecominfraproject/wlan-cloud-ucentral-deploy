@@ -14,53 +14,76 @@ volumes:
   kafka_data:
     driver: local
 
+networks:
+  ucentral:
+
 services:
-  ucentralgw.wlan.local:
+  ucentralgw:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw:${UCENTRALGW_TAG}"
+    networks:
+      ucentral:
+        aliases:
+          - ${INTERNAL_UCENTRALGW_HOSTNAME}
     env_file:
-      - .env_ucentralgw
+      - ucentralgw.env
     depends_on:
       - kafka
-      - rttys.wlan.local
+      - rttys
     restart: unless-stopped
     volumes:
-      - ucentralgw_data:/ucentralgw-data/persist
-      - ./certs:/ucentralgw-data/certs
+      - ucentralgw_data:${UCENTRALGW_ROOT}/persist
+      - ./certs:/${UCENTRALGW_ROOT}/certs
 
-  ucentralgw-ui.wlan.local:
+  ucentralgw-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw-ui:${UCENTRALGWUI_TAG}"
+    networks:
+      ucentral:
+        aliases:
+          - ${INTERNAL_UCENTRALGWUI_HOSTNAME}
     env_file:
-      - .env_ucentralgw-ui
+      - ucentralgw-ui.env
     depends_on:
-      - ucentralsec.wlan.local
-      - ucentralgw.wlan.local
-      - ucentralfms.wlan.local
+      - ucentralsec
+      - ucentralgw
+      - ucentralfms
     restart: unless-stopped
 
-  ucentralsec.wlan.local:
+  ucentralsec:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralsec:${UCENTRALSEC_TAG}"
+    networks:
+      ucentral:
+        aliases:
+          - ${INTERNAL_UCENTRALSEC_HOSTNAME}
     env_file:
-      - .env_ucentralsec
+      - ucentralsec.env
     depends_on:
       - kafka
     restart: unless-stopped
     volumes:
-      - ucentralsec_data:/ucentralsec-data/persist
-      - ./certs:/ucentralsec-data/certs
+      - ucentralsec_data:${UCENTRALSEC_ROOT}/persist
+      - ./certs:/${UCENTRALSEC_ROOT}/certs
 
-  ucentralfms.wlan.local:
+  ucentralfms:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralfms:${UCENTRALFMS_TAG}"
+    networks:
+      ucentral:
+        aliases:
+          - ${INTERNAL_UCENTRALFMS_HOSTNAME}
     env_file:
-      - .env_ucentralfms
+      - ucentralfms.env
     depends_on:
       - kafka
     restart: unless-stopped
     volumes:
-      - ucentralfms_data:/ucentralfms-data/persist
-      - ./certs:/ucentralfms-data/certs
+      - ucentralfms_data:${UCENTRALFMS_ROOT}/persist
+      - ./certs:/${UCENTRALFMS_ROOT}/certs
 
-  rttys.wlan.local:
+  rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
+    networks:
+      ucentral:
+        aliases:
+          - ${INTERNAL_RTTYS_HOSTNAME}
     restart: unless-stopped
     volumes:
       - ./certs/restapi-cert.pem:/etc/rttys/restapi-cert.pem
@@ -69,6 +92,8 @@ services:
 
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
+    networks:
+      ucentral:
     restart: unless-stopped
     volumes:
       - zookeeper_data:/data
@@ -76,8 +101,10 @@ services:
 
   kafka:
     image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
+    networks:
+      ucentral:
     env_file:
-      - .env_kafka
+      - kafka.env
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -86,22 +113,23 @@ services:
 
   traefik:
     image: "traefik:${TRAEFIK_TAG}"
+    networks:
+      ucentral:
     env_file:
-      - .env_traefik
+      - traefik.env
     depends_on:
-      - ucentralsec.wlan.local
-      - ucentralgw.wlan.local
-      - ucentralgw-ui.wlan.local
-      - ucentralfms.wlan.local
-      - rttys.wlan.local
+      - ucentralsec
+      - ucentralgw
+      - ucentralgw-ui
+      - ucentralfms
+      - rttys
     restart: unless-stopped
     ports:
       - "15002:15002"
-      - "127.0.0.1:16002:16002"
+      - "16002:16002"
       - "16003:16003"
-      - "127.0.0.1:80:80"
-      - "127.0.0.1:16001:16001"
-      - "127.0.0.1:16004:16004"
-      - "127.0.0.1:5913:5913"
-    volumes:
-      - "./traefik/ucentral.yaml:/etc/traefik/ucentral.yaml"
+      - "80:80"
+      - "443:443"
+      - "16001:16001"
+      - "16004:16004"
+      - "5913:5913"

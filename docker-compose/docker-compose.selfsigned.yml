@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  ucentralgw:
+    env_file:
+      - .env.selfsigned
+
+  ucentralsec:
+    env_file:
+      - .env.selfsigned
+
+  ucentralfms:
+    env_file:
+      - .env.selfsigned
+
+  traefik:
+    volumes:
+      - "./traefik/ucentral_selfsigned.yaml:/etc/traefik/ucentral.yaml"
+      - "./certs/restapi-ca.pem:/certs/restapi-ca.pem"
+      - "./certs/restapi-cert.pem:/certs/restapi-cert.pem"
+      - "./certs/restapi-key.pem:/certs/restapi-key.pem"

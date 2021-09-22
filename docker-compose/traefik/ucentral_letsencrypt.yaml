@@ -1,0 +1,83 @@
+http:
+  services:
+    ucentralgw-ui:
+      loadBalancer:
+        servers:
+          - url: "http://ucentralgw-ui.wlan.local:80/"
+    ucentralgw-restapi:
+      loadBalancer:
+        servers:
+          - url: "https://ucentralgw.wlan.local:16002/"
+    ucentralgw-fileupload:
+      loadBalancer:
+        servers:
+          - url: "https://ucentralgw.wlan.local:16003/"
+    ucentralsec-restapi:
+      loadBalancer:
+        servers:
+          - url: "https://ucentralsec.wlan.local:16001/"
+    ucentralfms-restapi:
+      loadBalancer:
+        servers:
+          - url: "https://ucentralfms.wlan.local:16004/"
+    rttys:
+      loadBalancer:
+        servers:
+          - url: "https://rttys.wlan.local:5913/"
+
+  routers:
+    ucentralgw-ui-http:
+      entryPoints: "ucentralgwuihttp"
+      service: "ucentralgw-ui"
+      rule: "Host(`{{ env "UCENTRALGWUI_HOSTNAME" }}`)"
+    ucentralgw-ui-https:
+      entryPoints: "ucentralgwuihttps"
+      service: "ucentralgw-ui"
+      rule: "Host(`{{ env "UCENTRALGWUI_HOSTNAME" }}`)"
+      tls:
+        certResolver: "ucentral"
+    ucentralgw-fileupload:
+      entryPoints: "ucentralgwfileupload"
+      service: "ucentralgw-fileupload"
+      rule: "Host(`{{ env "UCENTRALGWFILEUPLOAD_HOSTNAME" }}`)"
+      tls:
+        certResolver: "ucentral"
+    ucentralgw-restapi:
+      entryPoints: "ucentralgwrestapi"
+      service: "ucentralgw-restapi"
+      rule: "Host(`{{ env "UCENTRALGW_HOSTNAME" }}`)"
+      tls:
+        certResolver: "ucentral"
+    ucentralsec-restapi:
+      entryPoints: "ucentralsecrestapi"
+      service: "ucentralsec-restapi"
+      rule: "Host(`{{ env "UCENTRALSEC_HOSTNAME" }}`)"
+      tls:
+        certResolver: "ucentral"
+    ucentralfms-restapi:
+      entryPoints: "ucentralfmsrestapi"
+      service: "ucentralfms-restapi"
+      rule: "Host(`{{env "UCENTRALFMS_HOSTNAME"}}`)"
+      tls:
+        certResolver: "ucentral"
+    rttys:
+      entryPoints: "rttys"
+      service: "rttys"
+      rule: "Host(`{{ env "RTTYS_HOSTNAME" }}`)"
+      tls:
+        certResolver: "ucentral"
+
+tcp:
+  services:
+    ucentralgw-websocket:
+      loadBalancer:
+        servers:
+          - address: "ucentralgw.wlan.local:15002"
+
+  routers:
+    ucentralgw-websocket:
+      entryPoints: "ucentralgwwebsocket"
+      service: "ucentralgw-websocket"
+      rule: "HostSNI(`*`)"
+      tls:
+        passthrough: true

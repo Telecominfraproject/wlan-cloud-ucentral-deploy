@@ -1,3 +1,8 @@
+tls:
+  certificates:
+    - certFile: /certs/restapi-cert.pem
+      keyFile: /certs/restapi-key.pem
+
 http:
   services:
     ucentralgw-ui:
@@ -6,10 +11,16 @@ http:
           - url: "http://ucentralgw-ui.wlan.local:80/"
 
   routers:
-    ucentralgw-ui:
-      entryPoints: "ucentralgwui"
+    ucentralgw-ui-http:
+      entryPoints: "ucentralgwuihttp"
       service: "ucentralgw-ui"
       rule: "PathPrefix(`/`)"
+
+    ucentralgw-ui-https:
+      entryPoints: "ucentralgwuihttps"
+      service: "ucentralgw-ui"
+      rule: "PathPrefix(`/`)"
+      tls: {}
 
 tcp:
   services:
