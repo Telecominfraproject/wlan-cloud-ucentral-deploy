@@ -10,12 +10,11 @@ alias docker-compose-selfsigned="docker-compose -f docker-compose.yml -f docker-
 Spin up the deployment with `docker-compose-selfsigned up -d` and make sure to always use the alias when executing `docker-compose` commands. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-selfsigned up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
 
 4. Check if the containers are up and running with `docker-compose-selfsigned ps`.
-5. Add the self-signed certificates to the system trust store of the containers with `./add-ca-cert.sh`.
-6. Add SSL certificate exceptions in your browser by visiting https://ucentral.wlan.local:16001, https://ucentral.wlan.local:16002 and https://ucentral.wlan.local:16004.
-7. Connect to your AP via SSH and add a static hosts entry in `/etc/hosts` for `ucentral.wlan.local` which points to the address of the host the Compose deployment runs on.
-8. While staying in the SSH session, copy the content of `certs/restapi-ca.pem` on your local machine to your clipboard and append it to the file `/etc/ssl/cert.pem` on the AP. This way your AP will also trust the provided self-signed certificate.
-9. Navigate to the UI `https://ucentral.wlan.local` and login with your uCentralSec authentication data.
-10. To use the curl test scripts included in the microservice repositories set the following environment variables:
+5. Add SSL certificate exceptions in your browser by visiting https://ucentral.wlan.local:16001, https://ucentral.wlan.local:16002 and https://ucentral.wlan.local:16004.
+6. Connect to your AP via SSH and add a static hosts entry in `/etc/hosts` for `ucentral.wlan.local` which points to the address of the host the Compose deployment runs on.
+7. While staying in the SSH session, copy the content of `certs/restapi-ca.pem` on your local machine to your clipboard and append it to the file `/etc/ssl/cert.pem` on the AP. This way your AP will also trust the provided self-signed certificate.
+8. Navigate to the UI `https://ucentral.wlan.local` and login with your uCentralSec authentication data.
+9. To use the curl test scripts included in the microservice repositories set the following environment variables:
 ```
 export UCENTRALSEC="ucentral.wlan.local:16001"
 export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-compose/certs/restapi-ca.pem"
