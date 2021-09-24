@@ -24,59 +24,59 @@ http:
 
 tcp:
   services:
-    ucentralgw-websocket:
+    owgw-websocket:
       loadBalancer:
         servers:
-          - address: "ucentralgw.wlan.local:15002"
-    ucentralgw-restapi:
+          - address: "owgw.wlan.local:15002"
+    owgw-restapi:
       loadBalancer:
         servers:
-          - address: "ucentralgw.wlan.local:16002"
-    ucentralgw-fileupload:
+          - address: "owgw.wlan.local:16002"
+    owgw-fileupload:
       loadBalancer:
         servers:
-          - address: "ucentralgw.wlan.local:16003"
-    ucentralsec-restapi:
+          - address: "owgw.wlan.local:16003"
+    owsec-restapi:
       loadBalancer:
         servers:
-          - address: "ucentralsec.wlan.local:16001"
-    ucentralfms-restapi:
+          - address: "owsec.wlan.local:16001"
+    owfms-restapi:
       loadBalancer:
         servers:
-          - address: "ucentralfms.wlan.local:16004"
+          - address: "owfms.wlan.local:16004"
     rttys:
       loadBalancer:
         servers:
           - address: "rttys.wlan.local:5913"
 
   routers:
-    ucentralgw-websocket:
-      entryPoints: "ucentralgwwebsocket"
-      service: "ucentralgw-websocket"
+    owgw-websocket:
+      entryPoints: "owgwwebsocket"
+      service: "owgw-websocket"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
-    ucentralgw-restapi:
-      entryPoints: "ucentralgwrestapi"
-      service: "ucentralgw-restapi"
+    owgw-restapi:
+      entryPoints: "owgwrestapi"
+      service: "owgw-restapi"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
-    ucentralgw-fileupload:
-      entryPoints: "ucentralgwfileupload"
-      service: "ucentralgw-fileupload"
+    owgw-fileupload:
+      entryPoints: "owgwfileupload"
+      service: "owgw-fileupload"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
-    ucentralsec-restapi:
-      entryPoints: "ucentralsecrestapi"
-      service: "ucentralsec-restapi"
+    owsec-restapi:
+      entryPoints: "owsecrestapi"
+      service: "owsec-restapi"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
-    ucentralfms-restapi:
-      entryPoints: "ucentralfmsrestapi"
-      service: "ucentralfms-restapi"
+    owfms-restapi:
+      entryPoints: "owfmsrestapi"
+      service: "owfms-restapi"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true

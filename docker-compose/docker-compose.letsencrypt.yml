@@ -5,15 +5,15 @@ volumes:
     driver: local
 
 services:
-  ucentralgw:
+  owgw:
     env_file:
       - .env.letsencrypt
 
-  ucentralsec:
+  owsec:
     env_file:
       - .env.letsencrypt
 
-  ucentralfms:
+  owfms:
     env_file:
       - .env.letsencrypt
 
@@ -21,6 +21,6 @@ services:
     env_file:
       - .env.letsencrypt
     volumes:
-      - "./traefik/ucentral_letsencrypt.yaml:/etc/traefik/ucentral.yaml"
+      - "./traefik/openwifi_letsencrypt.yaml:/etc/traefik/openwifi.yaml"
       - "./certs/restapi-ca.pem:/certs/restapi-ca.pem"
       - "letsencrypt_certs:/letsencrypt"

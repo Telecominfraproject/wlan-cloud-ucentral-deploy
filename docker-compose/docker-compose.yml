@@ -1,11 +1,11 @@
 version: '3'
 
 volumes:
-  ucentralgw_data:
+  owgw_data:
     driver: local
-  ucentralsec_data:
+  owsec_data:
     driver: local
-  ucentralfms_data:
+  owfms_data:
     driver: local
   zookeeper_data:
     driver: local
@@ -15,73 +15,73 @@ volumes:
     driver: local
 
 networks:
-  ucentral:
+  openwifi:
 
 services:
-  ucentralgw:
-    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw:${UCENTRALGW_TAG}"
+  owgw:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owgw:${OWGW_TAG}"
     networks:
-      ucentral:
+      openwifi:
         aliases:
-          - ${INTERNAL_UCENTRALGW_HOSTNAME}
+          - ${INTERNAL_OWGW_HOSTNAME}
     env_file:
-      - ucentralgw.env
+      - owgw.env
     depends_on:
       - kafka
       - rttys
     restart: unless-stopped
     volumes:
-      - ucentralgw_data:${UCENTRALGW_ROOT}/persist
-      - ./certs:/${UCENTRALGW_ROOT}/certs
+      - owgw_data:${OWGW_ROOT}/persist
+      - ./certs:/${OWGW_ROOT}/certs
 
   ucentralgw-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw-ui:${UCENTRALGWUI_TAG}"
     networks:
-      ucentral:
+      openwifi:
         aliases:
           - ${INTERNAL_UCENTRALGWUI_HOSTNAME}
     env_file:
       - ucentralgw-ui.env
     depends_on:
-      - ucentralsec
-      - ucentralgw
-      - ucentralfms
+      - owsec
+      - owgw
+      - owfms
     restart: unless-stopped
 
-  ucentralsec:
-    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralsec:${UCENTRALSEC_TAG}"
+  owsec:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owsec:${OWSEC_TAG}"
     networks:
-      ucentral:
+      openwifi:
         aliases:
-          - ${INTERNAL_UCENTRALSEC_HOSTNAME}
+          - ${INTERNAL_OWSEC_HOSTNAME}
     env_file:
-      - ucentralsec.env
+      - owsec.env
     depends_on:
       - kafka
     restart: unless-stopped
     volumes:
-      - ucentralsec_data:${UCENTRALSEC_ROOT}/persist
-      - ./certs:/${UCENTRALSEC_ROOT}/certs
+      - owsec_data:${OWSEC_ROOT}/persist
+      - ./certs:/${OWSEC_ROOT}/certs
 
-  ucentralfms:
-    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralfms:${UCENTRALFMS_TAG}"
+  owfms:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owfms:${OWFMS_TAG}"
     networks:
-      ucentral:
+      openwifi:
         aliases:
-          - ${INTERNAL_UCENTRALFMS_HOSTNAME}
+          - ${INTERNAL_OWFMS_HOSTNAME}
     env_file:
-      - ucentralfms.env
+      - owfms.env
     depends_on:
       - kafka
     restart: unless-stopped
     volumes:
-      - ucentralfms_data:${UCENTRALFMS_ROOT}/persist
-      - ./certs:/${UCENTRALFMS_ROOT}/certs
+      - owfms_data:${OWFMS_ROOT}/persist
+      - ./certs:/${OWFMS_ROOT}/certs
 
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
     networks:
-      ucentral:
+      openwifi:
         aliases:
           - ${INTERNAL_RTTYS_HOSTNAME}
     restart: unless-stopped
@@ -93,7 +93,7 @@ services:
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
     networks:
-      ucentral:
+      openwifi:
     restart: unless-stopped
     volumes:
       - zookeeper_data:/data
@@ -102,7 +102,7 @@ services:
   kafka:
     image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
     networks:
-      ucentral:
+      openwifi:
     env_file:
       - kafka.env
     restart: unless-stopped
@@ -114,14 +114,14 @@ services:
   traefik:
     image: "traefik:${TRAEFIK_TAG}"
     networks:
-      ucentral:
+      openwifi:
     env_file:
       - traefik.env
     depends_on:
-      - ucentralsec
-      - ucentralgw
+      - owsec
+      - owgw
       - ucentralgw-ui
-      - ucentralfms
+      - owfms
       - rttys
     restart: unless-stopped
     ports:

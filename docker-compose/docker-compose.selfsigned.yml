@@ -1,21 +1,21 @@
 version: '3'
 
 services:
-  ucentralgw:
+  owgw:
     env_file:
       - .env.selfsigned
 
-  ucentralsec:
+  owsec:
     env_file:
       - .env.selfsigned
 
-  ucentralfms:
+  owfms:
     env_file:
       - .env.selfsigned
 
   traefik:
     volumes:
-      - "./traefik/ucentral_selfsigned.yaml:/etc/traefik/ucentral.yaml"
+      - "./traefik/openwifi_selfsigned.yaml:/etc/traefik/openwifi.yaml"
       - "./certs/restapi-ca.pem:/certs/restapi-ca.pem"
       - "./certs/restapi-cert.pem:/certs/restapi-cert.pem"
       - "./certs/restapi-key.pem:/certs/restapi-key.pem"
