@@ -1,26 +1,26 @@
-# uCentralGW (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/)
-ucentralgw:
-  fullnameOverride: ucentralgw
+# OpenWIFI Gateway (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/)
+owgw:
+  fullnameOverride: owgw
 
   configProperties:
-    ucentral.kafka.enable: "true"
-    ucentral.kafka.brokerlist: kafka:9092
+    openwifi.kafka.enable: "true"
+    openwifi.kafka.brokerlist: kafka:9092
 
-# uCentralSec (https://github.com/Telecominfraproject/wlan-cloud-ucentralsec)
-ucentralsec:
-  fullnameOverride: ucentralsec
-
-  configProperties:
-    ucentral.kafka.enable: "true"
-    ucentral.kafka.brokerlist: kafka:9092
-
-# uCentralFMS (https://github.com/Telecominfraproject/wlan-cloud-ucentralfms)
-ucentralfms:
-  fullnameOverride: ucentralfms
+# OpenWIFI Security (https://github.com/Telecominfraproject/wlan-cloud-ucentralsec)
+owsec:
+  fullnameOverride: owsec
 
   configProperties:
-    ucentral.kafka.enable: "true"
-    ucentral.kafka.brokerlist: kafka:9092
+    openwifi.kafka.enable: "true"
+    openwifi.kafka.brokerlist: kafka:9092
+
+# OpenWIFI Firmware (https://github.com/Telecominfraproject/wlan-cloud-ucentralfms)
+owfms:
+  fullnameOverride: owfms
+
+  configProperties:
+    openwifi.kafka.enable: "true"
+    openwifi.kafka.brokerlist: kafka:9092
 
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
@@ -47,8 +47,6 @@ kafka:
   zookeeper:
     fullnameOverride: zookeeper
 
-# uCentral UI (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui/)
-ucentralgwui:
-  enabled: true
-
-  fullnameOverride: ucentralgwui
+# OpenWIFI Web UI (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui/)
+owgwui:
+  fullnameOverride: owgwui
