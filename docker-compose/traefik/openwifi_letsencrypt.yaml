@@ -1,9 +1,9 @@
 http:
   services:
-    ucentralgw-ui:
+    owgw-ui:
       loadBalancer:
         servers:
-          - url: "http://ucentralgw-ui.wlan.local:80/"
+          - url: "http://owgw-ui.wlan.local:80/"
     owgw-restapi:
       loadBalancer:
         servers:
@@ -26,14 +26,14 @@ http:
           - url: "https://rttys.wlan.local:5913/"
 
   routers:
-    ucentralgw-ui-http:
-      entryPoints: "ucentralgwuihttp"
-      service: "ucentralgw-ui"
-      rule: "Host(`{{ env "UCENTRALGWUI_HOSTNAME" }}`)"
-    ucentralgw-ui-https:
-      entryPoints: "ucentralgwuihttps"
-      service: "ucentralgw-ui"
-      rule: "Host(`{{ env "UCENTRALGWUI_HOSTNAME" }}`)"
+    owgw-ui-http:
+      entryPoints: "owgwuihttp"
+      service: "owgw-ui"
+      rule: "Host(`{{ env "OWGWUI_HOSTNAME" }}`)"
+    owgw-ui-https:
+      entryPoints: "owgwuihttps"
+      service: "owgw-ui"
+      rule: "Host(`{{ env "OWGWUI_HOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
     owgw-fileupload:

@@ -35,13 +35,13 @@ services:
       - ./certs:/${OWGW_ROOT}/certs
 
   ucentralgw-ui:
-    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/ucentralgw-ui:${UCENTRALGWUI_TAG}"
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owgw-ui:${OWGWUI_TAG}"
     networks:
       openwifi:
         aliases:
-          - ${INTERNAL_UCENTRALGWUI_HOSTNAME}
+          - ${INTERNAL_OWGWUI_HOSTNAME}
     env_file:
-      - ucentralgw-ui.env
+      - owgw-ui.env
     depends_on:
       - owsec
       - owgw

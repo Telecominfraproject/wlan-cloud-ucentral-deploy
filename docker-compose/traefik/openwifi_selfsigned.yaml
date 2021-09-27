@@ -5,20 +5,20 @@ tls:
 
 http:
   services:
-    ucentralgw-ui:
+    owgw-ui:
       loadBalancer:
         servers:
-          - url: "http://ucentralgw-ui.wlan.local:80/"
+          - url: "http://owgw-ui.wlan.local:80/"
 
   routers:
-    ucentralgw-ui-http:
-      entryPoints: "ucentralgwuihttp"
-      service: "ucentralgw-ui"
+    owgw-ui-http:
+      entryPoints: "owgwuihttp"
+      service: "owgw-ui"
       rule: "PathPrefix(`/`)"
 
-    ucentralgw-ui-https:
-      entryPoints: "ucentralgwuihttps"
-      service: "ucentralgw-ui"
+    owgw-ui-https:
+      entryPoints: "owgwuihttps"
+      service: "owgw-ui"
       rule: "PathPrefix(`/`)"
       tls: {}
 
