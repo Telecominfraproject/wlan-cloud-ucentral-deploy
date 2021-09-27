@@ -34,7 +34,7 @@ services:
       - owgw_data:${OWGW_ROOT}/persist
       - ./certs:/${OWGW_ROOT}/certs
 
-  ucentralgw-ui:
+  owgw-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owgw-ui:${OWGWUI_TAG}"
     networks:
       openwifi:
@@ -120,7 +120,7 @@ services:
     depends_on:
       - owsec
       - owgw
-      - ucentralgw-ui
+      - owgw-ui
       - owfms
       - rttys
     restart: unless-stopped
