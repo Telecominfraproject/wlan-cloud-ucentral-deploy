@@ -1,22 +1,21 @@
 apiVersion: v2
-name: wlan-cloud-ucentral
+name: openwifi
 appVersion: "1.0"
 description: A Helm chart for Kubernetes
 version: 0.1.0
 dependencies:
-- name: ucentralgw
+- name: owgw
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=master"
   version: 0.1.0
-- name: ucentralsec
+- name: owsec
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=main"
   version: 0.1.0
-- name: ucentralfms
+- name: owfms
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=main"
   version: 0.1.0
-- name: ucentralgwui
+- name: owgwui
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=main"
   version: 0.1.0
-  condition: ucentralgwui.enabled
 - name: rttys
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=main"
   version: 0.1.0
