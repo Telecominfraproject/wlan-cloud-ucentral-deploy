@@ -38,6 +38,7 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | Variable                 | Description                                  |
 | -----------------------  | -------------------------------------------- |
 | `FILEUPLOADER_HOST_NAME` | Set this to your OWGW fileupload hostname    |
+| `FILEUPLOADER_URI`       | Set this to your OWGW fileupload URL         |
 | `SYSTEM_URI_PUBLIC`      | Set this to your OWGW REST API public URL    |
 | `RTTY_SERVER`            | Set this to your public RTTY server hostname |
 
