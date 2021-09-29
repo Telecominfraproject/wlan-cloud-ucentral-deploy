@@ -44,7 +44,11 @@ tcp:
       loadBalancer:
         servers:
           - address: "owfms.wlan.local:16004"
-    rttys:
+    rttys-dev:
+      loadBalancer:
+        servers:
+          - address: "rttys.wlan.local:5912"
+    rttys-user:
       loadBalancer:
         servers:
           - address: "rttys.wlan.local:5913"
@@ -80,9 +84,15 @@ tcp:
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
-    rttys:
-      entryPoints: "rttys"
-      service: "rttys"
+    rttys-dev:
+      entryPoints: "rttysdev"
+      service: "rttys-dev"
+      rule: "HostSNI(`*`)"
+      tls:
+        passthrough: true
+    rttys-user:
+      entryPoints: "rttysuser"
+      service: "rttys-user"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
