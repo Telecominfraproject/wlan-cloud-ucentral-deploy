@@ -12,13 +12,13 @@ Spin up the deployment with `docker-compose-selfsigned up -d` and make sure to a
 4. Check if the containers are up and running with `docker-compose-selfsigned ps`.
 5. Add SSL certificate exceptions in your browser by visiting https://openwifi.wlan.local:16001, https://openwifi.wlan.local:16002 and https://openwifi.wlan.local:16004.
 6. Connect to your AP via SSH and add a static hosts entry in `/etc/hosts` for `openwifi.wlan.local` which points to the address of the host the Compose deployment runs on.
-7. While staying in the SSH session, copy the content of `certs/restapi-ca.pem` on your local machine to your clipboard and append it to the file `/etc/ssl/cert.pem` on the AP. This way your AP will also trust the provided self-signed certificate.
-8. Navigate to the UI `https://openwifi.wlan.local` and login with your OWSec authentication data.
-9. To use the curl test scripts included in the microservice repositories set the following environment variables:
+7. Navigate to the UI `https://openwifi.wlan.local` and login with your OWSec authentication data.
+8. To use the curl test scripts included in the microservice repositories set the following environment variables:
 ```
 export UCENTRALSEC="openwifi.wlan.local:16001"
 export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-compose/certs/restapi-ca.pem"
 ```
+**Note**: When deploying with self-signed certificates you can not make use of the trace functionality in the UI since the AP will throw a TLS error when uploading the trace to OWGW. Please use the Letsencrypt deployment or provide your own valid certificates if you want to use this function.
 
 ## Deployment with Letsencrypt certificates
 1. Switch into the project directory with `cd docker-compose/`.
