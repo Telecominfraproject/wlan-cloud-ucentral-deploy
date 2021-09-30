@@ -18,7 +18,7 @@ Spin up the deployment with `docker-compose-selfsigned up -d` and make sure to a
 export UCENTRALSEC="openwifi.wlan.local:16001"
 export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-compose/certs/restapi-ca.pem"
 ```
-**Note**: When deploying with self-signed certificates you can not make use of the trace functionality in the UI since the AP will throw a TLS error when uploading the trace to OWGW. Please use the Letsencrypt deployment or provide your own valid certificates if you want to use this function.
+⚠️**Note**: When deploying with self-signed certificates you can not make use of the trace functionality in the UI since the AP will throw a TLS error when uploading the trace to OWGW. Please use the Letsencrypt deployment or provide your own valid certificates if you want to use this function.
 
 ## Deployment with Letsencrypt certificates
 1. Switch into the project directory with `cd docker-compose/`.
