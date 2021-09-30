@@ -17,4 +17,6 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 ```
 The `--cacert` option is necessary since the REST API certificates are self-signed. Omit the option if you provide your own signed certificates.
 
+**Note**: When deploying with self-signed certificates you can not make use of the trace functionality in the UI since the AP will throw a TLS error when uploading the trace to OWGW. Please use the Letsencrypt deployment or provide your own valid certificates if you want to use this function.
+
 PS: The deployment creates local volumes to persist mostly application and database data. In addition to that several bind mounts are created: one for the `docker-compose/certs/` directory which is used by multiple services, and the other ones mount service specific data directories and configuration files located under `docker-compose/` into the appropriate containers. Be aware that for the bind mounts the host directories and files will be owned by the user in the container. Since the files are under version control, you may have to change the ownership to your user again before pulling changes.
