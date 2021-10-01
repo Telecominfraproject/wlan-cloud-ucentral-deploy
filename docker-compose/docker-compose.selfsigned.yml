@@ -13,6 +13,12 @@ services:
     env_file:
       - .env.selfsigned
 
+  rttys:
+    volumes:
+      - "./certs/restapi-cert.pem:/etc/rttys/restapi-cert.pem"
+      - "./certs/restapi-key.pem:/etc/rttys/restapi-key.pem"
+      - "./rttys/rttys_selfsigned.conf:/rttys/rttys.conf"
+
   traefik:
     volumes:
       - "./traefik/openwifi_selfsigned.yaml:/etc/traefik/openwifi.yaml"

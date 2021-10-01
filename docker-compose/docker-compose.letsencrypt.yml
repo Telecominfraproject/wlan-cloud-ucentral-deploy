@@ -17,6 +17,10 @@ services:
     env_file:
       - .env.letsencrypt
 
+  rttys:
+    volumes:
+      - "./rttys/rttys_letsencrypt.conf:/rttys/rttys.conf"
+
   traefik:
     env_file:
       - .env.letsencrypt

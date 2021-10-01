@@ -85,10 +85,6 @@ services:
         aliases:
           - ${INTERNAL_RTTYS_HOSTNAME}
     restart: unless-stopped
-    volumes:
-      - ./certs/restapi-cert.pem:/etc/rttys/restapi-cert.pem
-      - ./certs/restapi-key.pem:/etc/rttys/restapi-key.pem
-      - ./rttys/rttys.conf:/rttys/rttys.conf
 
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
