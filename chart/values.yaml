@@ -22,6 +22,18 @@ owfms:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
 
+# OpenWIFI Provisioning (https://github.com/Telecominfraproject/wlan-cloud-owprov/)
+owprov:
+  fullnameOverride: owprov
+
+  configProperties:
+    openwifi.kafka.enable: "true"
+    openwifi.kafka.brokerlist: kafka:9092
+
+# OpenWIFI Web UI (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui/)
+owgwui:
+  fullnameOverride: owgwui
+
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
   enabled: true
@@ -47,6 +59,3 @@ kafka:
   zookeeper:
     fullnameOverride: zookeeper
 
-# OpenWIFI Web UI (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui/)
-owgwui:
-  fullnameOverride: owgwui
