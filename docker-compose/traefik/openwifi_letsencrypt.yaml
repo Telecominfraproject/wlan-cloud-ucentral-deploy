@@ -20,6 +20,10 @@ http:
       loadBalancer:
         servers:
           - url: "https://owfms.wlan.local:16004/"
+    owprov-restapi:
+      loadBalancer:
+        servers:
+          - url: "https://owprov.wlan.local:16005/"
     rttys-user:
       loadBalancer:
         servers:
@@ -58,6 +62,12 @@ http:
       entryPoints: "owfmsrestapi"
       service: "owfms-restapi"
       rule: "Host(`{{env "OWFMS_HOSTNAME"}}`)"
+      tls:
+        certResolver: "openwifi"
+    owprov-restapi:
+      entryPoints: "owprovrestapi"
+      service: "owprov-restapi"
+      rule: "Host(`{{env "OWPROV_HOSTNAME"}}`)"
       tls:
         certResolver: "openwifi"
     rttys-user:
