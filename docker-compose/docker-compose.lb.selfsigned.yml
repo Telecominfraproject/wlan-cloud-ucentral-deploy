@@ -1,6 +1,14 @@
 version: '3'
 
 volumes:
+  owgw_data:
+    driver: local
+  owsec_data:
+    driver: local
+  owfms_data:
+    driver: local
+  owprov_data:
+    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -19,24 +27,24 @@ services:
         aliases:
           - ${INTERNAL_OWGW_HOSTNAME}
     env_file:
+      - .env.selfsigned
       - owgw.env
     depends_on:
       - kafka
       - rttys
     restart: unless-stopped
     volumes:
-      - "./owgw_data:${OWGW_ROOT}"
-      - "./certs:/${OWGW_ROOT}/certs"
-    ports:
-      - "15002:15002"
-      - "16002:16002"
-      - "16102:16102"
-      - "16003:16003"
+      - owgw_data:${OWGW_ROOT}/persist
+      - ./certs:/${OWGW_ROOT}/certs
 
   owgw-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owgw-ui:${OWGWUI_TAG}"
+    env_file: 
+      - owgw-ui.env
     networks:
       openwifi:
+        aliases:
+          - ${INTERNAL_OWGWUI_HOSTNAME}
     env_file:
       - owgw-ui.env
     depends_on:
@@ -45,11 +53,6 @@ services:
       - owfms
       - owprov
     restart: unless-stopped
-    volumes:
-      - "./owgw-ui/default.conf:/etc/nginx/conf.d/default.conf"
-    ports:
-      - "80:80"
-      - "443:443"
 
   owsec:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owsec:${OWSEC_TAG}"
@@ -58,16 +61,14 @@ services:
         aliases:
           - ${INTERNAL_OWSEC_HOSTNAME}
     env_file:
+      - .env.selfsigned
       - owsec.env
     depends_on:
       - kafka
     restart: unless-stopped
     volumes:
-      - "./owsec_data:${OWSEC_ROOT}"
-      - "./certs:/${OWSEC_ROOT}/certs"
-    ports:
-      - "16001:16001"
-      - "16101:16101"
+      - owsec_data:${OWSEC_ROOT}/persist
+      - ./certs:/${OWSEC_ROOT}/certs
 
   owfms:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owfms:${OWFMS_TAG}"
@@ -76,16 +77,14 @@ services:
         aliases:
           - ${INTERNAL_OWFMS_HOSTNAME}
     env_file:
+      - .env.selfsigned
       - owfms.env
     depends_on:
       - kafka
     restart: unless-stopped
     volumes:
-      - "./owfms_data:${OWFMS_ROOT}"
-      - "./certs:/${OWFMS_ROOT}/certs"
-    ports:
-      - "16004:16004"
-      - "16104:16104"
+      - owfms_data:${OWFMS_ROOT}/persist
+      - ./certs:/${OWFMS_ROOT}/certs
 
   owprov:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owprov:${OWPROV_TAG}"
@@ -94,29 +93,26 @@ services:
         aliases:
           - ${INTERNAL_OWPROV_HOSTNAME}
     env_file:
+      - .env.selfsigned
       - owprov.env
     depends_on:
       - kafka
     restart: unless-stopped
     volumes:
-      - "./owprov_data:${OWPROV_ROOT}"
-      - "./certs:/${OWPROV_ROOT}/certs"
-    ports:
-      - "16005:16005"
-      - "16105:16105"
+      - owprov_data:${OWPROV_ROOT}
+      - ./certs:/${OWPROV_ROOT}/certs
 
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
-    restart: unless-stopped
     networks:
       openwifi:
+        aliases:
+          - ${INTERNAL_RTTYS_HOSTNAME}
+    restart: unless-stopped
     volumes:
       - "./certs/restapi-cert.pem:/etc/rttys/restapi-cert.pem"
       - "./certs/restapi-key.pem:/etc/rttys/restapi-key.pem"
       - "./rttys/rttys.conf:/rttys/rttys.conf"
-    ports:
-      - "5912:5912"
-      - "5913:5913"
 
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
@@ -138,3 +134,34 @@ services:
       - zookeeper
     volumes:
       - kafka_data:/bitnami/kafka
+
+  traefik:
+    image: "traefik:${TRAEFIK_TAG}"
+    networks:
+      openwifi:
+    env_file:
+      - traefik.env
+    depends_on:
+      - owsec
+      - owgw
+      - owgw-ui
+      - owfms
+      - owprov
+      - rttys
+    restart: unless-stopped
+    volumes:
+      - "./traefik/openwifi_selfsigned.yaml:/etc/traefik/openwifi.yaml"
+      - "./certs/restapi-ca.pem:/certs/restapi-ca.pem"
+      - "./certs/restapi-cert.pem:/certs/restapi-cert.pem"
+      - "./certs/restapi-key.pem:/certs/restapi-key.pem"
+    ports:
+      - "15002:15002"
+      - "16002:16002"
+      - "16003:16003"
+      - "80:80"
+      - "443:443"
+      - "16001:16001"
+      - "16004:16004"
+      - "16005:16005"
+      - "5912:5912"
+      - "5913:5913"
