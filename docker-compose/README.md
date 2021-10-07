@@ -31,6 +31,7 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `OWGWFILEUPLOAD_HOSTNAME` | This will be used as a hostname for OWGW fileupload |
 | `OWSEC_HOSTNAME`          | This will be used as a hostname for OWSec REST API  |
 | `OWFMS_HOSTNAME`          | This will be used as a hostname for OWFms REST API  |
+| `OWPROV_HOSTNAME`         | This will be used as a hostname for OWProv REST API |
 | `RTTYS_HOSTNAME`          | This will be used as a hostname for RTTYS           |
 | `SYSTEM_URI_UI`           | Set this to your uCentralGW-UI URL                  |
 
@@ -53,9 +54,14 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `SYSTEM_URI_PUBLIC` | Set this to your OWSec public URL |
 
 ### owfms.env
-| Variable             | Description                              |
-| -------------------- | ---------------------------------------- |
-| `SYSTEM_URI_PUBLIC`  | Set this to your OWFms public URL  |
+| Variable             | Description                       |
+| -------------------- | ----------------------------------|
+| `SYSTEM_URI_PUBLIC`  | Set this to your OWFms public URL |
+
+### owprov.env
+| Variable             | Description                        |
+| -------------------- | ---------------------------------- |
+| `SYSTEM_URI_PUBLIC`  | Set this to your OWProv public URL |
 
 ### traefik.env
 | Variable                                            | Description                               |

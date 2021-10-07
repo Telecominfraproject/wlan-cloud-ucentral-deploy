@@ -7,6 +7,8 @@ volumes:
     driver: local
   owfms_data:
     driver: local
+  owprov_data:
+    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -78,6 +80,21 @@ services:
       - owfms_data:${OWFMS_ROOT}/persist
       - ./certs:/${OWFMS_ROOT}/certs
 
+  owprov:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owprov:${OWPROV_TAG}"
+    networks:
+      openwifi:
+        aliases:
+          - ${INTERNAL_OWPROV_HOSTNAME}
+    env_file:
+      - owprov.env
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    volumes:
+      - owprov_data:${OWPROV_ROOT}/persist
+      - ./certs:/${OWPROV_ROOT}/certs
+
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
     networks:
@@ -118,6 +135,7 @@ services:
       - owgw
       - owgw-ui
       - owfms
+      - owprov
       - rttys
     restart: unless-stopped
     ports:
@@ -128,5 +146,6 @@ services:
       - "443:443"
       - "16001:16001"
       - "16004:16004"
+      - "16005:16005"
       - "5912:5912"
       - "5913:5913"
