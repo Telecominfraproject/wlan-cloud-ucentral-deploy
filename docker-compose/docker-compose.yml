@@ -101,7 +101,7 @@ services:
       - kafka
     restart: unless-stopped
     volumes:
-      - "./owprov_data:${OWPROV_ROOT}"
+      - "./owprov_data:${OWPROV_ROOT}/persist"
       - "./certs:/${OWPROV_ROOT}/certs"
     ports:
       - "16005:16005"
