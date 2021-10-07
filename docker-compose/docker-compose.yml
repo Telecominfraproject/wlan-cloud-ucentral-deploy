@@ -25,7 +25,7 @@ services:
       - rttys
     restart: unless-stopped
     volumes:
-      - "./owgw_data:${OWGW_ROOT}"
+      - "./owgw_data:${OWGW_ROOT}/persist"
       - "./certs:/${OWGW_ROOT}/certs"
     ports:
       - "15002:15002"
@@ -65,7 +65,7 @@ services:
       - kafka
     restart: unless-stopped
     volumes:
-      - "./owsec_data:${OWSEC_ROOT}"
+      - "./owsec_data:${OWSEC_ROOT}/persist"
       - "./certs:/${OWSEC_ROOT}/certs"
     ports:
       - "16001:16001"
@@ -83,7 +83,7 @@ services:
       - kafka
     restart: unless-stopped
     volumes:
-      - "./owfms_data:${OWFMS_ROOT}"
+      - "./owfms_data:${OWFMS_ROOT}/persist"
       - "./certs:/${OWFMS_ROOT}/certs"
     ports:
       - "16004:16004"
