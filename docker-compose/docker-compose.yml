@@ -81,7 +81,7 @@ services:
       - ./certs:/${OWFMS_ROOT}/certs
 
   owprov:
-    image: "wlan-cloud-owprov:${OWPROV_TAG}"
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owprov:${OWPROV_TAG}"
     networks:
       openwifi:
         aliases:
