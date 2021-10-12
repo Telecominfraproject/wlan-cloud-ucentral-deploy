@@ -1,10 +1,13 @@
 # Docker Compose
-With the provided Docker Compose files you can instantiate a deployment of the OpenWifi microservices and related components. The repository contains a self-signed certificate and a TIP-signed gateway certificate which are valid for the `*.wlan.local` domain. You also have the possibility to either generate and use Letsencrypt certs or provide your own certificates. Furthermore the deployments are split by whether Traefik is used as a reverse proxy/load balancer in front of the microservices or if they are exposed directly on the host.
-1. Deployment without Traefik (self-signed certificates)
-2. Deployment without Traefik (own certificates)
-3. Deployment with Traefik (self-signed certificates)
-4. Deployment with Traefik (Letsencrypt certificates)
-## Deployment without Traefik (self-signed certificates)
+### Overview
+With the provided Docker Compose files you can instantiate a deployment of the OpenWifi microservices and related components. The repository contains a self-signed certificate and a TIP-signed gateway certificate which are valid for the `*.wlan.local` domain. You also have the possibility to either generate and use Letsencrypt certs or provide your own certificates. Furthermore the deployments are split by whether Traefik is used as a reverse proxy/load balancer in front of the microservices or if they are exposed directly on the host. The advantage of using the deployments with Traefik is that you can use Letsencrypt certs (automatic certificate generation and renewal) and you have the ability to scale specific containers to multiple replicas.
+- [Non-LB deployment with self-signed certificates](#non-lb-deployment-with-self-signed-certificates)
+- [Non-LB deployment with own certificates](#non-lb-deployment-with-own-certificates)
+- [LB deployment with self-signed certificates](#lb-deployment-with-self-signed-certificates)
+- [LB deployment with Letsencrypt certificates](#lb-deployment-with-letsencrypt-certificates)
+### Configuration
+The configuration of the OpenWifi microservices is done via environment variables. For an overview of the supported configuration properties have a look into the microservice specific env files. For an explanation of the configuration properties please see the README in the respective microservice repository.
+## Non-LB deployment with self-signed certificates
 1. Switch into the project directory with `cd docker-compose/`.
 2. Add an entry for `openwifi.wlan.local` in your hosts file which points to `127.0.0.1` or whatever the IP of the host running the deployment is.
 3. Spin up the deployment with `docker-compose up -d`.
@@ -18,7 +21,7 @@ export UCENTRALSEC="openwifi.wlan.local:16001"
 export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-compose/certs/restapi-ca.pem"
 ```
 ⚠️**Note**: When deploying with self-signed certificates you can not make use of the trace functionality in the UI since the AP will throw a TLS error when uploading the trace to OWGW. Please use the Letsencrypt deployment or provide your own valid certificates if you want to use this function.
-## Deployment without Traefik (own certificates)
+## Non-LB deployment with own certificates
 1. Switch into the project directory with `cd docker-compose/`. Copy your websocket and REST API certificates into the `certs/` directory. Make sure to reference the certificates accordingly in the service config if you use different file names or if you want to use different certificates for the respective microservices.
 2. Adapt the following hostname and URI variables according to your environment:
 ### .env
@@ -58,9 +61,10 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 3. Spin up the deployment with `docker-compose up -d`.
 4. Check if the containers are up and running with `docker-compose ps`.
 5. Navigate to the UI and login with your OWSec authentication data.
-## Deployment with Traefik (self-signed certificates)
+## LB deployment with self-signed certificates
 Follow the same instructions as for the self-signed deployment without Traefik. The only difference is that you have to spin up the deployment with `docker-compose -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned up -d`. Make sure to specify the Compose and the according .env file every time you're working with the deployment or create an alias, for example `alias docker-compose-lb-selfsigned="docker-compose -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned"`. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-lb-selfsigned up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
-## Deployment with Traefik (Letsencrypt certificates)
+## LB deployment with Letsencrypt certificates
+For the Letsencrypt challenge to work you need a public IP address. The hostnames which you set for the microservices have to resolve to this IP address to pass the HTTP-01 challenge (https://letsencrypt.org/docs/challenge-types/#http-01-challenge).
 1. Switch into the project directory with `cd docker-compose/`.
 2. Adapt the following hostname and URI variables according to your environment.
 ### .env.letsencrypt
@@ -113,7 +117,7 @@ Follow the same instructions as for the self-signed deployment without Traefik. 
 | `TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL` | Email address used for ACME registration. |
 
 3. Spin up the deployment with `docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt up -d`. Make sure to specify the Compose and the according .env file every time you're working with the deployment or create an alias, for example `alias docker-compose-lb-letsencrypt="docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt"`. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-lb-letsencrypt up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
-4. Check if the containers are up and running with `docker-compose-letsencrypt ps`.
+4. Check if the containers are up and running with `docker-compose-lb-letsencrypt ps`.
 5. Navigate to the UI and login with your OWSec authentication data.
 
-**Note**: Both deployments create local volumes to persist mostly application, database and certificate data. In addition to that the `certs/` directory is bind mounted into the microservice containers. Be aware that for the bind mounts the host directories and files will be owned by the user in the container. Since the files are under version control, you may have to change the ownership to your user again before pulling changes.
+**Note**: The deployments create local volumes to persist mostly application, database and certificate data. In addition to that the `certs/` directory is bind mounted into the microservice containers. Be aware that for the bind mounts the host directories and files will be owned by the user in the container. Since the files are under version control, you may have to change the ownership to your user again before pulling changes.
