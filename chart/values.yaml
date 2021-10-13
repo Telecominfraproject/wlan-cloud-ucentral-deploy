@@ -34,6 +34,10 @@ owprov:
 owgwui:
   fullnameOverride: owgwui
 
+# OpenWIFI Provisioning Web UI (https://github.com/Telecominfraproject/wlan-cloud-owprov-ui/)
+owprovui:
+  fullnameOverride: owprovui
+
 # rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
 rttys:
   enabled: true

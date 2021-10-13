@@ -19,6 +19,9 @@ dependencies:
 - name: owgwui
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=main"
   version: 0.1.0
+- name: owprovui
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov-ui@helm?ref=main"
+  version: 0.1.0
 - name: rttys
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=main"
   version: 0.1.0
