@@ -121,3 +121,7 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 5. Navigate to the UI and login with your OWSec authentication data.
 
 **Note**: The deployments create local volumes to persist mostly application, database and certificate data. In addition to that the `certs/` directory is bind mounted into the microservice containers. Be aware that for the bind mounts the host directories and files will be owned by the user in the container. Since the files are under version control, you may have to change the ownership to your user again before pulling changes.
+
+### owsec templates and wwwassets
+
+On the startup of owsec directories for wwwassets and mailer templates are created from the base files included in Docker image. After the initial startup you may edit those files as you wish in the [owsec-data/persist](./owsec-data/persist) directory.
