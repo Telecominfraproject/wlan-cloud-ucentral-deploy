@@ -155,6 +155,7 @@ services:
     networks:
       openwifi:
     env_file:
+      - .env.letsencrypt
       - traefik.env
     depends_on:
       - owsec
