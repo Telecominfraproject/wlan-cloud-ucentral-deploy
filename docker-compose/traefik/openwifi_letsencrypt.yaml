@@ -24,6 +24,10 @@ http:
       loadBalancer:
         servers:
           - url: "https://owprov.wlan.local:16005/"
+    owprov-ui:
+      loadBalancer:
+        servers:
+          - url: "http://owprov-ui.wlan.local:80/"
     rttys-user:
       loadBalancer:
         servers:
@@ -68,6 +72,16 @@ http:
       entryPoints: "owprovrestapi"
       service: "owprov-restapi"
       rule: "Host(`{{env "OWPROV_HOSTNAME"}}`)"
+      tls:
+        certResolver: "openwifi"
+    owprov-ui-http:
+      entryPoints: "owgwuihttp"
+      service: "owprov-ui"
+      rule: "Host(`{{ env "OWPROVUI_HOSTNAME" }}`)"
+    owprov-ui-https:
+      entryPoints: "owgwuihttps"
+      service: "owprov-ui"
+      rule: "Host(`{{ env "OWPROVUI_HOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
     rttys-user:

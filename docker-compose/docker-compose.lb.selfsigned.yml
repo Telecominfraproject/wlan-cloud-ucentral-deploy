@@ -102,6 +102,21 @@ services:
       - owprov_data:${OWPROV_ROOT}
       - ./certs:/${OWPROV_ROOT}/certs
 
+  owprov-ui:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owprov-ui:${OWPROVUI_TAG}"
+    networks:
+      openwifi:
+        aliases:
+          - ${INTERNAL_OWPROVUI_HOSTNAME}
+    env_file:
+      - owprov-ui.env
+    depends_on:
+      - owsec
+      - owgw
+      - owfms
+      - owprov
+    restart: unless-stopped
+
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
     networks:
@@ -147,6 +162,7 @@ services:
       - owgw-ui
       - owfms
       - owprov
+      - owprov-ui
       - rttys
     restart: unless-stopped
     volumes:
@@ -159,7 +175,9 @@ services:
       - "16002:16002"
       - "16003:16003"
       - "80:80"
+      - "8080:8080"
       - "443:443"
+      - "8443:8443"
       - "16001:16001"
       - "16004:16004"
       - "16005:16005"
