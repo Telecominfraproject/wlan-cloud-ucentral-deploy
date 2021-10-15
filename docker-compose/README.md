@@ -58,6 +58,10 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | ---------------------------------------- | ------------------------------------------------------------------------------------- |
 | `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWProv REST API URL, for example `https://owprov.example.com:16005`. |
 | `SYSTEM_URI_UI`                          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.              |
+### owprov-ui.env
+| Variable                  | Description                                                                |
+| ------------------------- | -------------------------------------------------------------------------- |
+| `DEFAULT_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
 3. Spin up the deployment with `docker-compose up -d`.
 4. Check if the containers are up and running with `docker-compose ps`.
 5. Navigate to the UI and login with your OWSec authentication data.
@@ -76,6 +80,7 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 | `OWSEC_HOSTNAME`          | Set this to your OWSec hostname, for example `owsec.example.com`.          |
 | `OWFMS_HOSTNAME`          | Set this to your OWFms hostname, for example `owfms.example.com`.          |
 | `OWPROV_HOSTNAME`         | Set this to your OWProv hostname, for example `owprov.example.com`.        |
+| `OWPROVUI_HOSTNAME`       | Set this to your OWProv-UI hostname, for example `owprov-ui.example.com`.  |
 | `RTTYS_HOSTNAME`          | Set this to your RTTYS hostname, for example `rttys.example.com`.          |
 
 ### owgw.env
@@ -103,25 +108,23 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 | ------------------- | -------------------------------------------------------------------------- |
 | `SYSTEM_URI_PUBLIC` | Set this to your OWFms URL, for example `https://owfms.example.com:16004`. |
 | `SYSTEM_URI_UI`     | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.   |
-
-
 ### owprov.env
 | Variable             | Description                                                                  |
 | -------------------- | ---------------------------------------------------------------------------- |
 | `SYSTEM_URI_PUBLIC`  | Set this to your OWProv URL, for example `https://owprov.example.com:16005`. |
 | `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.     |
-
+### owprov-ui.env
+| Variable                  | Description                                                                |
+| ------------------------- | -------------------------------------------------------------------------- |
+| `DEFAULT_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
 ### traefik.env
 | Variable                                            | Description                               |
 | --------------------------------------------------- | ----------------------------------------- |
 | `TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL` | Email address used for ACME registration. |
-
 3. Spin up the deployment with `docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt up -d`. Make sure to specify the Compose and the according .env file every time you're working with the deployment or create an alias, for example `alias docker-compose-lb-letsencrypt="docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt"`. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-lb-letsencrypt up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
 4. Check if the containers are up and running with `docker-compose-lb-letsencrypt ps`.
 5. Navigate to the UI and login with your OWSec authentication data.
 
 **Note**: The deployments create local volumes to persist mostly application, database and certificate data. In addition to that the `certs/` directory is bind mounted into the microservice containers. Be aware that for the bind mounts the host directories and files will be owned by the user in the container. Since the files are under version control, you may have to change the ownership to your user again before pulling changes.
-
 ### owsec templates and wwwassets
-
 On the startup of owsec directories for wwwassets and mailer templates are created from the base files included in Docker image. After the initial startup you may edit those files as you wish in the [owsec-data/persist](./owsec-data/persist) directory.
