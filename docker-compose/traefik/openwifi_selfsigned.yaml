@@ -10,6 +10,11 @@ http:
         servers:
           - url: "http://owgw-ui.wlan.local:80/"
 
+    owprov-ui:
+      loadBalancer:
+        servers:
+          - url: "http://owprov-ui.wlan.local:80/"
+
   routers:
     owgw-ui-http:
       entryPoints: "owgwuihttp"
@@ -19,6 +24,17 @@ http:
     owgw-ui-https:
       entryPoints: "owgwuihttps"
       service: "owgw-ui"
+      rule: "PathPrefix(`/`)"
+      tls: {}
+
+    owprov-ui-http:
+      entryPoints: "owprovuihttp"
+      service: "owprov-ui"
+      rule: "PathPrefix(`/`)"
+
+    owprov-ui-https:
+      entryPoints: "owprovuihttps"
+      service: "owprov-ui"
       rule: "PathPrefix(`/`)"
       tls: {}
 
