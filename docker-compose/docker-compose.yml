@@ -107,6 +107,26 @@ services:
       - "16005:16005"
       - "16105:16105"
 
+  owprov-ui:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owprov-ui:${OWPROVUI_TAG}"
+    networks:
+      openwifi:
+    env_file:
+      - owprov-ui.env
+    depends_on:
+      - owsec
+      - owgw
+      - owfms
+      - owprov
+    restart: unless-stopped
+    volumes:
+      - "./owprov-ui/default.conf:/etc/nginx/conf.d/default.conf"
+      - "./certs/restapi-cert.pem:/etc/nginx/restapi-cert.pem"
+      - "./certs/restapi-key.pem:/etc/nginx/restapi-key.pem"
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
     restart: unless-stopped
