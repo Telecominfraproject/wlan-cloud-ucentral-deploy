@@ -1,0 +1,24 @@
+dependencies:
+- name: owgw
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=master
+  version: 0.1.0
+- name: owsec
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=main
+  version: 0.1.0
+- name: owfms
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=main
+  version: 0.1.0
+- name: owprov
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-owprov@helm?ref=main
+  version: 0.1.0
+- name: owgwui
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=main
+  version: 0.1.0
+- name: rttys
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=main
+  version: 0.1.0
+- name: kafka
+  repository: https://charts.bitnami.com/bitnami
+  version: 13.0.2
+digest: sha256:85df544b65067e3e264ddfc96cec868f49023e6452d101538b83ec8715d36408
+generated: "2021-10-06T16:47:57.71697477+03:00"
