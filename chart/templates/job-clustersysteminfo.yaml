@@ -1,0 +1,82 @@
+{{- $root := . -}}
+{{- if .Values.clustersysteminfo.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "openwifi.fullname" . }}-clustersysteminfo-check
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation
+  labels:
+    app.kubernetes.io/name: {{ include "openwifi.name" . }}
+    helm.sh/chart: {{ include "openwifi.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- with .Values.clustersysteminfo.activeDeadlineSeconds }}
+  activeDeadlineSeconds: {{ . }}
+  {{- end }}
+  {{- with .Values.clustersysteminfo.backoffLimit }}
+  backoffLimit: {{ . }}
+  {{- end }}
+  template:
+    metadata:
+      name: {{ include "openwifi.fullname" . }}-clustersysteminfo-check
+      labels:
+        app.kubernetes.io/name: {{ include "openwifi.name" . }}
+        helm.sh/chart: {{ include "openwifi.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+    spec:
+      containers:
+        - name: clustersysteminfo-check
+          image: "{{ .Values.clustersysteminfo.images.clustersysteminfo.repository }}:{{ .Values.clustersysteminfo.images.clustersysteminfo.tag }}"
+          imagePullPolicy: {{ .Values.clustersysteminfo.images.clustersysteminfo.pullPolicy }}
+
+          env:
+            - name: KUBERNETES_DEPLOYED
+              value: "{{ now }}"
+          {{- range $key, $value := .Values.clustersysteminfo.public_env_variables }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+          {{- end }}
+          {{- range $key, $value := .Values.clustersysteminfo.secret_env_variables }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "openwifi.fullname" $root }}-clustersysteminfo-env
+                  key: {{ $key }}
+          {{- end }}
+
+          {{- with .Values.clustersysteminfo.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+      restartPolicy: {{ .Values.clustersysteminfo.restartPolicy }}
+
+      imagePullSecrets:
+      {{- range $image, $imageValue := .Values.clustersysteminfo.images }}
+        {{- if $imageValue.regcred }}
+      - name: {{ include "openwifi.fullname" $root }}-{{ $image }}-clustersysteminfo-regcred
+        {{- end }}
+      {{- end }}
+
+      {{- with .Values.clustersysteminfo.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.clustersysteminfo.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.clustersysteminfo.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+{{- end }}

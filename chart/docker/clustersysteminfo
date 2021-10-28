@@ -1,0 +1,95 @@
+#!/bin/bash
+
+if [[ "$(which jq)" == "" ]]
+then
+  echo "You need the package jq installed to use this script."
+  exit 1
+fi
+
+if [[ "$(which curl)" == "" ]]
+then
+  echo "You need the package curl installed to use this script."
+  exit 1
+fi
+
+if [[ "${OWSEC}" == "" ]]
+then
+  echo "You must set the variable OWSEC in order to use this script. Something like"
+  echo "OWSEC=security.isp.com:16001"
+  exit 1
+fi
+
+if [[ "${OWSEC_USERNAME}" == "" ]]
+then
+  echo "You must set the variable OWSEC_USERNAME in order to use this script. Something like"
+  echo "OWSEC_USERNAME=tip@ucentral.com"
+  exit 1
+fi
+
+if [[ "${OWSEC_PASSWORD}" == "" ]]
+then
+  echo "You must set the variable OWSEC_PASSWORD in order to use this script. Something like"
+  echo "OWSEC_PASSWORD=openwifi"
+  exit 1
+fi
+
+if [[ "${CHECK_RETRIES}" == "" ]] && [[ "${CHECK_RETRIES}" -eq "${CHECK_RETRIES}" ]]
+then
+  echo "Environment variable CHECK_RETRIES is not set or is not number, setting it to the default value "
+  export CHECK_RETRIES=10
+fi
+
+# Adapt scripts for the security credentials
+# -> Username
+sed '/^username/s/username=.*/username="'$OWSEC_USERNAME'"/' owsec_cli -i
+sed '/^username/s/username=.*/username="'$OWSEC_USERNAME'"/' owgw_cli -i
+sed '/^username/s/username=.*/username="'$OWSEC_USERNAME'"/' owfms_cli -i
+sed '/^username/s/username=.*/username="'$OWSEC_USERNAME'"/' owprov_cli -i
+# -> Password
+sed '/^password/s/password=.*/password="'$OWSEC_PASSWORD'"/' owsec_cli -i
+sed '/^password/s/password=.*/password="'$OWSEC_PASSWORD'"/' owgw_cli  -i
+sed '/^password/s/password=.*/password="'$OWSEC_PASSWORD'"/' owfms_cli -i
+sed '/^password/s/password=.*/password="'$OWSEC_PASSWORD'"/' owprov_cli -i
+
+exit_code_sum=1
+until [[ "$exit_code_sum" -eq "0" ]] || [[ "${CHECK_RETRIES}" -eq "0" ]]
+do
+  exit_code_sum=0
+    ./owsec_cli systeminfo
+  let "exit_code_sum+=$?"
+  if [[ ! -s result.json ]]
+  then
+    let "exit_code_sum+=1"
+  fi
+  let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+
+  ./owgw_cli systeminfo
+  let "exit_code_sum+=$?"
+  if [[ ! -s result.json ]]
+  then
+    let "exit_code_sum+=1"
+  fi
+  let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+
+  ./owfms_cli systeminfo
+  let "exit_code_sum+=$?"
+  if [[ ! -s result.json ]]
+  then
+    let "exit_code_sum+=1"
+  fi
+  let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+
+  ./owprov_cli systeminfo
+  let "exit_code_sum+=$?"
+  if [[ ! -s result.json ]]
+  then
+    let "exit_code_sum+=1"
+  fi
+  let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+
+  let "CHECK_RETRIES-=1"
+  echo "Exit code sum: $exit_code_sum"
+  echo "Left retries: $CHECK_RETRIES"
+  sleep 1
+done
+exit $exit_code_sum
