@@ -72,7 +72,7 @@ clustersysteminfo:
   images:
     clustersysteminfo:
       repository: tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo
-      tag: master
+      tag: main
       pullPolicy: Always
 #      regcred:
 #        registry: tip-tip-wlan-cloud-ucentral.jfrog.io
@@ -106,7 +106,7 @@ clustersysteminfo:
     OWSEC_USERNAME: tip@ucentral.com
     OWSEC_PASSWORD: openwifi
 
-  activeDeadlineSeconds: 300
-  backoffLimit: 1
+  activeDeadlineSeconds: 1200
+  backoffLimit: 5
   restartPolicy: OnFailure
 

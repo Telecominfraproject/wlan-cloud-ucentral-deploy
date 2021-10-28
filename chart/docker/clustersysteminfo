@@ -51,17 +51,45 @@ sed '/^password/s/password=.*/password="'$OWSEC_PASSWORD'"/' owgw_cli  -i
 sed '/^password/s/password=.*/password="'$OWSEC_PASSWORD'"/' owfms_cli -i
 sed '/^password/s/password=.*/password="'$OWSEC_PASSWORD'"/' owprov_cli -i
 
+export OWSEC_FQDN=$(echo $OWSEC | awk -F ':' '{print $1}')
+echo "Waiting for OWSEC FQDN ($OWSEC_FQDN) to be resolvable"
+exit_code=1
+until [[ "$exit_code" -eq "0" ]]
+do
+  getent hosts $OWSEC_FQDN
+  exit_code=$?
+done
+echo
+
+echo "Waiting for OWSEC to be ready to respond to systeminfo requests"
 exit_code_sum=1
-until [[ "$exit_code_sum" -eq "0" ]] || [[ "${CHECK_RETRIES}" -eq "0" ]]
+until [[ "$exit_code_sum" -eq "0" ]]
 do
   exit_code_sum=0
-    ./owsec_cli systeminfo
+  ./owsec_cli systeminfo
   let "exit_code_sum+=$?"
   if [[ ! -s result.json ]]
   then
     let "exit_code_sum+=1"
   fi
   let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+  sleep 5
+done
+echo
+
+echo "Running systeminfo checks for all components until all of them are available OR check tries are exausted ($CHECK_RETRIES)"
+exit_code_sum=1
+until [[ "$exit_code_sum" -eq "0" ]] || [[ "${CHECK_RETRIES}" -eq "0" ]]
+do
+  exit_code_sum=0
+  ./owsec_cli systeminfo
+  let "exit_code_sum+=$?"
+  if [[ ! -s result.json ]]
+  then
+    let "exit_code_sum+=1"
+  fi
+  let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+  sleep 1
 
   ./owgw_cli systeminfo
   let "exit_code_sum+=$?"
@@ -70,6 +98,7 @@ do
     let "exit_code_sum+=1"
   fi
   let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+  sleep 1
 
   ./owfms_cli systeminfo
   let "exit_code_sum+=$?"
@@ -78,6 +107,7 @@ do
     let "exit_code_sum+=1"
   fi
   let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+  sleep 1
 
   ./owprov_cli systeminfo
   let "exit_code_sum+=$?"
@@ -86,10 +116,12 @@ do
     let "exit_code_sum+=1"
   fi
   let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+  sleep 1
 
   let "CHECK_RETRIES-=1"
   echo "Exit code sum: $exit_code_sum"
   echo "Left retries: $CHECK_RETRIES"
-  sleep 1
+  sleep 5
+  echo
 done
 exit $exit_code_sum
