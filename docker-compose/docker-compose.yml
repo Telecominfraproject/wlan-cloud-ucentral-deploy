@@ -32,6 +32,10 @@ services:
       - "16002:16002"
       - "16102:16102"
       - "16003:16003"
+    sysctls:
+      - net.ipv4.tcp_keepalive_intvl=5
+      - net.ipv4.tcp_keepalive_probes=2
+      - net.ipv4.tcp_keepalive_time=45
 
   owgw-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owgw-ui:${OWGWUI_TAG}"
