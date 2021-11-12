@@ -10,6 +10,8 @@ This Helm chart helps to deploy OpenWIFI Cloud SDK with all required dependencie
 $ helm install .
 ```
 
+Then change the default password as described in [owsec docs](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/tree/main#changing-default-password).
+
 ## Introduction
 
 This chart bootstraps the OpenWIFI Cloud SDK on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
@@ -33,6 +35,10 @@ If you need to update your release, it could be required to update your helm cha
 ```bash
 helm dependency update
 ```
+
+#### Required password changing on the first startup
+
+One important action that must be done before using the deployment is changing password for the default user in owsec as described in [owsec docs](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/tree/main#changing-default-password). Please use these docs to find the actions that must be done **after** the deployment in order to start using your deployment.
 
 ## Uninstalling the Chart
 
