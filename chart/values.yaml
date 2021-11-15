@@ -106,7 +106,7 @@ clustersysteminfo:
     OWSEC_USERNAME: tip@ucentral.com
     OWSEC_PASSWORD: openwifi
 
-  activeDeadlineSeconds: 1200
+  activeDeadlineSeconds: 2400
   backoffLimit: 5
   restartPolicy: OnFailure
 
