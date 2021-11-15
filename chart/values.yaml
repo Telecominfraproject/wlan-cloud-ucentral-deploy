@@ -103,8 +103,9 @@ clustersysteminfo:
     CHECK_RETRIES: 30
 
   secret_env_variables:
-    OWSEC_USERNAME: tip@ucentral.com
-    OWSEC_PASSWORD: openwifi
+    OWSEC_DEFAULT_USERNAME: tip@ucentral.com
+    OWSEC_DEFAULT_PASSWORD: openwifi
+    #OWSEC_NEW_PASSWORD: "" # Set this value in order for the check to work. Password must comply https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationvalidationexpression
 
   activeDeadlineSeconds: 1200
   backoffLimit: 5

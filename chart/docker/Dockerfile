@@ -41,5 +41,6 @@ RUN git clone https://github.com/Telecominfraproject/wlan-cloud-owprov.git owpro
   && rm -rf owprov
 
 COPY clustersysteminfo clustersysteminfo
+COPY change_credentials change_credentials
 
 ENTRYPOINT ["/cli/clustersysteminfo"]
