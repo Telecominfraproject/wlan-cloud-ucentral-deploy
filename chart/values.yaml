@@ -107,7 +107,7 @@ clustersysteminfo:
     OWSEC_DEFAULT_PASSWORD: openwifi
     #OWSEC_NEW_PASSWORD: "" # Set this value in order for the check to work. Password must comply https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationvalidationexpression
 
-  activeDeadlineSeconds: 1200
+  activeDeadlineSeconds: 2400
   backoffLimit: 5
   restartPolicy: OnFailure
 
