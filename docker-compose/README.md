@@ -6,7 +6,8 @@ With the provided Docker Compose files you can instantiate a deployment of the O
 - [LB deployment with self-signed certificates](#lb-deployment-with-self-signed-certificates)
 - [LB deployment with Letsencrypt certificates](#lb-deployment-with-letsencrypt-certificates)
 ### Configuration
-The configuration of the OpenWifi microservices is done via environment variables. For an overview of the supported configuration properties have a look into the microservice specific env files. For an explanation of the configuration properties please see the README in the respective microservice repository.
+If you don't bind mount your own config files they are generated on every startup based on the environment variables in the microservice specific env files. For an overview of the supported configuration properties have a look into the microservice specific env files. For an explanation of the configuration properties please see the README in the respective microservice repository.  
+Be aware that the non-LB deployment exposes the generated config files on the host, so if you want to make configuration changes afterwards please do them directly in the config files located in the microservice data directories.
 #### Required password changing on the first startup
 One important action that must be done before using the deployment is changing password for the default user in owsec as described in [owsec docs](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/tree/main#changing-default-password). Please use these docs to find the actions that must be done **after** the deployment in order to start using your deployment.
 ## Non-LB deployment with self-signed certificates
