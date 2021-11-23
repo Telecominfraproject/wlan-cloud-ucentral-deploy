@@ -7,9 +7,12 @@ With the provided Docker Compose files you can instantiate a deployment of the O
 - [LB deployment with Letsencrypt certificates](#lb-deployment-with-letsencrypt-certificates)
 ### Configuration
 If you don't bind mount your own config files they are generated on every startup based on the environment variables in the microservice specific env files. For an overview of the supported configuration properties have a look into the microservice specific env files. For an explanation of the configuration properties please see the README in the respective microservice repository.  
-Be aware that the non-LB deployment exposes the generated config files on the host, so if you want to make configuration changes afterwards please do them directly in the config files located in the microservice data directories.
+Be aware that the non-LB deployment exposes the generated config files on the host. So if you want to make configuration changes afterwards, please do them directly in the config files located in the microservice data directories.
 #### Required password changing on the first startup
 One important action that must be done before using the deployment is changing password for the default user in owsec as described in [owsec docs](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/tree/main#changing-default-password). Please use these docs to find the actions that must be done **after** the deployment in order to start using your deployment.
+### Ports
+Every OpenWifi service is exposed via a separate port either directly on the host or through Traefik. For an overview of the exposed ports have a look into the deployment specific Docker Compose file. If you use your own certificates or make use of the [Letsencrypt LB deployment](#lb-deployment-with-letsencrypt-certificates), you can also configure different hostnames for the microservices.  
+Please note that the OWProv-UI is exposed on port `8080(HTTP)/8443(HTTPS)` by default except for the Letsencrypt LB deployment, where the service listens on the default `80/443` HTTP(S) ports.
 ## Non-LB deployment with self-signed certificates
 1. Switch into the project directory with `cd docker-compose/`.
 2. Add an entry for `openwifi.wlan.local` in your hosts file which points to `127.0.0.1` or whatever the IP of the host running the deployment is.
