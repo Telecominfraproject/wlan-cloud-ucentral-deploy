@@ -1,0 +1,20 @@
+deploy_repo_url: git@github.com:Telecominfraproject/wlan-cloud-ucentral-deploy.git
+repositories:
+  - name: owgw
+    url: git@github.com:Telecominfraproject/wlan-cloud-ucentralgw.git
+    docker_compose_name: OWGW_TAG
+  - name: owsec
+    url: git@github.com:Telecominfraproject/wlan-cloud-ucentralsec.git
+    docker_compose_name: OWSEC_TAG
+  - name: owfms
+    url: git@github.com:Telecominfraproject/wlan-cloud-ucentralfms.git
+    docker_compose_name: OWFMS_TAG
+  - name: owgw-ui
+    url: git@github.com:Telecominfraproject/wlan-cloud-ucentralgw-ui.git
+    docker_compose_name: OWGWUI_TAG
+#  - name: owprov-ui
+#    url: git@github.com:Telecominfraproject/wlan-cloud-owprov-ui.git
+#    docker_compose_name: OWPROVUI_TAG
+#  - name: owprov
+#    url: git@github.com:Telecominfraproject/wlan-cloud-owprov.git
+#    docker_compose_name: OWPROV_TAG
