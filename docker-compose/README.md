@@ -23,7 +23,7 @@ Please note that the OWProv-UI is exposed on port `8080(HTTP)/8443(HTTPS)` by de
 7. Navigate to the UI `https://openwifi.wlan.local` and login with your OWSec authentication data.
 8. To use the curl test scripts included in the microservice repositories set the following environment variables:
 ```
-export UCENTRALSEC="openwifi.wlan.local:16001"
+export OWSEC="openwifi.wlan.local:16001"
 export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-compose/certs/restapi-ca.pem"
 ```
 ⚠️**Note**: When deploying with self-signed certificates you can not make use of the trace functionality in the UI since the AP will throw a TLS error when uploading the trace to OWGW. Please use the Letsencrypt deployment or provide your own valid certificates if you want to use this function.
