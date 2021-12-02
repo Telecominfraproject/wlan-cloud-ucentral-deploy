@@ -1,0 +1,59 @@
+name: Create new release for OpenWIFI 2.x services
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version to create (i.e. v2.4.0)'
+        required: true
+      tag_type:
+        default: 'rc'
+        description: 'Tag type to create (final OR rc)'
+        required: true
+      push_confirm:
+        default: ''
+        description: 'Set to "true" if changes should be pushed (dry-run enabled by default)'
+        required: false
+      log_level:
+        default: 'INFO'
+        description: 'Log level for the script'
+        required: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-cloud-ucentral-deploy
+
+    - name: Install system dependencies
+      run: |
+        pip3 install yq
+        helm plugin install https://github.com/databus23/helm-diff
+        helm plugin install https://github.com/aslafy-z/helm-git
+        ls ~/.local/share/helm/plugins/helm-git/helm-git-plugin.sh || true
+        sed 's/--skip-refresh //' -i ~/.local/share/helm/plugins/helm-git/helm-git-plugin.sh
+
+    - name: Run release creation script
+      working-directory: wlan-cloud-ucentral-deploy/.github/git-release-tool
+      run: |
+        export RELEASE_VERSION=${{ github.event.inputs.release_version }}
+        export TAG_TYPE=${{ github.event.inputs.tag_type }}
+        export GIT_PUSH_CONFIRMED=${{ github.event.inputs.push_confirm }}
+        export LOG_VERBOSITY=${{ github.event.inputs.log_level }}
+        mkdir -p ~/.ssh
+        chmod -R 700 ~/.ssh
+        ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+        echo https://tip-automation:${{ secrets.GIT_PUSH_PAT }}@github.com > ~/.git-credentials
+        git config --global credential.helper store
+        git config --global user.email "tip-automation@telecominfraproject.com"
+        git config --global user.name "TIP Automation User"
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo update
+        ./git-release-tool.sh
