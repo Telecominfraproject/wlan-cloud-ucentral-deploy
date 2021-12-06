@@ -16,7 +16,7 @@ on:
         required: false
       log_level:
         default: 'INFO'
-        description: 'Log level for the script'
+        description: 'Log level for the script (ERROR/INFO/DEBUG)'
         required: false
 
 defaults:
