@@ -2,16 +2,16 @@ apiVersion: v2
 name: openwifi
 appVersion: "1.0"
 description: A Helm chart for Kubernetes
-version: 2.4.0-RC6
+version: 2.4.0-RC7
 dependencies:
 - name: owgw
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.4.0-RC5"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.4.0-RC6"
   version: 0.1.0
 - name: owsec
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=v2.4.0-RC4"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=v2.4.0-RC5"
   version: 0.1.0
 - name: owfms
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=v2.4.0-RC4"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=v2.4.0-RC5"
   version: 0.1.0
 - name: owprov
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov@helm?ref=main"
