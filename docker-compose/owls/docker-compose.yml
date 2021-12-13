@@ -27,8 +27,8 @@ services:
       - "./owsec_data:${OWSEC_ROOT}"
       - "../certs:/${OWSEC_ROOT}/certs"
     ports:
-      - "16201:16001"
-      - "16301:16101"
+      - "16001:16001"
+      - "16101:16101"
 
   owls:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owls:${OWLS_TAG}"
@@ -48,6 +48,24 @@ services:
     ports:
       - "16007:16007"
       - "16107:16107"
+
+  owls-ui:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owls-ui:${OWLSUI_TAG}"
+    networks:
+      owls:
+    env_file:
+      - owls-ui.env
+    depends_on:
+      - owsec
+      - owls
+    restart: unless-stopped
+    volumes:
+      - "./owls-ui/default.conf:/etc/nginx/conf.d/default.conf"
+      - "../certs/restapi-cert.pem:/etc/nginx/restapi-cert.pem"
+      - "../certs/restapi-key.pem:/etc/nginx/restapi-key.pem"
+    ports:
+      - "80:80"
+      - "443:443"
 
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
