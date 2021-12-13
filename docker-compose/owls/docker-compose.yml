@@ -27,8 +27,8 @@ services:
       - "./owsec_data:${OWSEC_ROOT}"
       - "../certs:/${OWSEC_ROOT}/certs"
     ports:
-      - "16001:16001"
-      - "16101:16101"
+      - "16201:16001"
+      - "16301:16101"
 
   owls:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owls:${OWLS_TAG}"
