@@ -1,3 +1,5 @@
 *.swp
 chart/charts/*
 /docker-compose/certs/
+/docker-compose/*_data
+/docker-compose/owls/*_data

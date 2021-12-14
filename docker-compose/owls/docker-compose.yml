@@ -1,0 +1,89 @@
+version: '3'
+
+volumes:
+  zookeeper_data:
+    driver: local
+  zookeeper_datalog:
+    driver: local
+  kafka_data:
+    driver: local
+
+networks:
+  owls:
+
+services:
+  owsec:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owsec:${OWSEC_TAG}"
+    networks:
+      owls:
+        aliases:
+          - ${INTERNAL_OWSEC_HOSTNAME}
+    env_file:
+      - owsec.env
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    volumes:
+      - "./owsec_data:${OWSEC_ROOT}"
+      - "../certs:/${OWSEC_ROOT}/certs"
+    ports:
+      - "16001:16001"
+      - "16101:16101"
+
+  owls:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owls:${OWLS_TAG}"
+    networks:
+      owls:
+        aliases:
+          - ${INTERNAL_OWLS_HOSTNAME}
+    env_file:
+      - owls.env
+    depends_on:
+      - owsec
+      - kafka
+    restart: unless-stopped
+    volumes:
+      - "./owls_data:${OWLS_ROOT}"
+      - "../certs:/${OWLS_ROOT}/certs"
+    ports:
+      - "16007:16007"
+      - "16107:16107"
+
+  owls-ui:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owls-ui:${OWLSUI_TAG}"
+    networks:
+      owls:
+    env_file:
+      - owls-ui.env
+    depends_on:
+      - owsec
+      - owls
+    restart: unless-stopped
+    volumes:
+      - "./owls-ui/default.conf:/etc/nginx/conf.d/default.conf"
+      - "../certs/restapi-cert.pem:/etc/nginx/restapi-cert.pem"
+      - "../certs/restapi-key.pem:/etc/nginx/restapi-key.pem"
+    ports:
+      - "80:80"
+      - "443:443"
+
+  zookeeper:
+    image: "zookeeper:${ZOOKEEPER_TAG}"
+    networks:
+      owls:
+    restart: unless-stopped
+    volumes:
+      - zookeeper_data:/data
+      - zookeeper_datalog:/datalog
+
+  kafka:
+    image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
+    networks:
+      owls:
+    env_file:
+      - kafka.env
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    volumes:
+      - kafka_data:/bitnami/kafka
