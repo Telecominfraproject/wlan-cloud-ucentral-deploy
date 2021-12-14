@@ -1,10 +1,12 @@
 # Docker Compose
 ### Overview
-With the provided Docker Compose files you can instantiate a deployment of the OpenWifi microservices and related components. The repository contains a self-signed certificate and a TIP-signed gateway certificate which are valid for the `*.wlan.local` domain. You also have the possibility to either generate and use Letsencrypt certs or provide your own certificates. Furthermore the deployments are split by whether Traefik is used as a reverse proxy/load balancer in front of the microservices or if they are exposed directly on the host. The advantage of using the deployments with Traefik is that you can use Letsencrypt certs (automatic certificate generation and renewal) and you have the ability to scale specific containers to multiple replicas.
+With the provided Docker Compose files you can instantiate a deployment of the OpenWifi microservices and related components. The repository contains a self-signed certificate and a TIP-signed gateway certificate which are valid for the `*.wlan.local` domain. You also have the possibility to either generate and use Letsencrypt certs or provide your own certificates. Furthermore the deployments are split by whether Traefik is used as a reverse proxy/load balancer in front of the microservices or if they are exposed directly on the host. The advantage of using the deployments with Traefik is that you can use Letsencrypt certs (automatic certificate generation and renewal) and you have the ability to scale specific containers to multiple replicas.  
+The repository also contains a separate Docker Compose deployment to set up the [OWLS microservice](https://github.com/Telecominfraproject/wlan-cloud-owls) and related components for running a load simulation test against an existing controller.
 - [Non-LB deployment with self-signed certificates](#non-lb-deployment-with-self-signed-certificates)
 - [Non-LB deployment with own certificates](#non-lb-deployment-with-own-certificates)
 - [LB deployment with self-signed certificates](#lb-deployment-with-self-signed-certificates)
 - [LB deployment with Letsencrypt certificates](#lb-deployment-with-letsencrypt-certificates)
+- [OWLS deployment with self-signed certificates](#owls-deployment-with-self-signed-certificates)
 ### Configuration
 If you don't bind mount your own config files they are generated on every startup based on the environment variables in the microservice specific env files. For an overview of the supported configuration properties have a look into the microservice specific env files. For an explanation of the configuration properties please see the README in the respective microservice repository.  
 Be aware that the non-LB deployment exposes the generated config files on the host. So if you want to make configuration changes afterwards, please do them directly in the config files located in the microservice data directories.
@@ -13,6 +15,8 @@ One important action that must be done before using the deployment is changing p
 ### Ports
 Every OpenWifi service is exposed via a separate port either directly on the host or through Traefik. For an overview of the exposed ports have a look into the deployment specific Docker Compose file. If you use your own certificates or make use of the [Letsencrypt LB deployment](#lb-deployment-with-letsencrypt-certificates), you can also configure different hostnames for the microservices.  
 Please note that the OWProv-UI is exposed on port `8080(HTTP)/8443(HTTPS)` by default except for the Letsencrypt LB deployment, where the service listens on the default `80/443` HTTP(S) ports.
+### owsec templates and wwwassets
+On the startup of owsec directories for wwwassets and mailer templates are created from the base files included in Docker image. After the initial startup you may edit those files as you wish in the [owsec-data/persist](./owsec-data/persist) directory.
 ## Non-LB deployment with self-signed certificates
 1. Switch into the project directory with `cd docker-compose/`.
 2. Add an entry for `openwifi.wlan.local` in your hosts file which points to `127.0.0.1` or whatever the IP of the host running the deployment is.
@@ -130,7 +134,19 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 3. Spin up the deployment with `docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt up -d`. Make sure to specify the Compose and the according .env file every time you're working with the deployment or create an alias, for example `alias docker-compose-lb-letsencrypt="docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt"`. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-lb-letsencrypt up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
 4. Check if the containers are up and running with `docker-compose-lb-letsencrypt ps`.
 5. Navigate to the UI and login with your OWSec authentication data.
+## OWLS deployment with self-signed certificates
+To run a load simulation you need to obtain a TIP signed client certificate which will be used to connect to the gateway. The certificate CN has to start with the characters `53494d` like it is described [here](https://github.com/Telecominfraproject/wlan-cloud-owls#get-a-simulator-key). Be aware that since the OWLS deployment partly exposes the same ports on the host as the OpenWifi deployment, it is not intended that both run on the same host.
+1. Copy or move your TIP signed load simulation client certificate into the `docker-compose/certs` directory. Don't forget to name the files `device-cert.pem` and `device-key.pem` or adapt the path names in the OWLS configuration if you're using different file names.
+2. To be able to run load simulation tests against your OpenWifi deployment, you'll have to [configure the OWGW microservice](https://github.com/Telecominfraproject/wlan-cloud-owls#prepare-your-openwifi-gateway) to allow load simulation tests. You can do that by either editing the OWGW env file or doing the changes directly in the OWGW configuration file if it is exposed on the host.
+3. Switch into the project directory with `cd docker-compose/owls`.
+4. Add an entry for `openwifi-owls.wlan.local` in your hosts file which points to `127.0.0.1` or whatever the IP of the host running the OWLS deployment is.
+5. Spin up the deployment with `docker-compose up -d`.
+6. Check if the containers are up and running with `docker-compose ps`.
+7. Add SSL certificate exceptions in your browser by visiting https://openwifi-owls.wlan.local:16001 and https://openwifi-owls.wlan.local:16007.
+8. If you're using an OpenWifi deployment with self-signed certificates, you'll have to add a custom hosts entry for `openwifi.wlan.local` on the machine running the OWLS deployment pointing to the remote IP of your OpenWifi host.
+9. Login to the UI by visiting https://openwifi-owls.wlan.local and follow the instructions to change your default password.
+10. In the Simulation tab, click on the + sign on the right side to add a load simulation.
+11. Fill out the required fields. MAC prefix is used for the MAC addresses of the simulated devices, so you can use any six-digit hexadecimal number. Specify the remote address of your OpenWifi gateway in the Gateway field, for example `https://openwifi.wlan.local:15002`. Adapt the rest of the settings according to your needs.
+12. Click on the floppy disk icon to save your load simulation. You can run it by clicking the play symbol in the table view.
 
-**Note**: The deployments create local volumes to persist mostly application, database and certificate data. In addition to that the `certs/` directory is bind mounted into the microservice containers. Be aware that for the bind mounts the host directories and files will be owned by the user in the container. Since the files are under version control, you may have to change the ownership to your user again before pulling changes.
-### owsec templates and wwwassets
-On the startup of owsec directories for wwwassets and mailer templates are created from the base files included in Docker image. After the initial startup you may edit those files as you wish in the [owsec-data/persist](./owsec-data/persist) directory.
+**Note**: All deployments create local volumes to persist mostly application, database and certificate data. In addition to that the `certs/` directory is bind mounted into the microservice containers. Be aware that for the bind mounts the host directories and files will be owned by the user in the container. Since the files are under version control, you may have to change the ownership to your user again before pulling changes.
