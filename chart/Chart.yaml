@@ -25,8 +25,14 @@ dependencies:
 - name: rttys
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty@chart?ref=v0.1.0"
   version: 0.1.0
-  condition: rttys.enabled
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 13.0.2
-  condition: kafka.enabled
+- name: owls
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owls@helm?ref=main"
+  version: 0.1.0
+  condition: owls.enabled
+- name: owlsui
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owls-ui@helm?ref=master"
+  version: 0.1.0
+  condition: owlsui.enabled
