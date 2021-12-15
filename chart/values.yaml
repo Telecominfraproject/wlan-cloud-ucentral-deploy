@@ -111,3 +111,14 @@ clustersysteminfo:
   backoffLimit: 5
   restartPolicy: OnFailure
 
+# OpenWIFI Load Simulator (https://github.com/Telecominfraproject/wlan-cloud-owls)
+owls:
+  fullnameOverride: owls
+
+  configProperties:
+    openwifi.kafka.enable: "true"
+    openwifi.kafka.brokerlist: kafka:9092
+
+# OpenWIFI Load Simulator UI (https://github.com/Telecominfraproject/wlan-cloud-owls-ui)
+owlsui:
+  fullnameOverride: owlsui
