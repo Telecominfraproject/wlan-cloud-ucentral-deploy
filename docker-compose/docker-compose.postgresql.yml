@@ -8,18 +8,22 @@ services:
   owgw:
     depends_on:
       - postgresql
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owgw"]
 
   owsec:
     depends_on:
       - postgresql
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owsec"]
 
   owfms:
     depends_on:
       - postgresql
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owfms"]
 
   owprov:
     depends_on:
       - postgresql
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owprov"]
 
   postgresql:
     image: "postgres:${POSTGRESQL_TAG}"
