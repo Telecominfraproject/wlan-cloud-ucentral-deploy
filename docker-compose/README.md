@@ -4,6 +4,7 @@ With the provided Docker Compose files you can instantiate a deployment of the O
 The repository also contains a separate Docker Compose deployment to set up the [OWLS microservice](https://github.com/Telecominfraproject/wlan-cloud-owls) and related components for running a load simulation test against an existing controller.
 - [Non-LB deployment with self-signed certificates](#non-lb-deployment-with-self-signed-certificates)
 - [Non-LB deployment with own certificates](#non-lb-deployment-with-own-certificates)
+- [Non-LB deployment with PostgreSQL](#non-lb-deployment-with-postgresql)
 - [LB deployment with self-signed certificates](#lb-deployment-with-self-signed-certificates)
 - [LB deployment with Letsencrypt certificates](#lb-deployment-with-letsencrypt-certificates)
 - [OWLS deployment with self-signed certificates](#owls-deployment-with-self-signed-certificates)
@@ -24,7 +25,7 @@ On the startup of owsec directories for wwwassets and mailer templates are creat
 4. Check if the containers are up and running with `docker-compose ps`.
 5. Add SSL certificate exceptions in your browser by visiting https://openwifi.wlan.local:16001, https://openwifi.wlan.local:16002, https://openwifi.wlan.local:16004 and https://openwifi.wlan.local:16005.
 6. Connect to your AP via SSH and add a static hosts entry in `/etc/hosts` for `openwifi.wlan.local`. This should point to the address of the host the Compose deployment runs on.
-7. Navigate to the UI `https://openwifi.wlan.local` and login with your OWSec authentication data.
+7. Login to the UI `https://openwifi.wlan.local` and follow the instructions to change your default password.
 8. To use the curl test scripts included in the microservice repositories set the following environment variables:
 ```
 export OWSEC="openwifi.wlan.local:16001"
@@ -74,7 +75,60 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `DEFAULT_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
 3. Spin up the deployment with `docker-compose up -d`.
 4. Check if the containers are up and running with `docker-compose ps`.
-5. Navigate to the UI and login with your OWSec authentication data.
+5. Login to the UI and and follow the instructions to change your default password.
+## Non-LB deployment with PostgreSQL
+1. Switch into the project directory with `cd docker-compose/`.
+2. Set the following variables in the env files and make sure to uncomment the lines. It is highly recommended that you change the DB passwords to some random string.
+### owgw.env
+| Variable                           | Value/Description |
+| ---------------------------------- | ----------------- |
+| `STORAGE_TYPE`                     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_HOST`     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_USERNAME` | `owgw`            |
+| `STORAGE_TYPE_POSTGRESQL_PASSWORD` | `owgw`            |
+| `STORAGE_TYPE_POSTGRESQL_DATABASE` | `owgw`            |
+### owsec.env
+| Variable                           | Value/Description |
+| ---------------------------------- | ----------------- |
+| `STORAGE_TYPE`                     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_HOST`     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_USERNAME` | `owsec`           |
+| `STORAGE_TYPE_POSTGRESQL_PASSWORD` | `owsec`           |
+| `STORAGE_TYPE_POSTGRESQL_DATABASE` | `owsec`           |
+### owfms.env
+| Variable                           | Value/Description |
+| ---------------------------------- | ----------------- |
+| `STORAGE_TYPE`                     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_HOST`     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_USERNAME` | `owfms`           |
+| `STORAGE_TYPE_POSTGRESQL_PASSWORD` | `owfms`           |
+| `STORAGE_TYPE_POSTGRESQL_DATABASE` | `owfms`           |
+### owprov.env
+| Variable                           | Value/Description |
+| ---------------------------------- | ----------------- |
+| `STORAGE_TYPE`                     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_HOST`     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_USERNAME` | `owprov`          |
+| `STORAGE_TYPE_POSTGRESQL_PASSWORD` | `owprov`          |
+| `STORAGE_TYPE_POSTGRESQL_DATABASE` | `owprov`          |
+### postgresql.env
+| Variable             | Value      |
+| -------------------- | ---------- |
+| `POSTGRES_PASSWORD`  | `postgres` |
+| `POSTGRES_USER`      | `postgres` |
+| `OWGW_DB`            | `owgw`     |
+| `OWGW_DB_USER`       | `owgw`     |
+| `OWGW_DB_PASSWORD`   | `owgw`     |
+| `OWSEC_DB`           | `owsec`    |
+| `OWSEC_DB_USER`      | `owsec`    |
+| `OWSEC_DB_PASSWORD`  | `owsec`    |
+| `OWFMS_DB`           | `owfms`    |
+| `OWFMS_DB_USER`      | `owfms`    |
+| `OWFMS_DB_PASSWORD`  | `owfms`    |
+| `OWPROV_DB`          | `owprov`   |
+| `OWPROV_DB_USER`     | `owprov`   |
+| `OWPROV_DB_PASSWORD` | `owprov`   |
+3. Depending on whether you want to use [self-signed certificates](#non-lb-deployment-with-self-signed-certificates) or [provide your own](#non-lb-deployment-with-own-certificates), follow the instructions of the according deployment model. Spin up the deployment with `docker-compose -f docker-compose.yml -f docker-compose.postgresql.yml up -d`. It is recommended to create an alias for this deployment model with `alias docker-compose-postgresql="docker-compose -f docker-compose.yml -f docker-compose.postgresql.yml"`.
 ## LB deployment with self-signed certificates
 Follow the same instructions as for the self-signed deployment without Traefik. The only difference is that you have to spin up the deployment with `docker-compose -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned up -d`. Make sure to specify the Compose and the according .env file every time you're working with the deployment or create an alias, for example `alias docker-compose-lb-selfsigned="docker-compose -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned"`. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-lb-selfsigned up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
 ## LB deployment with Letsencrypt certificates
@@ -133,7 +187,7 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 | `TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL` | Email address used for ACME registration. |
 3. Spin up the deployment with `docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt up -d`. Make sure to specify the Compose and the according .env file every time you're working with the deployment or create an alias, for example `alias docker-compose-lb-letsencrypt="docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt"`. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-lb-letsencrypt up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
 4. Check if the containers are up and running with `docker-compose-lb-letsencrypt ps`.
-5. Navigate to the UI and login with your OWSec authentication data.
+5. Login to the UI and follow the instructions to change your default password.
 ## OWLS deployment with self-signed certificates
 To run a load simulation you need to obtain a TIP signed client certificate which will be used to connect to the gateway. The certificate CN has to start with the characters `53494d` like it is described [here](https://github.com/Telecominfraproject/wlan-cloud-owls#get-a-simulator-key). Be aware that since the OWLS deployment partly exposes the same ports on the host as the OpenWifi deployment, it is not intended that both run on the same host.
 1. Copy or move your TIP signed load simulation client certificate into the `docker-compose/certs` directory. Don't forget to name the files `device-cert.pem` and `device-key.pem` or adapt the path names in the OWLS configuration if you're using different file names.
