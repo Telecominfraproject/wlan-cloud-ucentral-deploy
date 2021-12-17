@@ -113,6 +113,8 @@ clustersysteminfo:
 
 # OpenWIFI Load Simulator (https://github.com/Telecominfraproject/wlan-cloud-owls)
 owls:
+  enabled: false
+
   fullnameOverride: owls
 
   configProperties:
@@ -121,4 +123,6 @@ owls:
 
 # OpenWIFI Load Simulator UI (https://github.com/Telecominfraproject/wlan-cloud-owls-ui)
 owlsui:
+  enabled: false
+
   fullnameOverride: owlsui
