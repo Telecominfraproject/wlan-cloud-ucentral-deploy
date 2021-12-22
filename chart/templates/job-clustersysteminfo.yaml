@@ -30,6 +30,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
+      initContainers:
+        - name: delay
+          image: "alpine:latest"
+          command: ["/bin/sleep","{{ default 0 .Values.clustersysteminfo.delay }}"]
       containers:
         - name: clustersysteminfo-check
           image: "{{ .Values.clustersysteminfo.images.clustersysteminfo.repository }}:{{ .Values.clustersysteminfo.images.clustersysteminfo.tag }}"
