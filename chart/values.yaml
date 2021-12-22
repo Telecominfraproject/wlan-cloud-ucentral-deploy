@@ -66,6 +66,7 @@ kafka:
 # clustersysteminfo check
 clustersysteminfo:
   enabled: false
+  #delay: 60 # number of seconds to delay clustersysteminfo execution
 
   fullnameOverride: clustersysteminfo
 
