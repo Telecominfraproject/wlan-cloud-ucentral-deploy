@@ -7,6 +7,7 @@ This Helm chart helps to deploy OpenWIFI Cloud SDK with all required dependencie
 [helm-git](https://github.com/aslafy-z/helm-git) is required for remote the installation as it pull charts from other repositories for the deployment, so intall it if you don't have it already.
 
 ```bash
+$ helm dependency update
 $ helm install .
 ```
 
@@ -20,23 +21,36 @@ Current dependencies may be found in [chart definition](Chart.yaml) and list wil
 
 ## Installing the Chart
 
-To install the chart with the release name `my-release`:
+There are multiple ways to install this chart. Described commands will deploy the OpenWIFI Cloud SDK on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that will be overwritten above default values from dependent charts.
+
+### Installation using local git repo
+
+To install the chart from local git repo with the release name `my-release` you need to first update dependencies as it is required with dependencies deployed by helm-git:
 
 ```bash
-$ helm install --name my-release git+https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy/@chart?ref=main
+$ helm dependency update
+$ helm install --name my-release git+https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy@chart/openwifi-0.1.0.tgz?ref=main
 ```
 
-The command deploys the OpenWIFI Cloud SDK on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that will be overwritten above default values from dependent charts.
+### Installation using remote chart
 
-> **Tip**: List all releases using `helm list`
-
-If you need to update your release, it could be required to update your helm charts dependencies before installation:
+To install the chart with the release name `my-release` you need to first update dependencies as it is required with dependencies deployed by helm-git:
 
 ```bash
-helm dependency update
+$ helm dependency update
+$ helm install --name my-release git+https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy@chart/openwifi-0.1.0.tgz?ref=main
 ```
 
-#### Required password changing on the first startup
+### Installation using external repo
+
+This approach requires adding external helm repo and new versions are build for every [release](https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy/releases):
+
+```bash
+helm repo add tip-wlan https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
+helm install my-release tip-wlan/openwifi
+```
+
+## Required password changing on the first startup
 
 One important action that must be done before using the deployment is changing password for the default user in owsec as described in [owsec docs](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/tree/main#changing-default-password). Please use these docs to find the actions that must be done **after** the deployment in order to start using your deployment.
 
