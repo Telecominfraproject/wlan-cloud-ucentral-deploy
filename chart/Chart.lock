@@ -23,5 +23,11 @@ dependencies:
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 13.0.2
-digest: sha256:3de20b44745484d6e2980d34b3d9e95c92b93537facb2a0bb62c75e583ef444f
-generated: "2021-10-26T16:27:32.319129019+03:00"
+- name: owls
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-owls@helm?ref=main
+  version: 0.1.0
+- name: owlsui
+  repository: git+https://github.com/Telecominfraproject/wlan-cloud-owls-ui@helm?ref=master
+  version: 0.1.0
+digest: sha256:18710254d131d941c68f5f045562e3e121fc8cdfe95626a689a62e3e3965412e
+generated: "2021-12-17T14:22:24.55458053+03:00"
