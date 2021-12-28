@@ -126,3 +126,255 @@ owlsui:
   enabled: false
 
   fullnameOverride: owlsui
+
+# HAproxy (https://github.com/bitnami/charts/tree/master/bitnami/haproxy)
+haproxy:
+  enabled: false
+
+  fullnameOverride: proxy
+
+  replicaCount: 3
+
+  service:
+    type: LoadBalancer
+    ports:
+      # healthcheck
+      - name: health
+        protocol: TCP
+        port: 8080
+        targetPort: health
+      # owfms
+      - name: owfmsrest
+        protocol: TCP
+        port: 16004
+        targetPort: owfmsrest
+      - name: owfmsrestint
+        protocol: TCP
+        port: 17004
+        targetPort: owfmsrestint
+      # owgw
+      - name: owgwws
+        protocol: TCP
+        port: 15002
+        targetPort: owgwws
+      - name: owgwrest
+        protocol: TCP
+        port: 16002
+        targetPort: owgwrest
+      - name: owgwfileup
+        protocol: TCP
+        port: 16003
+        targetPort: owgwfileup
+      - name: owgwrestint
+        protocol: TCP
+        port: 17002
+        targetPort: owgwrestint
+      # owprov
+      - name: owprovrest
+        protocol: TCP
+        port: 16005
+        targetPort: owprovrest
+      - name: owprovrestint
+        protocol: TCP
+        port: 17005
+        targetPort: owprovrestint
+      # owsec
+      - name: owsecrest
+        protocol: TCP
+        port: 16001
+        targetPort: owsecrest
+      - name: owsecrestint
+        protocol: TCP
+        port: 17001
+        targetPort: owsecrestint
+      # rttys
+      - name: rttysdev
+        protocol: TCP
+        port: 5912
+        targetPort: rttysdev
+      - name: rttysuser
+        protocol: TCP
+        port: 5913
+        targetPort: rttysuser
+      - name: rttysweb
+        protocol: TCP
+        port: 5914
+        targetPort: rttysweb
+
+  containerPorts:
+    # healthcheck
+    - name: health
+      containerPort: 8080
+    # owfms
+    - name: owfmsrest
+      containerPort: 16004
+    - name: owfmsrestint
+      containerPort: 17004
+    # owgw
+    - name: owgwws
+      containerPort: 15002
+    - name: owgwrest
+      containerPort: 16002
+    - name: owgwfileup
+      containerPort: 16003
+    - name: owgwrestint
+      containerPort: 17002
+    # owprov
+    - name: owprovrest
+      containerPort: 16005
+    - name: owprovrestint
+      containerPort: 17005
+    # owsec
+    - name: owsecrest
+      containerPort: 16001
+    - name: owsecrestint
+      containerPort: 17001
+    # rttys
+    - name: rttysdev
+      containerPort: 5912
+    - name: rttysuser
+      containerPort: 5913
+    - name: rttysweb
+      containerPort: 5914
+
+  # NOTE set the listed environment variables in order to make proxy working
+  extraEnvVars: []
+#    - name: DNS
+#      value: "172.20.0.10"
+#    - name: SVC_DOMAIN
+#      value: "openwifi-test.svc.cluster.local"
+
+  configuration: |
+    global
+      log stdout format raw local0
+      maxconn 1024
+    defaults
+      log global
+      timeout client 60s
+      timeout connect 60s
+      timeout server 60s
+    resolvers kubernetes
+      nameserver kubedns ${DNS}:53
+      resolve_retries 10
+      timeout retry   2s
+      hold valid      30s
+
+    # healthcheck
+    frontend front_healthcheck
+      bind :8080
+      mode http
+      default_backend back_healthcheck
+    backend back_healthcheck
+      mode http
+      http-after-response set-header Access-Control-Allow-Origin "*"
+      http-after-response set-header Access-Control-Max-Age "31536000"
+      http-request return status 200 content-type "text/plain" string "Pong"
+
+    # owfms
+    frontend front_owfms_rest
+      bind :16004
+      mode tcp
+      default_backend back_owfms_rest
+    backend back_owfms_rest
+      mode tcp
+      server svc_owfms_rest owfms-owfms.${SVC_DOMAIN}:16004 resolvers kubernetes
+
+    frontend front_owfms_rest_internal
+      bind :17004
+      mode tcp
+      default_backend back_owfms_rest_internal
+    backend back_owfms_rest_internal
+      mode tcp
+      server svc_owfms_rest_internal owfms-owfms.${SVC_DOMAIN}:17004 resolvers kubernetes
+
+    # owgw
+    frontend front_owgw_websocket
+      bind :15002
+      mode tcp
+      default_backend back_owgw_websocket
+    backend back_owgw_websocket
+      mode tcp
+      server svc_owgw_websocket owgw-owgw.${SVC_DOMAIN}:15002 resolvers kubernetes
+
+    frontend front_owgw_rest
+      bind :16002
+      mode tcp
+      default_backend back_owgw_rest
+    backend back_owgw_rest
+      mode tcp
+      server svc_owgw_rest owgw-owgw.${SVC_DOMAIN}:16002 resolvers kubernetes
+
+    frontend front_owgw_fileuploader
+      bind :16003
+      mode tcp
+      default_backend back_owgw_fileuploader
+    backend back_owgw_fileuploader
+      mode tcp
+      server svc_owgw_fileuploader owgw-owgw.${SVC_DOMAIN}:16003 resolvers kubernetes
+
+    frontend front_owgw_rest_internal
+      bind :17002
+      mode tcp
+      default_backend back_owgw_rest_internal
+    backend back_owgw_rest_internal
+      mode tcp
+      server svc_owgw_rest_internal owgw-owgw.${SVC_DOMAIN}:17002 resolvers kubernetes
+
+    # owprov
+    frontend front_owprov_rest
+      bind :16005
+      mode tcp
+      default_backend back_owprov_rest
+    backend back_owprov_rest
+      mode tcp
+      server svc_owprov_rest owprov-owprov.${SVC_DOMAIN}:16005 resolvers kubernetes
+
+    frontend front_owprov_rest_internal
+      bind :17005
+      mode tcp
+      default_backend back_owprov_rest_internal
+    backend back_owprov_rest_internal
+      mode tcp
+      server svc_owprov_rest_internal owprov-owprov.${SVC_DOMAIN}:17005 resolvers kubernetes
+
+    # owsec
+    frontend front_owsec_rest
+      bind :16001
+      mode tcp
+      default_backend back_owsec_rest
+    backend back_owsec_rest
+      mode tcp
+      server svc_owsec_rest owsec-owsec.${SVC_DOMAIN}:16001 resolvers kubernetes
+
+    frontend front_owsec_rest_internal
+      bind :17001
+      mode tcp
+      default_backend back_owsec_rest_internal
+    backend back_owsec_rest_internal
+      mode tcp
+      server svc_owsec_rest_internal owsec-owsec.${SVC_DOMAIN}:17001 resolvers kubernetes
+
+    # rttys
+    frontend front_rttys_dev
+      bind :5912
+      mode tcp
+      default_backend back_rttys_dev
+    backend back_rttys_dev
+      mode tcp
+      server svc_rttys_dev rttys-rttys.${SVC_DOMAIN}:5912 resolvers kubernetes
+
+    frontend front_rttys_user
+      bind :5913
+      mode tcp
+      default_backend back_rttys_user
+    backend back_rttys_user
+      mode tcp
+      server svc_rttys_user rttys-rttys.${SVC_DOMAIN}:5913 resolvers kubernetes
+
+    frontend front_rttys_web
+      bind :5914
+      mode tcp
+      default_backend back_rttys_web
+    backend back_rttys_web
+      mode tcp
+      server svc_rttys_web rttys-rttys.${SVC_DOMAIN}:5914 resolvers kubernetes

@@ -36,3 +36,7 @@ dependencies:
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owls-ui@helm?ref=master"
   version: 0.1.0
   condition: owlsui.enabled
+- name: haproxy
+  repository: https://charts.bitnami.com/bitnami
+  version: 0.2.21
+  condition: haproxy.enabled
