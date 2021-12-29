@@ -238,11 +238,6 @@ haproxy:
     - name: rttysweb
       containerPort: 5914
 
-  # NOTE set the listed environment variables in order to make proxy working
-  extraEnvVars: []
-#    - name: SVC_DOMAIN
-#      value: "openwifi-test.svc.cluster.local"
-
   configuration: |
     global
       log stdout format raw local0
@@ -271,7 +266,7 @@ haproxy:
       default_backend back_owfms_rest
     backend back_owfms_rest
       mode tcp
-      server svc_owfms_rest owfms-owfms.${SVC_DOMAIN}:16004
+      server svc_owfms_rest owfms-owfms:16004
 
     frontend front_owfms_rest_internal
       bind :17004
@@ -279,7 +274,7 @@ haproxy:
       default_backend back_owfms_rest_internal
     backend back_owfms_rest_internal
       mode tcp
-      server svc_owfms_rest_internal owfms-owfms.${SVC_DOMAIN}:17004
+      server svc_owfms_rest_internal owfms-owfms:17004
 
     # owgw
     frontend front_owgw_websocket
@@ -288,7 +283,7 @@ haproxy:
       default_backend back_owgw_websocket
     backend back_owgw_websocket
       mode tcp
-      server svc_owgw_websocket owgw-owgw.${SVC_DOMAIN}:15002
+      server svc_owgw_websocket owgw-owgw:15002
 
     frontend front_owgw_rest
       bind :16002
@@ -296,7 +291,7 @@ haproxy:
       default_backend back_owgw_rest
     backend back_owgw_rest
       mode tcp
-      server svc_owgw_rest owgw-owgw.${SVC_DOMAIN}:16002
+      server svc_owgw_rest owgw-owgw:16002
 
     frontend front_owgw_fileuploader
       bind :16003
@@ -304,7 +299,7 @@ haproxy:
       default_backend back_owgw_fileuploader
     backend back_owgw_fileuploader
       mode tcp
-      server svc_owgw_fileuploader owgw-owgw.${SVC_DOMAIN}:16003
+      server svc_owgw_fileuploader owgw-owgw:16003
 
     frontend front_owgw_rest_internal
       bind :17002
@@ -312,7 +307,7 @@ haproxy:
       default_backend back_owgw_rest_internal
     backend back_owgw_rest_internal
       mode tcp
-      server svc_owgw_rest_internal owgw-owgw.${SVC_DOMAIN}:17002
+      server svc_owgw_rest_internal owgw-owgw:17002
 
     # owprov
     frontend front_owprov_rest
@@ -321,7 +316,7 @@ haproxy:
       default_backend back_owprov_rest
     backend back_owprov_rest
       mode tcp
-      server svc_owprov_rest owprov-owprov.${SVC_DOMAIN}:16005
+      server svc_owprov_rest owprov-owprov:16005
 
     frontend front_owprov_rest_internal
       bind :17005
@@ -329,7 +324,7 @@ haproxy:
       default_backend back_owprov_rest_internal
     backend back_owprov_rest_internal
       mode tcp
-      server svc_owprov_rest_internal owprov-owprov.${SVC_DOMAIN}:17005
+      server svc_owprov_rest_internal owprov-owprov:17005
 
     # owsec
     frontend front_owsec_rest
@@ -338,7 +333,7 @@ haproxy:
       default_backend back_owsec_rest
     backend back_owsec_rest
       mode tcp
-      server svc_owsec_rest owsec-owsec.${SVC_DOMAIN}:16001
+      server svc_owsec_rest owsec-owsec:16001
 
     frontend front_owsec_rest_internal
       bind :17001
@@ -346,7 +341,7 @@ haproxy:
       default_backend back_owsec_rest_internal
     backend back_owsec_rest_internal
       mode tcp
-      server svc_owsec_rest_internal owsec-owsec.${SVC_DOMAIN}:17001
+      server svc_owsec_rest_internal owsec-owsec:17001
 
     # rttys
     frontend front_rttys_dev
@@ -355,7 +350,7 @@ haproxy:
       default_backend back_rttys_dev
     backend back_rttys_dev
       mode tcp
-      server svc_rttys_dev rttys-rttys.${SVC_DOMAIN}:5912
+      server svc_rttys_dev rttys-rttys:5912
 
     frontend front_rttys_user
       bind :5913
@@ -363,7 +358,7 @@ haproxy:
       default_backend back_rttys_user
     backend back_rttys_user
       mode tcp
-      server svc_rttys_user rttys-rttys.${SVC_DOMAIN}:5913
+      server svc_rttys_user rttys-rttys:5913
 
     frontend front_rttys_web
       bind :5914
@@ -371,4 +366,4 @@ haproxy:
       default_backend back_rttys_web
     backend back_rttys_web
       mode tcp
-      server svc_rttys_web rttys-rttys.${SVC_DOMAIN}:5914
+      server svc_rttys_web rttys-rttys:5914
