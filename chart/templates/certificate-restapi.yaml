@@ -1,0 +1,51 @@
+{{- $root := . -}}
+{{- if .Values.restapiCerts.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ow-wildcard
+spec:
+  secretName: ow-wildcard-tls
+  commonName: {{ .Release.Namespace }}.svc.{{ .Values.restapiCerts.clusterDomain }}
+  isCA: true
+  usages:
+    - server auth
+    - client auth
+  issuerRef:
+    name: selfsigned-issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ow-ca-issuer
+spec:
+  ca:
+    secretName: ow-wildcard-tls
+{{ range .Values.restapiCerts.services }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ . }}-restapi
+spec:
+  secretName: {{ . }}-restapi-tls
+  isCA: false
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+  - "{{ . }}"
+  - "{{ . }}.{{ $root.Release.Namespace }}.svc"
+  - "{{ . }}.{{ $root.Release.Namespace }}.svc.{{ $root.Values.restapiCerts.clusterDomain }}"
+  issuerRef:
+    name: ow-ca-issuer
+{{- end }}
+{{- end }}
