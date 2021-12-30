@@ -366,3 +366,15 @@ haproxy:
     backend back_rttys_web
       mode tcp
       server svc_rttys_web rttys-rttys:5914
+
+# Cert-manager RESTAPI certs
+restapiCerts:
+  enabled: false
+
+  services:
+    - owgw-owgw
+    - owsec-owsec
+    - owfms-owfms
+    - owprov-owprov
+
+  clusterDomain: cluster.local
