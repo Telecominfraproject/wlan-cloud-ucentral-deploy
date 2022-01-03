@@ -29,5 +29,8 @@ dependencies:
 - name: owlsui
   repository: git+https://github.com/Telecominfraproject/wlan-cloud-owls-ui@helm?ref=master
   version: 0.1.0
-digest: sha256:18710254d131d941c68f5f045562e3e121fc8cdfe95626a689a62e3e3965412e
-generated: "2021-12-17T14:22:24.55458053+03:00"
+- name: haproxy
+  repository: https://charts.bitnami.com/bitnami
+  version: 0.2.21
+digest: sha256:ddb5b39b21822bc3e3c6edef60db3cd5140b8126ec7230d58c42cdb75ec9b333
+generated: "2021-12-30T14:44:40.935566071+03:00"
