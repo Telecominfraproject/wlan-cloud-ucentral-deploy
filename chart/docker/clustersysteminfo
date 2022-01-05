@@ -44,17 +44,9 @@ then
   exit 3
 fi
 
-# Adapt scripts for the security credentials
-# -> Username
-sed '/^username/s/username=.*/username="'$OWSEC_DEFAULT_USERNAME'"/' owsec_cli -i
-sed '/^username/s/username=.*/username="'$OWSEC_DEFAULT_USERNAME'"/' owgw_cli -i
-sed '/^username/s/username=.*/username="'$OWSEC_DEFAULT_USERNAME'"/' owfms_cli -i
-sed '/^username/s/username=.*/username="'$OWSEC_DEFAULT_USERNAME'"/' owprov_cli -i
-# -> Password
-sed '/^password/s/password=.*/password="'$OWSEC_NEW_PASSWORD'"/' owsec_cli -i
-sed '/^password/s/password=.*/password="'$OWSEC_NEW_PASSWORD'"/' owgw_cli  -i
-sed '/^password/s/password=.*/password="'$OWSEC_NEW_PASSWORD'"/' owfms_cli -i
-sed '/^password/s/password=.*/password="'$OWSEC_NEW_PASSWORD'"/' owprov_cli -i
+# Prepare security credentials for cli usage
+export OWSEC_USERNAME=${OWSEC_DEFAULT_USERNAME}
+export OWSEC_PASSWORD=${OWSEC_NEW_PASSWORD}
 
 echo "Running systeminfo checks for all components until all of them are available OR check tries are exausted ($CHECK_RETRIES)"
 exit_code_sum=1

@@ -100,7 +100,7 @@ clustersysteminfo:
 
   public_env_variables:
     FLAGS: "-s --connect-timeout 3"
-    OWSEC: sec:16001
+    OWSEC: owsec-owsec:16001
     CHECK_RETRIES: 30
 
   secret_env_variables:
