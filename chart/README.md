@@ -29,7 +29,7 @@ To install the chart from local git repo with the release name `my-release` you 
 
 ```bash
 $ helm dependency update
-$ helm install --name my-release git+https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy@chart/openwifi-0.1.0.tgz?ref=main
+$ helm install .
 ```
 
 ### Installation using remote chart
@@ -37,7 +37,6 @@ $ helm install --name my-release git+https://github.com/Telecominfraproject/wlan
 To install the chart with the release name `my-release` you need to first update dependencies as it is required with dependencies deployed by helm-git:
 
 ```bash
-$ helm dependency update
 $ helm install --name my-release git+https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy@chart/openwifi-0.1.0.tgz?ref=main
 ```
 
