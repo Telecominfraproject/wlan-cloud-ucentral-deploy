@@ -243,9 +243,9 @@ haproxy:
       maxconn 1024
     defaults
       log global
-      timeout client 60s
+      timeout client 360s
       timeout connect 60s
-      timeout server 60s
+      timeout server 360s
 
     # healthcheck
     frontend front_healthcheck
