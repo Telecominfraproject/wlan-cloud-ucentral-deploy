@@ -377,5 +377,6 @@ restapiCerts:
     - owsec-owsec
     - owfms-owfms
     - owprov-owprov
+    - owls-owls
 
   clusterDomain: cluster.local
