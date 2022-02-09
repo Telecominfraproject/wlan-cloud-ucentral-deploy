@@ -1,0 +1,9 @@
+owgw:
+  configProperties:
+    simulatorid: 53494D020202 # This value should be set to serial number of certificate that was provided to OWLS
+
+owls:
+  enabled: true
+
+owlsui:
+  enabled: true

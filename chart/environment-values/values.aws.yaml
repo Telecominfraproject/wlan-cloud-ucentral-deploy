@@ -1,0 +1,91 @@
+# TODO adapt config for your environments - change FQDNs, certificates and security credentials
+owgw:
+  configProperties: # TODO change FQDNs
+    openwifi.fileuploader.host.0.name: gw.cicd.lab.wlan.tip.build
+    openwifi.system.uri.public: https://gw.cicd.lab.wlan.tip.build:16002
+    openwifi.system.uri.private: https://gw.cicd.lab.wlan.tip.build:17002
+    openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
+    rtty.server: rtty.cicd.lab.wlan.tip.build
+    rtty.token: TOFILL # TODO change rttys token to the same used in rttys below
+
+owgwui:
+  ingresses:
+    default:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: alb
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/group.name: wlan-cicd
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285 # TODO change certificate
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+        alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_302"}}'
+        external-dns.alpha.kubernetes.io/hostname: webui.cicd.lab.wlan.tip.build # TODO change FQDN
+      paths:
+      - path: /*
+        serviceName: owgwui
+        servicePort: http
+
+  public_env_variables:
+    DEFAULT_UCENTRALSEC_URL: https://sec.cicd.lab.wlan.tip.build:16001 # TODO change to OWSEC RESTAPI url
+
+owsec:
+  configProperties: # TODO change FQDNs and credentials
+    authentication.default.username: tip@ucentral.com
+    authentication.default.password: TOFILL # TODO change password to default hashed password (see OWSEC readme for details)
+    openwifi.system.uri.public: https://sec.cicd.lab.wlan.tip.build:16001
+    openwifi.system.uri.private: https://sec.cicd.lab.wlan.tip.build:17001
+    openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
+
+owfms:
+  configProperties: # TODO change FQDNs and credentials
+    s3.key: TOFILL # TODO change these values to S3 credentials to get firmwares from bucket
+    s3.secret: TOFILL
+    # TODO uncomment and change these values if you are using your own S3 bucket with firmwares
+    #s3.bucketname: ucentral-ap-firmware
+    #s3.region: us-east-1
+    #s3.bucket.uri: ucentral-ap-firmware.s3.amazonaws.com
+    openwifi.system.uri.public: https://fms.cicd.lab.wlan.tip.build:16001
+    openwifi.system.uri.private: https://fms.cicd.lab.wlan.tip.build:17001
+    openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
+
+owprov:
+  configProperties: # TODO change FQDNs
+    openwifi.system.uri.public: https://prov.cicd.lab.wlan.tip.build:16001
+    openwifi.system.uri.private: https://prov.cicd.lab.wlan.tip.build:17001
+    openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
+
+owprovui:
+  ingresses:
+    default:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: alb
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/group.name: wlan-cicd
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285 # TODO change certificate
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+        alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_302"}}'
+        external-dns.alpha.kubernetes.io/hostname: provui.cicd.lab.wlan.tip.build # TODO change FQDN
+      paths:
+      - path: /*
+        serviceName: owprovui
+        servicePort: http
+
+  public_env_variables:
+    DEFAULT_UCENTRALSEC_URL: https://sec.cicd.lab.wlan.tip.build:16001 # TODO change to OWSEC RESTAPI url
+
+rttys:
+  config:
+    token: TOFILL # TODO change rttys token and set it in OWGW section above
+
+haproxy:
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+      service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285 # TODO change certificate
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,16001,17001,5912,5913"
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+      external-dns.alpha.kubernetes.io/hostname: "gw.cicd.lab.wlan.tip.build,sec.cicd.lab.wlan.tip.build,fms.cicd.lab.wlan.tip.build,prov.cicd.lab.wlan.tip.build,rtty.cicd.lab.wlan.tip.build"
+

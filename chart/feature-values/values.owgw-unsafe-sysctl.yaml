@@ -1,0 +1,12 @@
+owgw:
+  securityContext:
+    sysctls:
+    - name: net.ipv4.tcp_keepalive_intvl
+      value: "5"
+    - name: net.ipv4.tcp_keepalive_probes
+      value: "2"
+    - name: net.ipv4.tcp_keepalive_time
+      value: "45"
+
+  podSecurityPolicy:
+    enabled: true

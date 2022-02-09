@@ -1,0 +1,15 @@
+clustersysteminfo:
+  enabled: true
+  delay: 0 # you may change this if you need to wait for DNS propogation or other things
+
+  public_env_variables:
+    OWSEC: owsec-owsec:16001
+    # Uncomment these options if you want to run systeminfo checks inside of cluster
+    #OWGW_OVERRIDE: owgw-owgw:16002
+    #OWFMS_OVERRIDE: owfms-owfms:16004
+    #OWPROV_OVERRIDE: owprov-owprov:16005
+
+  secret_env_variables:
+    OWSEC_DEFAULT_USERNAME: tip@ucentral.com
+    OWSEC_DEFAULT_PASSWORD: openwifi
+    OWSEC_NEW_PASSWORD: TOFILL # TODO adapt password to your new password with password policy in mind
