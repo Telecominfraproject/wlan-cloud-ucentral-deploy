@@ -1,0 +1,27 @@
+owgw:
+  services:
+    owgw:
+      type: LoadBalancer
+
+owsec:
+  services:
+    owsec:
+      type: LoadBalancer
+
+rttys:
+  services:
+    rttys:
+      type: LoadBalancer
+
+owfms:
+  services:
+    owfms:
+      type: LoadBalancer
+
+owprov:
+  services:
+    owprov:
+      type: LoadBalancer
+
+haproxy:
+  enabled: false
