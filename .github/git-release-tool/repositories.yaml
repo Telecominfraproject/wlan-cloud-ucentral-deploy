@@ -12,9 +12,9 @@ repositories:
   - name: owgw-ui
     url: https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui.git
     docker_compose_name: OWGWUI_TAG
-#  - name: owprov-ui
-#    url: https://github.com/Telecominfraproject/wlan-cloud-owprov-ui.git
-#    docker_compose_name: OWPROVUI_TAG
-#  - name: owprov
-#    url: https://github.com/Telecominfraproject/wlan-cloud-owprov.git
-#    docker_compose_name: OWPROV_TAG
+  - name: owprov-ui
+    url: https://github.com/Telecominfraproject/wlan-cloud-owprov-ui.git
+    docker_compose_name: OWPROVUI_TAG
+  - name: owprov
+    url: https://github.com/Telecominfraproject/wlan-cloud-owprov.git
+    docker_compose_name: OWPROV_TAG

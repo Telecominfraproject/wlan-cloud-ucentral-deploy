@@ -103,14 +103,6 @@ modify_deploy_repo_values() {
     log_info "No changes in microservices found, new release is not required"
   else
     sed 's/^version: .*/version: '${NEW_RELEASE_TAG#v}'/' chart/Chart.yaml -i
-    if [[ "$GIT_PUSH_CONFIRMED" == "true" ]]; then
-      log_info "Updating helm dependencies:"
-      cd chart
-      helm dependency update
-      cd ..
-    else
-      log_info "Skipping helm charts update due to GIT_PUSH_CONFIRMED not being set to 'true'"
-    fi
   fi
   git diff
 }
