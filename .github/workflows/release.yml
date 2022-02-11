@@ -22,22 +22,22 @@ jobs:
           path: wlan-cloud-ucentral-deploy
           repository: Telecominfraproject/wlan-cloud-ucentral-deploy
 
-      - name: Run pre-checks
-        working-directory: wlan-cloud-ucentral-deploy/chart
-        run: |
-          pip3 install yq -q
-          export CHART_VERSION=$(cat Chart.yaml | yq .version -r)
-          export GIT_TAG=$(echo ${GITHUB_REF} | sed -e 's/refs\/tags\/[v]//' | tr '/' '-')
-          if [ "$CHART_VERSION" != "$GIT_TAG" ]; then
-            echo "Chart version in Chart.yaml ($CHART_VERSION) is different from Git tag ($GIT_TAG)";
-            exit 1
-          fi
-
-          if [ "$(cat Chart.yaml | yq '.dependencies[].repository' -r | grep -E 'ref=(main|master)' | wc -l)" != "0" ]; then
-            echo "Some of the dependencies does not have a fixed version set. List of affected dependencies:";
-            cat Chart.yaml | yq '.dependencies[].repository' -r | grep -E 'ref=(main|master)';
-            exit 1
-          fi
+#      - name: Run pre-checks
+#        working-directory: wlan-cloud-ucentral-deploy/chart
+#        run: |
+#          pip3 install yq -q
+#          export CHART_VERSION=$(cat Chart.yaml | yq .version -r)
+#          export GIT_TAG=$(echo ${GITHUB_REF} | sed -e 's/refs\/tags\/[v]//' | tr '/' '-')
+#          if [ "$CHART_VERSION" != "$GIT_TAG" ]; then
+#            echo "Chart version in Chart.yaml ($CHART_VERSION) is different from Git tag ($GIT_TAG)";
+#            exit 1
+#          fi
+#
+#          if [ "$(cat Chart.yaml | yq '.dependencies[].repository' -r | grep -E 'ref=(main|master)' | wc -l)" != "0" ]; then
+#            echo "Some of the dependencies does not have a fixed version set. List of affected dependencies:";
+#            cat Chart.yaml | yq '.dependencies[].repository' -r | grep -E 'ref=(main|master)';
+#            exit 1
+#          fi
 
       - name: Build package
         working-directory: wlan-cloud-ucentral-deploy/chart
