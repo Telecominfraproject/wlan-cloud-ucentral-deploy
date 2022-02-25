@@ -38,6 +38,11 @@ do
   sleep 5
 done
 
+if [[ "$ONLY_CHANGE_CREDENTIALS" == "true" ]]; then
+  echo "Flag ONLY_CHANGE_CREDENTIALS was set to true, exiting without services checks";
+  exit 0
+fi
+
 if [[ "${CHANGE_CHECK_RETRIES}" -eq "0" ]]
 then
   echo "Run out of retries to change/check login credentials"
