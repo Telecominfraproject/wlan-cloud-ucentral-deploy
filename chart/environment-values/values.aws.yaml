@@ -44,14 +44,14 @@ owfms:
     #s3.bucketname: ucentral-ap-firmware
     #s3.region: us-east-1
     #s3.bucket.uri: ucentral-ap-firmware.s3.amazonaws.com
-    openwifi.system.uri.public: https://fms.cicd.lab.wlan.tip.build:16001
-    openwifi.system.uri.private: https://fms.cicd.lab.wlan.tip.build:17001
+    openwifi.system.uri.public: https://fms.cicd.lab.wlan.tip.build:16004
+    openwifi.system.uri.private: https://fms.cicd.lab.wlan.tip.build:17004
     openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
 
 owprov:
   configProperties: # TODO change FQDNs
-    openwifi.system.uri.public: https://prov.cicd.lab.wlan.tip.build:16001
-    openwifi.system.uri.private: https://prov.cicd.lab.wlan.tip.build:17001
+    openwifi.system.uri.public: https://prov.cicd.lab.wlan.tip.build:16005
+    openwifi.system.uri.private: https://prov.cicd.lab.wlan.tip.build:17005
     openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
 
 owprovui:
