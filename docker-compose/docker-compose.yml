@@ -150,6 +150,24 @@ services:
       - "16009:16009"
       - "16109:16109"
 
+  owsub:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owsub:${OWSUB_TAG}"
+    networks:
+      openwifi:
+        aliases:
+          - ${INTERNAL_OWSUB_HOSTNAME}
+    env_file:
+      - owsub.env
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    volumes:
+      - "./owsub_data:${OWSUB_ROOT}"
+      - "./certs:/${OWSUB_ROOT}/certs"
+    ports:
+      - "16006:16006"
+      - "16106:16106"
+
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
     networks:

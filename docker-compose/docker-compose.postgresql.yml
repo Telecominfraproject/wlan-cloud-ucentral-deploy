@@ -30,6 +30,11 @@ services:
       - postgresql
     command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owanalytics"]
 
+  owsub:
+    depends_on:
+      - postgresql
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owsub"]
+
   postgresql:
     image: "postgres:${POSTGRESQL_TAG}"
     networks:

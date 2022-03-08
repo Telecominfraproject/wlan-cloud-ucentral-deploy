@@ -46,6 +46,16 @@ owgwui:
 owprovui:
   fullnameOverride: owprovui
 
+# OpenWIFI Subscription (https://github.com/Telecominfraproject/wlan-cloud-userportal/)
+owsub:
+  enabled: false
+
+  fullnameOverride: owsub
+
+  configProperties:
+    openwifi.kafka.enable: "true"
+    openwifi.kafka.brokerlist: kafka:9092
+
 # kafka (https://github.com/bitnami/charts/blob/master/bitnami/kafka/)
 kafka:
   enabled: true
