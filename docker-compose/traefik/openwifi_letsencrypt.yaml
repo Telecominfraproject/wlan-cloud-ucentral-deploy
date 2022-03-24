@@ -32,7 +32,7 @@ http:
       loadBalancer:
         servers:
           - url: "https://owanalytics.wlan.local:16009/"
-    owgw-rttys-user:
+    owgw-rttys-view:
       loadBalancer:
         servers:
           - url: "http://owgw.wlan.local:5913/"
@@ -60,9 +60,9 @@ http:
       rule: "Host(`{{ env "OWGW_HOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
-    owgw-rttys-user:
-      entryPoints: "owgwrttysuser"
-      service: "owgw-rttys-user"
+    owgw-rttys-view:
+      entryPoints: "owgwrttysview"
+      service: "owgw-rttys-view"
       rule: "Host(`{{ env "OWGW_HOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
@@ -108,7 +108,7 @@ tcp:
         servers:
           - address: "owgw.wlan.local:15002"
 
-    owgw-rttys-dev:
+    owgw-rttys:
       loadBalancer:
         servers:
           - address: "owgw.wlan.local:5912"
@@ -121,9 +121,9 @@ tcp:
       tls:
         passthrough: true
 
-    owgw-rttys-dev:
-      entryPoints: "owgwrttysdev"
-      service: "owgw-rttys-dev"
+    owgw-rttys:
+      entryPoints: "owgwrttys"
+      service: "owgw-rttys"
       rule: "HostSNI(`{{ env "OWGW_HOSTNAME" }}`)"
       tls:
         certResolver: openwifi

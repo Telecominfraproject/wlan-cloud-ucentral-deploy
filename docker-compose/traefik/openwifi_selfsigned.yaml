@@ -52,11 +52,11 @@ tcp:
       loadBalancer:
         servers:
           - address: "owgw.wlan.local:16003"
-    owgw-rttys-dev:
+    owgw-rttys:
       loadBalancer:
         servers:
           - address: "owgw.wlan.local:5912"
-    owgw-rttys-user:
+    owgw-rttys-view:
       loadBalancer:
         servers:
           - address: "owgw.wlan.local:5913"
@@ -96,15 +96,15 @@ tcp:
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
-    owgw-rttys-dev:
-      entryPoints: "owgwrttysdev"
-      service: "owgw-rttys-dev"
+    owgw-rttys:
+      entryPoints: "owgwrttys"
+      service: "owgw-rttys"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
-    owgw-rttys-user:
-      entryPoints: "owgwrttysuser"
-      service: "owgw-rttys-user"
+    owgw-rttys-view:
+      entryPoints: "owgwrttysview"
+      service: "owgw-rttys-view"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
