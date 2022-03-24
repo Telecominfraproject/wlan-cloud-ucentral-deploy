@@ -13,7 +13,6 @@ jobs:
   trigger-testing:
     if: startsWith(github.ref, 'refs/pull/')
     runs-on: ubuntu-latest
-    needs: docker
     steps:
     - name: Get base branch name and set as output
       id: get_base_branch
