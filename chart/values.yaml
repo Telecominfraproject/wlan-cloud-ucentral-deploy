@@ -29,6 +29,14 @@ owprov:
   configProperties:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
+      #
+# OpenWIFI Analytics (https://github.com/Telecominfraproject/wlan-cloud-analytics)
+owanalytics:
+  fullnameOverride: owanalytics
+
+  configProperties:
+    openwifi.kafka.enable: "true"
+    openwifi.kafka.brokerlist: kafka:9092
 
 # OpenWIFI Web UI (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui/)
 owgwui:
@@ -376,5 +384,6 @@ restapiCerts:
     - owfms-owfms
     - owprov-owprov
     - owls-owls
+    - owanalytics-owanalytics
 
   clusterDomain: cluster.local

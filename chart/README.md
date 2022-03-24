@@ -77,6 +77,9 @@ The following table lists the configurable parameters that overrides microservic
 | `owfms.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Firmware to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
 | `owprov.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Provisioning to use Kafka for communication | `'true'` |
 | `owprov.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Provisioning to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
+| `owanalytics.enabled` | boolean | Install OpenWIFI Analytics in the release | `false` |
+| `owanalytics.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Analytics to use Kafka for communication | `'true'` |
+| `owanalytics.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Analytics to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
 | `rttys.enabled` | boolean | Enables [rttys](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty) deployment | `True` |
 | `rttys.config.token` | string | Sets default rttys token |  |
 | `kafka.enabled` | boolean | Enables [kafka](https://github.com/bitnami/charts/blob/master/bitnami/kafka/) deployment | `True` |
