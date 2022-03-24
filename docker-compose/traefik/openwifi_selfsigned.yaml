@@ -64,6 +64,10 @@ tcp:
       loadBalancer:
         servers:
           - address: "owprov.wlan.local:16005"
+    owanalytics-restapi:
+      loadBalancer:
+        servers:
+          - address: "owanalytics.wlan.local:16009"
     rttys-dev:
       loadBalancer:
         servers:
@@ -107,6 +111,12 @@ tcp:
     owprov-restapi:
       entryPoints: "owprovrestapi"
       service: "owprov-restapi"
+      rule: "HostSNI(`*`)"
+      tls:
+        passthrough: true
+    owanalytics-restapi:
+      entryPoints: "owanalyticsrestapi"
+      service: "owanalytics-restapi"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true

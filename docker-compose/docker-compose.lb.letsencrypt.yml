@@ -9,6 +9,8 @@ volumes:
     driver: local
   owprov_data:
     driver: local
+  owanalytics_data:
+    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -121,6 +123,22 @@ services:
       - owprov
     restart: unless-stopped
 
+  owanalytics:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owanalytics:${OWANALYTICS_TAG}"
+    networks:
+      openwifi:
+        aliases:
+          - ${INTERNAL_OWANALYTICS_HOSTNAME}
+    env_file:
+      - .env.letsencrypt
+      - owanalytics.env
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    volumes:
+      - owanalytics_data:${OWANALYTICS_ROOT}
+      - ./certs:/${OWANALYTICS_ROOT}/certs
+
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
     networks:
@@ -183,5 +201,6 @@ services:
       - "16001:16001"
       - "16004:16004"
       - "16005:16005"
+      - "16009:16009"
       - "5912:5912"
       - "5913:5913"

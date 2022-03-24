@@ -131,6 +131,24 @@ services:
       - "8080:8080"
       - "8443:8443"
 
+  owprov:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owanalytics:${OWANALYTICS_TAG}"
+    networks:
+      openwifi:
+        aliases:
+          - ${INTERNAL_OWANALYTICS_HOSTNAME}
+    env_file:
+      - owanalytics.env
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    volumes:
+      - "./owanalytics_data:${OWANALYTICS_ROOT}"
+      - "./certs:/${OWANALYTICS_ROOT}/certs"
+    ports:
+      - "16009:16009"
+      - "16109:16109"
+
   rttys:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
     restart: unless-stopped
