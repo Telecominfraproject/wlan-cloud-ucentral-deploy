@@ -16,6 +16,9 @@ dependencies:
 - name: owprov
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov@helm?ref=main"
   version: 0.1.0
+- name: owanalytics
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-analytics@helm?ref=main"
+  version: 0.1.0
 - name: owgwui
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=main"
   version: 0.1.0

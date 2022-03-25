@@ -42,6 +42,7 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `INTERNAL_OWSEC_HOSTNAME`  | Set this to your OWSec hostname, for example `owsec.example.com`.   |
 | `INTERNAL_OWFMS_HOSTNAME`  | Set this to your OWFms hostname, for example `owfms.example.com`.   |
 | `INTERNAL_OWPROV_HOSTNAME` | Set this to your OWProv hostname, for example `owprov.example.com`. |
+| `INTERNAL_OWANALYTICS_HOSTNAME` | Set this to your OWAnalytics hostname, for example `owanalytics.example.com`. |
 ### owgw.env
 | Variable                                 | Description                                                                         |
 | ---------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -112,22 +113,25 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `STORAGE_TYPE_POSTGRESQL_PASSWORD` | `owprov`          |
 | `STORAGE_TYPE_POSTGRESQL_DATABASE` | `owprov`          |
 ### postgresql.env
-| Variable             | Value      |
-| -------------------- | ---------- |
-| `POSTGRES_PASSWORD`  | `postgres` |
-| `POSTGRES_USER`      | `postgres` |
-| `OWGW_DB`            | `owgw`     |
-| `OWGW_DB_USER`       | `owgw`     |
-| `OWGW_DB_PASSWORD`   | `owgw`     |
-| `OWSEC_DB`           | `owsec`    |
-| `OWSEC_DB_USER`      | `owsec`    |
-| `OWSEC_DB_PASSWORD`  | `owsec`    |
-| `OWFMS_DB`           | `owfms`    |
-| `OWFMS_DB_USER`      | `owfms`    |
-| `OWFMS_DB_PASSWORD`  | `owfms`    |
-| `OWPROV_DB`          | `owprov`   |
-| `OWPROV_DB_USER`     | `owprov`   |
-| `OWPROV_DB_PASSWORD` | `owprov`   |
+| Variable                  | Value         |
+| --------------------------| ------------- |
+| `POSTGRES_PASSWORD`       | `postgres`    |
+| `POSTGRES_USER`           | `postgres`    |
+| `OWGW_DB`                 | `owgw`        |
+| `OWGW_DB_USER`            | `owgw`        |
+| `OWGW_DB_PASSWORD`        | `owgw`        |
+| `OWSEC_DB`                | `owsec`       |
+| `OWSEC_DB_USER`           | `owsec`       |
+| `OWSEC_DB_PASSWORD`       | `owsec`       |
+| `OWFMS_DB`                | `owfms`       |
+| `OWFMS_DB_USER`           | `owfms`       |
+| `OWFMS_DB_PASSWORD`       | `owfms`       |
+| `OWPROV_DB`               | `owprov`      |
+| `OWPROV_DB_USER`          | `owprov`      |
+| `OWPROV_DB_PASSWORD`      | `owprov`      |
+| `OWANALYTICS_DB`          | `owanalytics` |
+| `OWANALYTICS_DB_USER`     | `owanalytics` |
+| `OWANALYTICS_DB_PASSWORD` | `owanalytics` |
 3. Depending on whether you want to use [self-signed certificates](#non-lb-deployment-with-self-signed-certificates) or [provide your own](#non-lb-deployment-with-own-certificates), follow the instructions of the according deployment model. Spin up the deployment with `docker-compose -f docker-compose.yml -f docker-compose.postgresql.yml up -d`. It is recommended to create an alias for this deployment model with `alias docker-compose-postgresql="docker-compose -f docker-compose.yml -f docker-compose.postgresql.yml"`.
 ## LB deployment with self-signed certificates
 Follow the same instructions as for the self-signed deployment without Traefik. The only difference is that you have to spin up the deployment with `docker-compose -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned up -d`. Make sure to specify the Compose and the according .env file every time you're working with the deployment or create an alias, for example `alias docker-compose-lb-selfsigned="docker-compose -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned"`. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-lb-selfsigned up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
@@ -136,16 +140,17 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 1. Switch into the project directory with `cd docker-compose/`.
 2. Adapt the following hostname and URI variables according to your environment.
 ### .env.letsencrypt
-| Variable                  | Description                                                                |
-| ------------------------- | -------------------------------------------------------------------------- |
-| `OWGW_HOSTNAME`           | Set this to your OWGW hostname, for example `owgw.example.com`.            |
-| `OWGWUI_HOSTNAME`         | Set this to your OWGW-UI hostname, for example `owgw-ui.example.com`.      |
-| `OWGWFILEUPLOAD_HOSTNAME` | Set this to your OWGW fileupload hostname, for example `owgw.example.com`. |
-| `OWSEC_HOSTNAME`          | Set this to your OWSec hostname, for example `owsec.example.com`.          |
-| `OWFMS_HOSTNAME`          | Set this to your OWFms hostname, for example `owfms.example.com`.          |
-| `OWPROV_HOSTNAME`         | Set this to your OWProv hostname, for example `owprov.example.com`.        |
-| `OWPROVUI_HOSTNAME`       | Set this to your OWProv-UI hostname, for example `owprov-ui.example.com`.  |
-| `RTTYS_HOSTNAME`          | Set this to your RTTYS hostname, for example `rttys.example.com`.          |
+| Variable                  | Description                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| `OWGW_HOSTNAME`           | Set this to your OWGW hostname, for example `owgw.example.com`.               |
+| `OWGWUI_HOSTNAME`         | Set this to your OWGW-UI hostname, for example `owgw-ui.example.com`.         |
+| `OWGWFILEUPLOAD_HOSTNAME` | Set this to your OWGW fileupload hostname, for example `owgw.example.com`.    |
+| `OWSEC_HOSTNAME`          | Set this to your OWSec hostname, for example `owsec.example.com`.             |
+| `OWFMS_HOSTNAME`          | Set this to your OWFms hostname, for example `owfms.example.com`.             |
+| `OWPROV_HOSTNAME`         | Set this to your OWProv hostname, for example `owprov.example.com`.           |
+| `OWPROVUI_HOSTNAME`       | Set this to your OWProv-UI hostname, for example `owprov-ui.example.com`.     |
+| `OWANALYTICS_HOSTNAME`    | Set this to your OWAnalytics hostname, for example `owanalytics.example.com`. |
+| `RTTYS_HOSTNAME`          | Set this to your RTTYS hostname, for example `rttys.example.com`.             |
 
 ### owgw.env
 | Variable                 | Description                                                                         |
@@ -181,6 +186,11 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 | Variable                  | Description                                                                |
 | ------------------------- | -------------------------------------------------------------------------- |
 | `DEFAULT_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
+### owanalytics.env
+| Variable             | Description                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------- |
+| `SYSTEM_URI_PUBLIC`  | Set this to your OWAnalytics URL, for example `https://owanalytics.example.com:16009`. |
+| `SYSTEM_URI_UI`      | Set this to your OWProv-UI URL, for example `https://owprov-ui.example.com`.           |
 ### traefik.env
 | Variable                                            | Description                               |
 | --------------------------------------------------- | ----------------------------------------- |
