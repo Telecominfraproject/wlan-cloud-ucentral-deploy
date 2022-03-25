@@ -247,9 +247,9 @@ haproxy:
       containerPort: 17001
     # owanalytics
     - name: owanalyticsrest
-      containerPort: 16001
+      containerPort: 16009
     - name: owanalyticsrint
-      containerPort: 17001
+      containerPort: 17009
     # rttys
     - name: rttysdev
       containerPort: 5912
