@@ -194,6 +194,15 @@ haproxy:
         protocol: TCP
         port: 17001
         targetPort: owsecrestint
+      # owanalytics
+      - name: owanalyticsrest
+        protocol: TCP
+        port: 16009
+        targetPort: owanalyticsrest
+      - name: owanalyticsrestint
+        protocol: TCP
+        port: 17009
+        targetPort: owanalyticsrestint
       # rttys
       - name: rttysdev
         protocol: TCP
@@ -235,6 +244,11 @@ haproxy:
     - name: owsecrest
       containerPort: 16001
     - name: owsecrestint
+      containerPort: 17001
+    # owanalytics
+    - name: owanalyticsrest
+      containerPort: 16001
+    - name: owanalyticsrestint
       containerPort: 17001
     # rttys
     - name: rttysdev
@@ -348,6 +362,23 @@ haproxy:
     backend back_owsec_rest_internal
       mode tcp
       server svc_owsec_rest_internal owsec-owsec:17001
+
+    # owanalytics
+    frontend front_owanalytics_rest
+      bind :16009
+      mode tcp
+      default_backend back_owanalytics_rest
+    backend back_owanalytics_rest
+      mode tcp
+      server svc_owanalytics_rest owanalytics-owanalytics:16009
+
+    frontend front_owanalytics_rest_internal
+      bind :17009
+      mode tcp
+      default_backend back_owanalytics_rest_internal
+    backend back_owanalytics_rest_internal
+      mode tcp
+      server svc_owanalytics_rest_internal owanalytics-owanalytics:17009
 
     # rttys
     frontend front_rttys_dev
