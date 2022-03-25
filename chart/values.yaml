@@ -199,10 +199,10 @@ haproxy:
         protocol: TCP
         port: 16009
         targetPort: owanalyticsrest
-      - name: owanalyticsrestint
+      - name: owanalyticsrint
         protocol: TCP
         port: 17009
-        targetPort: owanalyticsrestint
+        targetPort: owanalyticsrint
       # rttys
       - name: rttysdev
         protocol: TCP
@@ -248,7 +248,7 @@ haproxy:
     # owanalytics
     - name: owanalyticsrest
       containerPort: 16001
-    - name: owanalyticsrestint
+    - name: owanalyticsrint
       containerPort: 17001
     # rttys
     - name: rttysdev
