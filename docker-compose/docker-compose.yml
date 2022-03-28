@@ -131,7 +131,7 @@ services:
       - "8080:8080"
       - "8443:8443"
 
-  owprov:
+  owanalytics:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owanalytics:${OWANALYTICS_TAG}"
     networks:
       openwifi:
