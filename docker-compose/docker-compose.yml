@@ -22,7 +22,6 @@ services:
       - owgw.env
     depends_on:
       - kafka
-      - rttys
     restart: unless-stopped
     volumes:
       - "./owgw_data:${OWGW_ROOT}"
@@ -32,6 +31,8 @@ services:
       - "16002:16002"
       - "16102:16102"
       - "16003:16003"
+      - "5912:5912"
+      - "5913:5913"
     sysctls:
       - net.ipv4.tcp_keepalive_intvl=5
       - net.ipv4.tcp_keepalive_probes=2
@@ -148,19 +149,6 @@ services:
     ports:
       - "16009:16009"
       - "16109:16109"
-
-  rttys:
-    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
-    restart: unless-stopped
-    networks:
-      openwifi:
-    volumes:
-      - "./certs/restapi-cert.pem:/etc/rttys/restapi-cert.pem"
-      - "./certs/restapi-key.pem:/etc/rttys/restapi-key.pem"
-      - "./rttys/rttys.conf:/rttys/rttys.conf"
-    ports:
-      - "5912:5912"
-      - "5913:5913"
 
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"

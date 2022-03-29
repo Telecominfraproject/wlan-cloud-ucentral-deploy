@@ -52,6 +52,14 @@ tcp:
       loadBalancer:
         servers:
           - address: "owgw.wlan.local:16003"
+    owgw-rttys:
+      loadBalancer:
+        servers:
+          - address: "owgw.wlan.local:5912"
+    owgw-rttys-view:
+      loadBalancer:
+        servers:
+          - address: "owgw.wlan.local:5913"
     owsec-restapi:
       loadBalancer:
         servers:
@@ -68,14 +76,6 @@ tcp:
       loadBalancer:
         servers:
           - address: "owanalytics.wlan.local:16009"
-    rttys-dev:
-      loadBalancer:
-        servers:
-          - address: "rttys.wlan.local:5912"
-    rttys-user:
-      loadBalancer:
-        servers:
-          - address: "rttys.wlan.local:5913"
 
   routers:
     owgw-websocket:
@@ -93,6 +93,18 @@ tcp:
     owgw-fileupload:
       entryPoints: "owgwfileupload"
       service: "owgw-fileupload"
+      rule: "HostSNI(`*`)"
+      tls:
+        passthrough: true
+    owgw-rttys:
+      entryPoints: "owgwrttys"
+      service: "owgw-rttys"
+      rule: "HostSNI(`*`)"
+      tls:
+        passthrough: true
+    owgw-rttys-view:
+      entryPoints: "owgwrttysview"
+      service: "owgw-rttys-view"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
@@ -117,18 +129,6 @@ tcp:
     owanalytics-restapi:
       entryPoints: "owanalyticsrestapi"
       service: "owanalytics-restapi"
-      rule: "HostSNI(`*`)"
-      tls:
-        passthrough: true
-    rttys-dev:
-      entryPoints: "rttysdev"
-      service: "rttys-dev"
-      rule: "HostSNI(`*`)"
-      tls:
-        passthrough: true
-    rttys-user:
-      entryPoints: "rttysuser"
-      service: "rttys-user"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true

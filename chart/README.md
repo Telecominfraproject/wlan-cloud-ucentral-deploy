@@ -81,6 +81,8 @@ The following table lists the configurable parameters that overrides microservic
 | `owanalytics.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Analytics to use Kafka for communication | `'true'` |
 | `owanalytics.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Analytics to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
 | `rttys.enabled` | boolean | Enables [rttys](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty) deployment | `True` |
+| `rttys.internal` | boolean | Whether to use the built-in rttys server | `True` |
+| `rttys.enabled` | boolean | Enable or disable rttys | `True` |
 | `rttys.config.token` | string | Sets default rttys token |  |
 | `kafka.enabled` | boolean | Enables [kafka](https://github.com/bitnami/charts/blob/master/bitnami/kafka/) deployment | `True` |
 | `kafka.fullnameOverride` | string | Overrides Kafka Kubernetes service name so it could be predictable and set in microservices configs | `'kafka'` |

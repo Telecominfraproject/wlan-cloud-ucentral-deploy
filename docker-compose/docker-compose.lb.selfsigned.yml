@@ -33,7 +33,6 @@ services:
       - owgw.env
     depends_on:
       - kafka
-      - rttys
     restart: unless-stopped
     volumes:
       - owgw_data:${OWGW_ROOT}/persist
@@ -139,19 +138,6 @@ services:
       - owanalytics_data:${OWANALYTICS_ROOT}
       - ./certs:/${OWANALYTICS_ROOT}/certs
 
-
-  rttys:
-    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/rttys:${RTTYS_TAG}"
-    networks:
-      openwifi:
-        aliases:
-          - ${INTERNAL_RTTYS_HOSTNAME}
-    restart: unless-stopped
-    volumes:
-      - "./certs/restapi-cert.pem:/etc/rttys/restapi-cert.pem"
-      - "./certs/restapi-key.pem:/etc/rttys/restapi-key.pem"
-      - "./rttys/rttys.conf:/rttys/rttys.conf"
-
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
     networks:
@@ -186,7 +172,6 @@ services:
       - owfms
       - owprov
       - owprov-ui
-      - rttys
     restart: unless-stopped
     volumes:
       - "./traefik/openwifi_selfsigned.yaml:/etc/traefik/openwifi.yaml"

@@ -46,15 +46,6 @@ owgwui:
 owprovui:
   fullnameOverride: owprovui
 
-# rttys (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty)
-rttys:
-  enabled: true
-
-  fullnameOverride: rttys
-
-  config:
-    token: 96181c567b4d0d98c50f127230068fa8
-
 # kafka (https://github.com/bitnami/charts/blob/master/bitnami/kafka/)
 kafka:
   enabled: true
@@ -176,6 +167,14 @@ haproxy:
         protocol: TCP
         port: 17002
         targetPort: owgwrestint
+      - name: owgwrttys
+        protocol: TCP
+        port: 5912
+        targetPort: owgwrttys
+      - name: owgwrttysview
+        protocol: TCP
+        port: 5913
+        targetPort: owgwrttysview
       # owprov
       - name: owprovrest
         protocol: TCP
@@ -203,19 +202,6 @@ haproxy:
         protocol: TCP
         port: 17009
         targetPort: owanalyticsrint
-      # rttys
-      - name: rttysdev
-        protocol: TCP
-        port: 5912
-        targetPort: rttysdev
-      - name: rttysuser
-        protocol: TCP
-        port: 5913
-        targetPort: rttysuser
-      - name: rttysweb
-        protocol: TCP
-        port: 5914
-        targetPort: rttysweb
 
   containerPorts:
     # healthcheck
@@ -235,6 +221,10 @@ haproxy:
       containerPort: 16003
     - name: owgwrestint
       containerPort: 17002
+    - name: owgwrttys
+      containerPort: 5912
+    - name: owgwrttysview
+      containerPort: 5913
     # owprov
     - name: owprovrest
       containerPort: 16005
@@ -250,13 +240,6 @@ haproxy:
       containerPort: 16009
     - name: owanalyticsrint
       containerPort: 17009
-    # rttys
-    - name: rttysdev
-      containerPort: 5912
-    - name: rttysuser
-      containerPort: 5913
-    - name: rttysweb
-      containerPort: 5914
 
   configuration: |
     global
@@ -329,6 +312,22 @@ haproxy:
       mode tcp
       server svc_owgw_rest_internal owgw-owgw:17002
 
+    frontend front_owgw_rttys
+      bind :5912
+      mode tcp
+      default_backend back_owgw_rttys
+    backend back_owgw_rttys
+      mode tcp
+      server svc_owgw_rttys owgw-owgw:5912
+
+    frontend front_owgw_rttys_view
+      bind :5913
+      mode tcp
+      default_backend back_owgw_rttys_view
+    backend back_owgw_rttys_view
+      mode tcp
+      server svc_owgw_rttys_view owgw-owgw:5913
+
     # owprov
     frontend front_owprov_rest
       bind :16005
@@ -379,31 +378,6 @@ haproxy:
     backend back_owanalytics_rest_internal
       mode tcp
       server svc_owanalytics_rest_internal owanalytics-owanalytics:17009
-
-    # rttys
-    frontend front_rttys_dev
-      bind :5912
-      mode tcp
-      default_backend back_rttys_dev
-    backend back_rttys_dev
-      mode tcp
-      server svc_rttys_dev rttys-rttys:5912
-
-    frontend front_rttys_user
-      bind :5913
-      mode tcp
-      default_backend back_rttys_user
-    backend back_rttys_user
-      mode tcp
-      server svc_rttys_user rttys-rttys:5913
-
-    frontend front_rttys_web
-      bind :5914
-      mode tcp
-      default_backend back_rttys_web
-    backend back_rttys_web
-      mode tcp
-      server svc_rttys_web rttys-rttys:5914
 
 # Cert-manager RESTAPI certs
 restapiCerts:
