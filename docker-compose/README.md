@@ -58,22 +58,27 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 ### owsec.env
 | Variable                                 | Description                                                                         |
 | ---------------------------------------- | ----------------------------------------------------------------------------------- |
-| `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWSec REST API URL, for example `https://owsec.example.com:16001`. |
+| `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
 | `SYSTEM_URI_UI`                          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.            |
 ### owfms.env
 | Variable                                 | Description                                                                         |
 | ---------------------------------------- | ----------------------------------------------------------------------------------- |
-| `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWFms REST API URL, for example `https://owfms.example.com:16004`. |
+| `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWFms URL, for example `https://owfms.example.com:16004`. |
 | `SYSTEM_URI_UI`                          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.            |
 ### owprov.env
 | Variable                                 | Description                                                                           |
 | ---------------------------------------- | ------------------------------------------------------------------------------------- |
-| `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWProv REST API URL, for example `https://owprov.example.com:16005`. |
+| `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWProv URL, for example `https://owprov.example.com:16005`. |
 | `SYSTEM_URI_UI`                          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.              |
 ### owprov-ui.env
 | Variable                  | Description                                                                |
 | ------------------------- | -------------------------------------------------------------------------- |
 | `DEFAULT_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
+### owanalytics.env
+| Variable                                 | Description                                                                            |
+| ---------------------------------------- | -------------------------------------------------------------------------------------- |
+| `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWAnalytics URL, for example `https://owanalytics.example.com:16009`. |
+| `SYSTEM_URI_UI`                          | Set this to your OWProv-UI URL, for example `https://owprov-ui.example.com`.           |
 3. Spin up the deployment with `docker-compose up -d`.
 4. Check if the containers are up and running with `docker-compose ps`.
 5. Login to the UI and and follow the instructions to change your default password.
@@ -112,6 +117,14 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `STORAGE_TYPE_POSTGRESQL_USERNAME` | `owprov`          |
 | `STORAGE_TYPE_POSTGRESQL_PASSWORD` | `owprov`          |
 | `STORAGE_TYPE_POSTGRESQL_DATABASE` | `owprov`          |
+### owanalytics.env
+| Variable                           | Value/Description |
+| ---------------------------------- | ----------------- |
+| `STORAGE_TYPE`                     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_HOST`     | `postgresql`      |
+| `STORAGE_TYPE_POSTGRESQL_USERNAME` | `owanalytics`     |
+| `STORAGE_TYPE_POSTGRESQL_PASSWORD` | `owanalytics`     |
+| `STORAGE_TYPE_POSTGRESQL_DATABASE` | `owanalytics`     |
 ### postgresql.env
 | Variable                  | Value         |
 | --------------------------| ------------- |
