@@ -19,6 +19,7 @@ jobs:
       run: |
         echo ::set-output name=branch::$(echo ${GITHUB_BASE_REF##*/})
         echo ::set-output name=owgw_branch::$(echo ${GITHUB_BASE_REF##*/} | sed 's/main/master/g')
+        echo ::set-output name=pr_branch::$(echo ${GITHUB_REF_NAME})
 
     - name: Checkout actions repo
       uses: actions/checkout@v2
@@ -31,10 +32,11 @@ jobs:
       env:
         BASE_BRANCH: ${{ steps.get_base_branch.outputs.branch }}
         OWGW_BASE_BRANCH: ${{ steps.get_base_branch.outputs.owgw_branch }}
+        PR_BRANCH: ${{ steps.get_base_branch.outputs.pr_branch }}
       with:
         owner: Telecominfraproject
         repo: wlan-testing
         workflow: ow_docker-compose.yml
         token: ${{ secrets.WLAN_TESTING_PAT }}
         ref: master
-        inputs: '{"microservice": "all", "deployment_version": "${{ github.sha }}", "owgw_version": "${{ env.OWGW_BASE_BRANCH }}", "owgwui_version": "${{ env.BASE_BRANCH }}", "owsec_version": "${{ env.BASE_BRANCH }}", "owfms_version": "${{ env.BASE_BRANCH }}", "owprov_version": "${{ env.BASE_BRANCH }}", "owprovui_version": "${{ env.BASE_BRANCH }}"}'
+        inputs: '{"microservice": "all", "deployment_version": "${{ env.PR_BRANCH }}", "owgw_version": "${{ env.OWGW_BASE_BRANCH }}", "owgwui_version": "${{ env.BASE_BRANCH }}", "owsec_version": "${{ env.BASE_BRANCH }}", "owfms_version": "${{ env.BASE_BRANCH }}", "owprov_version": "${{ env.BASE_BRANCH }}", "owprovui_version": "${{ env.BASE_BRANCH }}"}'
