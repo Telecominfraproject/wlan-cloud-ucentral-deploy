@@ -49,7 +49,7 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `FILEUPLOADER_HOST_NAME`                 | Set this to your OWGW fileupload hostname, for example `owgw.example.com`.          |
 | `FILEUPLOADER_URI`                       | Set this to your OWGW fileupload URL, for example `https://owgw.example.com:16003`. |
 | `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWGW REST API URL, for example `https://owgw.example.com:16002`.   |
-| `RTTY_SERVER`                            | Set this to your RTTY server hostname, for example `rttys.example.com`.             |
+| `RTTY_SERVER`                            | Set this to your OWGW RTTYS hostname, for example `owgw.example.com`.               |
 | `SYSTEM_URI_UI`                          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.            |
 ### owgw-ui.env
 | Variable                  | Description                                                                |
@@ -150,7 +150,6 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 | `OWPROV_HOSTNAME`         | Set this to your OWProv hostname, for example `owprov.example.com`.           |
 | `OWPROVUI_HOSTNAME`       | Set this to your OWProv-UI hostname, for example `owprov-ui.example.com`.     |
 | `OWANALYTICS_HOSTNAME`    | Set this to your OWAnalytics hostname, for example `owanalytics.example.com`. |
-| `RTTYS_HOSTNAME`          | Set this to your RTTYS hostname, for example `rttys.example.com`.             |
 
 ### owgw.env
 | Variable                 | Description                                                                         |
@@ -158,7 +157,7 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 | `FILEUPLOADER_HOST_NAME` | Set this to your OWGW fileupload hostname, for example `owgw.example.com`.          |
 | `FILEUPLOADER_URI`       | Set this to your OWGW fileupload URL, for example `https://owgw.example.com:16003`. |
 | `SYSTEM_URI_PUBLIC`      | Set this to your OWGW REST API URL, for example `https://owgw.example.com:16002`.   |
-| `RTTY_SERVER`            | Set this to your public RTTY server hostname, for example `rttys.example.com`.      |
+| `RTTY_SERVER`            | Set this to your OWGW RTTYS hostname, for example `owgw.example.com`.               |
 | `SYSTEM_URI_UI`          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.            |
 
 ### owgw-ui.env
