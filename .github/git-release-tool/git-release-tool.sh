@@ -99,8 +99,9 @@ modify_deploy_repo_values() {
     sed "s/$REPO_DOCKER_COMPOSE_NAME=.*/$REPO_DOCKER_COMPOSE_NAME=$SERVICE_TAG/" -i docker-compose/.env.selfsigned
     sed "/${REPO_NAME_WITHOUT_SUFFIX#*/}@/s/ref=.*/ref=$SERVICE_TAG\"/g" -i chart/Chart.yaml
   done
-  if [[ "$(git diff | wc -l)" -eq "0" ]]; then
-    log_info "No changes in microservices found, new release is not required"
+  LATEST_RELEASE_TAG=$(git tag | grep $CURRENT_RELEASE_VERSION | tail -1)
+  if [[ "$(git diff | wc -l)" -eq "0" ]] && [[ "$(git diff $LATEST_RELEASE_TAG)" -eq "0" ]]; then
+    log_info "No changes in microservices and since the latest tag are found, new release is not required"
   else
     sed 's/^version: .*/version: '${NEW_RELEASE_TAG#v}'/' chart/Chart.yaml -i
   fi
