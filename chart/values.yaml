@@ -212,6 +212,15 @@ haproxy:
         protocol: TCP
         port: 17009
         targetPort: owanalyticsrint
+      # owsub
+      - name: owsubrest
+        protocol: TCP
+        port: 16006
+        targetPort: owsubrest
+      - name: owsubrint
+        protocol: TCP
+        port: 17006
+        targetPort: owsubrint
 
   containerPorts:
     # healthcheck
@@ -250,6 +259,11 @@ haproxy:
       containerPort: 16009
     - name: owanalyticsrint
       containerPort: 17009
+    # owsub
+    - name: owsubrest
+      containerPort: 16006
+    - name: owsubrint
+      containerPort: 17006
 
   configuration: |
     global
@@ -389,6 +403,23 @@ haproxy:
       mode tcp
       server svc_owanalytics_rest_internal owanalytics-owanalytics:17009
 
+    # owsub
+    frontend front_owsub_rest
+      bind :16009
+      mode tcp
+      default_backend back_owsub_rest
+    backend back_owsub_rest
+      mode tcp
+      server svc_owsub_rest owsub-owsub:16006
+
+    frontend front_owsub_rest_internal
+      bind :17006
+      mode tcp
+      default_backend back_owsub_rest_internal
+    backend back_owsub_rest_internal
+      mode tcp
+      server svc_owsub_rest_internal owsub-owsub:17006
+
 # Cert-manager RESTAPI certs
 restapiCerts:
   enabled: false
@@ -400,5 +431,6 @@ restapiCerts:
     - owprov-owprov
     - owls-owls
     - owanalytics-owanalytics
+    - owsub-owsub
 
   clusterDomain: cluster.local
