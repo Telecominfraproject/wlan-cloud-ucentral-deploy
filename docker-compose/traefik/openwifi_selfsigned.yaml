@@ -76,6 +76,10 @@ tcp:
       loadBalancer:
         servers:
           - address: "owanalytics.wlan.local:16009"
+    owsub-restapi:
+      loadBalancer:
+        servers:
+          - address: "owsub.wlan.local:16006"
 
   routers:
     owgw-websocket:
@@ -129,6 +133,12 @@ tcp:
     owanalytics-restapi:
       entryPoints: "owanalyticsrestapi"
       service: "owanalytics-restapi"
+      rule: "HostSNI(`*`)"
+      tls:
+        passthrough: true
+    owsub-restapi:
+      entryPoints: "owpsubestapi"
+      service: "owsub-restapi"
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true

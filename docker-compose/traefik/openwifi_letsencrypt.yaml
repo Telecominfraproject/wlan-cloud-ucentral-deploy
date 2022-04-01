@@ -32,6 +32,10 @@ http:
       loadBalancer:
         servers:
           - url: "https://owanalytics.wlan.local:16009/"
+    owsub-restapi:
+      loadBalancer:
+        servers:
+          - url: "https://owsub.wlan.local:16006/"
     owgw-rttys-view:
       loadBalancer:
         servers:
@@ -98,6 +102,12 @@ http:
       entryPoints: "owanalyticsrestapi"
       service: "owanalytics-restapi"
       rule: "Host(`{{env "OWANALYTICS_HOSTNAME"}}`)"
+      tls:
+        certResolver: "openwifi"
+    owsub-restapi:
+      entryPoints: "owsubrestapi"
+      service: "owsub-restapi"
+      rule: "Host(`{{env "OWSUB_HOSTNAME"}}`)"
       tls:
         certResolver: "openwifi"
 
