@@ -28,7 +28,6 @@ dependencies:
 - name: owsub
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-userportal@helm?ref=main"
   version: 0.1.0
-  condition: owsub.enabled
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 13.0.2

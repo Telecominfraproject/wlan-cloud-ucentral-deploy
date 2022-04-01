@@ -48,8 +48,6 @@ owprovui:
 
 # OpenWIFI Subscription (https://github.com/Telecominfraproject/wlan-cloud-userportal/)
 owsub:
-  enabled: false
-
   fullnameOverride: owsub
 
   configProperties:
