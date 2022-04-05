@@ -72,9 +72,9 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWProv URL, for example `https://owprov.example.com:16005`. |
 | `SYSTEM_URI_UI`                          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.              |
 ### owprov-ui.env
-| Variable                  | Description                                                                |
-| ------------------------- | -------------------------------------------------------------------------- |
-| `DEFAULT_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
+| Variable                    | Description                                                                |
+| --------------------------- | -------------------------------------------------------------------------- |
+| `REACT_APP_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
 ### owanalytics.env
 | Variable                                 | Description                                                                            |
 | ---------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -200,9 +200,9 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 | `SYSTEM_URI_PUBLIC`  | Set this to your OWProv URL, for example `https://owprov.example.com:16005`. |
 | `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.     |
 ### owprov-ui.env
-| Variable                  | Description                                                                |
-| ------------------------- | -------------------------------------------------------------------------- |
-| `DEFAULT_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
+| Variable                    | Description                                                                |
+| --------------------------- | -------------------------------------------------------------------------- |
+| `REACT_APP_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
 ### owanalytics.env
 | Variable             | Description                                                                            |
 | -------------------- | -------------------------------------------------------------------------------------- |
