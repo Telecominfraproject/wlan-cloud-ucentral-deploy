@@ -23,7 +23,7 @@ On the startup of owsec directories for wwwassets and mailer templates are creat
 2. Add an entry for `openwifi.wlan.local` in your hosts file which points to `127.0.0.1` or whatever the IP of the host running the deployment is.
 3. Spin up the deployment with `docker-compose up -d`.
 4. Check if the containers are up and running with `docker-compose ps`.
-5. Add SSL certificate exceptions in your browser by visiting https://openwifi.wlan.local:16001, https://openwifi.wlan.local:16002, https://openwifi.wlan.local:16004 and https://openwifi.wlan.local:16005.
+5. Add SSL certificate exceptions in your browser by visiting https://openwifi.wlan.local:16001, https://openwifi.wlan.local:16002, https://openwifi.wlan.local:16004, https://openwifi.wlan.local:16005, https://openwifi.wlan.local:16006 and https://openwifi.wlan.local:16009.
 6. Connect to your AP via SSH and add a static hosts entry in `/etc/hosts` for `openwifi.wlan.local`. This should point to the address of the host the Compose deployment runs on.
 7. Login to the UI `https://openwifi.wlan.local` and follow the instructions to change your default password.
 8. To use the curl test scripts included in the microservice repositories set the following environment variables:
