@@ -16,6 +16,7 @@ spec:
   secretName: ow-wildcard-tls
   commonName: {{ .Release.Namespace }}.svc.{{ .Values.restapiCerts.clusterDomain }}
   isCA: true
+  duration: 87600h
   usages:
     - server auth
     - client auth
