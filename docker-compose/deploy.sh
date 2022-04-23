@@ -84,6 +84,20 @@ git clone --branch $DEPLOY_VERSION https://github.com/Telecominfraproject/wlan-c
 mv -f /wlan-cloud-ucentral-deploy-tmp/* /wlan-cloud-ucentral-deploy/ && rm -r wlan-cloud-ucentral-deploy-tmp
 cd wlan-cloud-ucentral-deploy/docker-compose
 
+# Search and replace image version tags if set
+if [[ ! -z "$OWGW_VERSION" ]]; then
+  sed -i "s~.*OWGW_TAG=.*~OWGW_TAG=$OWGW_VERSION~" .env
+fi
+if [[ ! -z "$OWSEC_VERSION" ]]; then
+  sed -i "s~.*OWSEC_TAG=.*~OWSEC_TAG=$OWSEC_VERSION~" .env
+fi
+if [[ ! -z "$OWFMS_VERSION" ]]; then
+  sed -i "s~.*OWFMS_TAG=.*~OWFMS_TAG=$OWFMS_VERSION~" .env
+fi
+if [[ ! -z "$OWPROV_VERSION" ]]; then
+  sed -i "s~.*OWPROV_TAG=.*~OWPROV_TAG=$OWPROV_VERSION~" .env
+fi
+
 # Search and replace variable values in env files
 sed -i "s~\(^INTERNAL_OWGW_HOSTNAME=\).*~\1$INTERNAL_OWGW_HOSTNAME~" .env
 sed -i "s~\(^INTERNAL_OWSEC_HOSTNAME=\).*~\1$INTERNAL_OWSEC_HOSTNAME~" .env
