@@ -8,10 +8,10 @@ owgw:
 
   resources:
     requests:
-      cpu: 100m
+      cpu: 1000m
       memory: 100Mi
     limits:
-      cpu: 100m
+      cpu: 1000m
       memory: 200Mi
 
   securityContext:
@@ -227,10 +227,10 @@ owfms:
   resources:
     requests:
       cpu: 10m
-      memory: 30Mi
-    limits:
-      cpu: 50m
       memory: 80Mi
+    limits:
+      cpu: 100m
+      memory: 160Mi
 
   podAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
