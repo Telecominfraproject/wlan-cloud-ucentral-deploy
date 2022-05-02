@@ -189,6 +189,12 @@ All services have 2 REST API endpoints - private and public one. Private endpoin
 
 You may see example values to enable this feature in [values.restapi-certmanager-certs.yaml](./feature-values/values.restapi-certmanager-certs.yaml).
 
+### Unsecure REST API endpoints
+
+If you want, you may use configuration property `openwifi.security.restapi.disable=true` in order to disable TLS requirements on REST API endpoints which basically only requires OWGW Websocket TLS certificate in order to deploy the whole environment. If you will pass certificates into the container they will be ignored.
+
+You may see example values to enable this feature in [values.restapi-disable-tls.yaml](./feature-values/values.restapi-disable-tls.yaml).
+
 ## Environment specific values
 
 This repository contains values files that may be used in the same manner as feature values above to deploy to specific runtime envionemnts (including different cloud deployments).

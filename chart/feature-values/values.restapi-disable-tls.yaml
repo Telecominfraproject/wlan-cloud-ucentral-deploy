@@ -1,0 +1,30 @@
+# NOTE: using of this values files will require you to use http schema in 'openwifi.system.uri.public' configuration properties (i.e. "openwifi.system.uri.public=http://owgw.openwifi.local:16002")
+owgw:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.private: http://owsec-owsec:17002
+
+owsec:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.private: http://owsec-owsec:17001
+
+owfms:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.private: http://owsec-owsec:17004
+
+owprov:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.private: http://owsec-owsec:17005
+
+owanalytics:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.private: http://owsec-owsec:17009
+
+owsub:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.private: http://owsec-owsec:17006
