@@ -9,6 +9,10 @@ owgw:
     rtty.token: TOFILL # TODO change rttys token to the same used in rttys below
 
 owgwui:
+  services:
+    owprovui:
+      type: NodePort
+
   ingresses:
     default:
       enabled: true
@@ -55,6 +59,10 @@ owprov:
     openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
 
 owprovui:
+  services:
+    owprovui:
+      type: NodePort
+
   ingresses:
     default:
       enabled: true
@@ -72,7 +80,7 @@ owprovui:
         servicePort: http
 
   public_env_variables:
-    DEFAULT_UCENTRALSEC_URL: https://sec.cicd.lab.wlan.tip.build:16001 # TODO change to OWSEC RESTAPI url
+    REACT_APP_UCENTRALSEC_URL: https://sec.cicd.lab.wlan.tip.build:16001 # TODO change to OWSEC RESTAPI url
 
 rttys:
   config:
