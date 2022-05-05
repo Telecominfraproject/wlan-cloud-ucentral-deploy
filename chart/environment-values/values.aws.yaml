@@ -6,7 +6,6 @@ owgw:
     openwifi.system.uri.private: https://gw.cicd.lab.wlan.tip.build:17002
     openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
     rtty.server: rtty.cicd.lab.wlan.tip.build
-    rtty.token: TOFILL # TODO change rttys token to the same used in rttys below
 
 owgwui:
   services:
@@ -82,9 +81,17 @@ owprovui:
   public_env_variables:
     REACT_APP_UCENTRALSEC_URL: https://sec.cicd.lab.wlan.tip.build:16001 # TODO change to OWSEC RESTAPI url
 
-rttys:
-  config:
-    token: TOFILL # TODO change rttys token and set it in OWGW section above
+owsub:
+  configProperties: # TODO change FQDNs
+    openwifi.system.uri.public: https://sub.cicd.lab.wlan.tip.build:16007
+    openwifi.system.uri.private: https://sub.cicd.lab.wlan.tip.build:17007
+    openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
+
+owanalytics:
+  configProperties: # TODO change FQDNs
+    openwifi.system.uri.public: https://analytics.cicd.lab.wlan.tip.build:16009
+    openwifi.system.uri.private: https://analytics.cicd.lab.wlan.tip.build:17009
+    openwifi.system.uri.ui: https://webui.cicd.lab.wlan.tip.build
 
 haproxy:
   service:
@@ -93,7 +100,7 @@ haproxy:
       service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
       service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285 # TODO change certificate
-      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,16001,17001,5912,5913"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,16001,17001,5912,5913,16009,16007"
       service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
-      external-dns.alpha.kubernetes.io/hostname: "gw.cicd.lab.wlan.tip.build,sec.cicd.lab.wlan.tip.build,fms.cicd.lab.wlan.tip.build,prov.cicd.lab.wlan.tip.build,rtty.cicd.lab.wlan.tip.build"
+      external-dns.alpha.kubernetes.io/hostname: "gw.cicd.lab.wlan.tip.build,sec.cicd.lab.wlan.tip.build,fms.cicd.lab.wlan.tip.build,prov.cicd.lab.wlan.tip.build,rtty.cicd.lab.wlan.tip.build,sub.cicd.lab.wlan.tip.build,analytics.cicd.lab.wlan.tip.build" # TODO change FQDNs
 
