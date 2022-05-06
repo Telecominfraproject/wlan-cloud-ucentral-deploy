@@ -1,0 +1,29 @@
+# NOTE: using of this values files will require you to use http schema in 'openwifi.system.uri.private' (and maybe 'openwifi.system.uri.public') configuration properties (i.e. http://owgw-owgw:17002)
+owgw:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+
+owsec:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+
+owfms:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+
+owprov:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+
+owanalytics:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+
+owsub:
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+
+haproxy:
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
