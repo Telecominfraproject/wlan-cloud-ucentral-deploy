@@ -37,8 +37,10 @@ usage () {
   echo "- EXTRA_VALUES - extra values that should be passed to Helm deployment separated by comma (,)"
   echo "- DEVICE_CERT_LOCATION - path to certificate in PEM format that will be used for load simulator";
   echo "- DEVICE_KEY_LOCATION - path to private key in PEM format that will be used for load simulator";
-  echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services"
-  echo "- INTERNAL_RESTAPI_ENDPOINT_SCHEMA - what schema to use for internal RESTAPI endpoints (https by default)"
+  echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services";
+  echo "- INTERNAL_RESTAPI_ENDPOINT_SCHEMA - what schema to use for internal RESTAPI endpoints (https by default)";
+  echo "- MAILER_USERNAME - SMTP username used for OWSEC mailer";
+  echo "- MAILER_PASSWORD - SMTP password used for OWSEC mailer (only if both MAILER_PASSWORD and MAILER_USERNAME are set, mailer will be enabled)";
 }
 
 # Global variables
@@ -87,6 +89,8 @@ fi
 [ -z ${DEVICE_CERT_LOCATION+x} ] && echo "DEVICE_CERT_LOCATION is unset, setting it to CERT_LOCATION" && export DEVICE_CERT_LOCATION=$CERT_LOCATION
 [ -z ${DEVICE_KEY_LOCATION+x} ] && echo "DEVICE_KEY_LOCATION is unset, setting it to KEY_LOCATION" && export DEVICE_KEY_LOCATION=$KEY_LOCATION
 [ -z ${INTERNAL_RESTAPI_ENDPOINT_SCHEMA+x} ] && echo "INTERNAL_RESTAPI_ENDPOINT_SCHEMA is unset, setting it to 'https'" && export INTERNAL_RESTAPI_ENDPOINT_SCHEMA=https
+export MAILER_ENABLED="false"
+[ ! -z ${MAILER_USERNAME+x} ] && [ ! -z ${MAILER_PASSWORD+x} ] && echo "MAILER_USERNAME and MAILER_PASSWORD are set, mailer will be enabled" && export MAILER_ENABLED="true"
 
 # Transform some environment variables
 export OWGW_VERSION_TAG=$(echo ${OWGW_VERSION} | tr '/' '-')
@@ -171,6 +175,10 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owsec.configProperties."openwifi\.system\.uri\.public"=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owsec.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsec-owsec:17001 \
   --set owsec.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owsec.configProperties."mailer\.sender"=sec-${NAMESPACE}@cicd.lab.wlan.tip.build \
+  --set owsec.configProperties."mailer\.enabled"=$MAILER_ENABLED \
+  --set owsec.configProperties."mailer\.username"=$MAILER_USERNAME \
+  --set owsec.configProperties."mailer\.password"=$MAILER_PASSWORD \
   --set owfms.configProperties."s3\.secret"=${OWFMS_S3_SECRET} \
   --set owfms.configProperties."s3\.key"=${OWFMS_S3_KEY} \
   --set owfms.services.owfms.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=fms-${NAMESPACE}.cicd.lab.wlan.tip.build \
