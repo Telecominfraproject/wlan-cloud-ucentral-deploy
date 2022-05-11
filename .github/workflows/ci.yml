@@ -90,7 +90,7 @@ jobs:
   trigger-docker-compose-upgrade-testing:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
-    needs: env
+    needs: envs
     steps:
     - name: Checkout actions repo
       uses: actions/checkout@v2
