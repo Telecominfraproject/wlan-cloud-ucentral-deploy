@@ -1,6 +1,10 @@
 name: CI
 
 on:
+  push:
+    tags:
+      - 'v*'
+      - '!v*-RC*'
   pull_request:
     branches:
       - main
@@ -12,19 +16,30 @@ defaults:
 jobs:
   envs:
     name: Setup environment variables for further tests
-    if: startsWith(github.ref, 'refs/pull/')
+    if: startsWith(github.ref, 'refs/pull/') || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     outputs:
-      branch: ${{ steps.get_base_branch.outputs.branch }}
-      owgw_branch: ${{ steps.get_base_branch.outputs.owgw_branch }}
-      pr_branch: ${{ steps.get_base_branch.outputs.pr_branch }}
+      pr_branch: ${{ steps.get_branch_names.outputs.pr_branch }}
+      deployment_upgrade_tag: ${{ steps.get_deployment_upgrade_tag.outputs.tag }}
+      deployment_tag: ${{ steps.get_deployment_tag.outputs.tag }}
     steps:
-    - name: Get base branch name and set as output
-      id: get_base_branch
+    - name: Get branch names and set as outputs
+      id: get_branch_names
+      if: startsWith(github.ref, 'refs/pull/')
       run: |
-        echo ::set-output name=branch::$(echo ${GITHUB_BASE_REF##*/})
-        echo ::set-output name=owgw_branch::$(echo ${GITHUB_BASE_REF##*/} | sed 's/main/master/g')
         echo ::set-output name=pr_branch::$(echo ${GITHUB_HEAD_REF})
+
+    - name: Get created deployment tag and set as output
+      id: get_deployment_upgrade_tag
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        echo ::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})
+
+    - name: Get previous deployment tag
+      id: get_deployment_tag
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        echo ::set-output name=tag::$(git tag | grep -v RC | tail -2 | head -1)
 
   trigger-docker-compose-testing:
     if: startsWith(github.ref, 'refs/pull/')
@@ -40,8 +55,6 @@ jobs:
     - name: Trigger testing of OpenWifi Docker Compose deployment and wait for result
       uses: ./github/composite-actions/trigger-workflow-and-wait
       env:
-        BASE_BRANCH: ${{ needs.envs.outputs.branch }}
-        OWGW_BASE_BRANCH: ${{ needs.envs.outputs.owgw_branch }}
         PR_BRANCH: ${{ needs.envs.outputs.pr_branch }}
       with:
         owner: Telecominfraproject
@@ -49,7 +62,7 @@ jobs:
         workflow: ow_docker-compose.yml
         token: ${{ secrets.WLAN_TESTING_PAT }}
         ref: master
-        inputs: '{"deployment_version": "${{ env.PR_BRANCH }}", "owgw_version": "${{ env.OWGW_BASE_BRANCH }}", "owsec_version": "${{ env.BASE_BRANCH }}", "owfms_version": "${{ env.BASE_BRANCH }}", "owprov_version": "${{ env.BASE_BRANCH }}", "owanalytics_version": "${{ env.BASE_BRANCH }}", "owsub_version": "${{ env.BASE_BRANCH }}", "microservice": "all"}'
+        inputs: '{"deployment_version": "${{ env.PR_BRANCH }}", "microservice": "all"}'
 
   trigger-k8s-testing:
     if: startsWith(github.ref, 'refs/pull/')
@@ -65,8 +78,6 @@ jobs:
     - name: Trigger testing of OpenWifi Docker Compose deployment and wait for result
       uses: ./github/composite-actions/trigger-workflow-and-wait
       env:
-        BASE_BRANCH: ${{ needs.envs.outputs.branch }}
-        OWGW_BASE_BRANCH: ${{ needs.envs.outputs.owgw_branch }}
         PR_BRANCH: ${{ needs.envs.outputs.pr_branch }}
       with:
         owner: Telecominfraproject
@@ -74,4 +85,28 @@ jobs:
         workflow: ow_k8s.yml
         token: ${{ secrets.WLAN_TESTING_PAT }}
         ref: master
-        inputs: '{"deployment_version": "${{ env.PR_BRANCH }}", "owgw_version": "${{ env.OWGW_BASE_BRANCH }}", "owsec_version": "${{ env.BASE_BRANCH }}", "owfms_version": "${{ env.BASE_BRANCH }}", "owprov_version": "${{ env.BASE_BRANCH }}", "owanalytics_version": "${{ env.BASE_BRANCH }}", "owsub_version": "${{ env.BASE_BRANCH }}", "microservice": "all"}'
+        inputs: '{"deployment_version": "${{ env.PR_BRANCH }}", "microservice": "all"}'
+
+  trigger-docker-compose-upgrade-testing:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs: env
+    steps:
+    - name: Checkout actions repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/.github
+        path: github
+
+    - name: Trigger testing of OpenWifi Docker Compose deployment upgrade and wait for result
+      uses: ./github/composite-actions/trigger-workflow-and-wait
+      env:
+        DEPLOYMENT_TAG: ${{ needs.envs.outputs.deployment_tag }}
+        DEPLOYMENT_UPGRADE_TAG: ${{ needs.envs.outputs.deployment_upgrade_tag }}
+      with:
+        owner: Telecominfraproject
+        repo: wlan-testing
+        workflow: ow_docker-compose-upgrade-test.yml
+        token: ${{ secrets.WLAN_TESTING_PAT }}
+        ref: master
+        inputs: '{"deployment_version": "${{ env.DEPLOYMENT_TAG }}", "deployment_upgrade_version": "${{ env.DEPLOYMENT_UPGRADE_TAG }}"}'
