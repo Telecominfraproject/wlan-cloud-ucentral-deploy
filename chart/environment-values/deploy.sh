@@ -39,6 +39,7 @@ usage () {
   echo "- DEVICE_KEY_LOCATION - path to private key in PEM format that will be used for load simulator" >&2;
   echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services" >&2;
   echo "- INTERNAL_RESTAPI_ENDPOINT_SCHEMA - what schema to use for internal RESTAPI endpoints (https by default)" >&2;
+  echo "- IPTOCOUNTRY_IPINFO_TOKEN - token that should be set for IPInfo support (owgw/owprov iptocountry.ipinfo.token properties), ommited if not passed" >&2;
   echo "- MAILER_USERNAME - SMTP username used for OWSEC mailer" >&2;
   echo "- MAILER_PASSWORD - SMTP password used for OWSEC mailer (only if both MAILER_PASSWORD and MAILER_USERNAME are set, mailer will be enabled)" >&2;
 }
@@ -168,6 +169,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owgw.configProperties."openwifi\.system\.uri\.public"=https://gw-${NAMESPACE}.cicd.lab.wlan.tip.build:16002 \
   --set owgw.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owgw-owgw:17002 \
   --set owgw.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owgw.configProperties."iptocountry\.ipinfo\.token"="${IPTOCOUNTRY_IPINFO_TOKEN}" \
   --set owgw.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owsec.configProperties."authentication\.default\.username"=${OWGW_AUTH_USERNAME} \
   --set owsec.configProperties."authentication\.default\.password"=${OWGW_AUTH_PASSWORD} \
@@ -193,6 +195,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owprov.configProperties."openwifi\.system\.uri\.public"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:16005 \
   --set owprov.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owprov-owprov:17005 \
   --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owprov.configProperties."iptocountry\.ipinfo\.token"="${IPTOCOUNTRY_IPINFO_TOKEN}" \
   --set owprov.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
