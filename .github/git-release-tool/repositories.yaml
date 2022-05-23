@@ -18,9 +18,9 @@ repositories:
   - name: owprov
     url: https://github.com/Telecominfraproject/wlan-cloud-owprov.git
     docker_compose_name: OWPROV_TAG
-#  - name: owanalytics
-#    url: https://github.com/Telecominfraproject/wlan-cloud-analytics.git
-#    docker_compose_name: OWANALYTICS_TAG
-#  - name: owsub
-#    url: https://github.com/Telecominfraproject/wlan-cloud-userportal.git
-#    docker_compose_name: OWSUB_TAG
+  - name: owanalytics
+    url: https://github.com/Telecominfraproject/wlan-cloud-analytics.git
+    docker_compose_name: OWANALYTICS_TAG
+  - name: owsub
+    url: https://github.com/Telecominfraproject/wlan-cloud-userportal.git
+    docker_compose_name: OWSUB_TAG
