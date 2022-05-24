@@ -26,13 +26,9 @@ usage () {
   echo;
 #  echo "- OWSEC_SYSTEM_URI_PRIVATE - private URL to be used for OWSec";
   echo "- OWSEC_SYSTEM_URI_PUBLIC - public URL to be used for OWSec";
-  echo "- OWSEC_AUTHENTICATION_DEFAULT_USERNAME - username to be used for requests to OWSec";
-  echo "- OWSEC_AUTHENTICATION_DEFAULT_PASSWORD - hashed password for OWSec (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
   echo;
 #  echo "- OWFMS_SYSTEM_URI_PRIVATE - private URL to be used for OWFms";
   echo "- OWFMS_SYSTEM_URI_PUBLIC - public URL to be used for OWFms";
-  echo "- OWFMS_S3_SECRET - secret key that is used for OWFms access to firmwares S3 bucket";
-  echo "- OWFMS_S3_KEY - access key that is used for OWFms access to firmwares S3 bucket";
   echo;
 #  echo "- OWPROV_SYSTEM_URI_PRIVATE - private URL to be used for OWProv";
   echo "- OWPROV_SYSTEM_URI_PUBLIC - public URL to be used for OWProv";
@@ -42,6 +38,13 @@ usage () {
   echo;
 #  echo "- OWSUB_SYSTEM_URI_PRIVATE - private URL to be used for OWSub";
   echo "- OWSUB_SYSTEM_URI_PUBLIC - public URL to be used for OWSub";
+  echo;
+  echo "Optional environment variables:"
+  echo "- OWSEC_AUTHENTICATION_DEFAULT_USERNAME - username to be used for requests to OWSec";
+  echo "- OWSEC_AUTHENTICATION_DEFAULT_PASSWORD - hashed password for OWSec (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
+  echo;
+  echo "- OWFMS_S3_SECRET - secret key that is used for OWFms access to firmwares S3 bucket";
+  echo "- OWFMS_S3_KEY - access key that is used for OWFms access to firmwares S3 bucket";
 }
 
 # Check if required environment variables were passed
@@ -62,15 +65,11 @@ usage () {
 [ -z ${OWGW_SYSTEM_URI_PUBLIC+x} ] && echo "OWGW_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
 [ -z ${OWGW_RTTY_SERVER+x} ] && echo "OWGW_RTTY_SERVER is unset" && usage && exit 1
 ## OWSec configuration variables
-[ -z ${OWSEC_AUTHENTICATION_DEFAULT_USERNAME+x} ] && echo "OWSEC_AUTHENTICATION_DEFAULT_USERNAME is unset" && usage && exit 1
-[ -z ${OWSEC_AUTHENTICATION_DEFAULT_PASSWORD+x} ] && echo "OWSEC_AUTHENTICATION_DEFAULT_PASSWORD is unset" && usage && exit 1
 #[ -z ${OWSEC_SYSTEM_URI_PRIVATE+x} ] && echo "OWSEC_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWSEC_SYSTEM_URI_PUBLIC+x} ] && echo "OWSEC_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
 ## OWFms configuration variables
 #[ -z ${OWFMS_SYSTEM_URI_PRIVATE+x} ] && echo "OWFMS_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWFMS_SYSTEM_URI_PUBLIC+x} ] && echo "OWFMS_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
-[ -z ${OWFMS_S3_SECRET+x} ] && echo "OWFMS_S3_SECRET is unset" && usage && exit 1
-[ -z ${OWFMS_S3_KEY+x} ] && echo "OWFMS_S3_KEY is unset" && usage && exit 1
 ## OWProv configuration variables
 #[ -z ${OWPROV_SYSTEM_URI_PRIVATE+x} ] && echo "OWPROV_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWPROV_SYSTEM_URI_PUBLIC+x} ] && echo "OWPROV_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
