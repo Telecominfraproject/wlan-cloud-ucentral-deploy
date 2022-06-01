@@ -40,6 +40,9 @@ usage () {
   echo "- OWSUB_SYSTEM_URI_PUBLIC - public URL to be used for OWSub";
   echo;
   echo "Optional environment variables:"
+  echo "- WEBSOCKET_CERT - Your Digicert-signed websocket certificate"
+  echo "- WEBSOCKET_KEY - The key to your Digicert-signed websocket certificate"
+  echo;
   echo "- OWSEC_AUTHENTICATION_DEFAULT_USERNAME - username to be used for requests to OWSec";
   echo "- OWSEC_AUTHENTICATION_DEFAULT_PASSWORD - hashed password for OWSec (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
   echo;
@@ -108,6 +111,12 @@ fi
 #sed -i "s~\(^INTERNAL_OWANALYTICS_HOSTNAME=\).*~\1$INTERNAL_OWANALYTICS_HOSTNAME~" .env
 #sed -i "s~\(^INTERNAL_OWSUB_HOSTNAME=\).*~\1$INTERNAL_OWSUB_HOSTNAME~" .env
 
+if [[ ! -z "$WEBSOCKET_CERT" ]]; then
+  echo "$WEBSOCKET_CERT" > certs/websocket-cert.pem
+fi
+if [[ ! -z "$WEBSOCKET_KEY" ]]; then
+  echo "$WEBSOCKET_KEY" > certs/websocket-key.pem
+fi
 sed -i "s~.*FILEUPLOADER_HOST_NAME=.*~FILEUPLOADER_HOST_NAME=$OWGW_FILEUPLOADER_HOST_NAME~" owgw.env
 sed -i "s~.*FILEUPLOADER_URI=.*~FILEUPLOADER_URI=$OWGW_FILEUPLOADER_URI~" owgw.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWGW_SYSTEM_URI_PUBLIC~" owgw.env
