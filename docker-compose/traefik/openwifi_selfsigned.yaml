@@ -137,7 +137,7 @@ tcp:
       tls:
         passthrough: true
     owsub-restapi:
-      entryPoints: "owpsubestapi"
+      entryPoints: "owsubrestapi"
       service: "owsub-restapi"
       rule: "HostSNI(`*`)"
       tls:
