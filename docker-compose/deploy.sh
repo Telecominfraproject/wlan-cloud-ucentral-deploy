@@ -48,6 +48,8 @@ usage () {
   echo;
   echo "- OWFMS_S3_SECRET - secret key that is used for OWFms access to firmwares S3 bucket";
   echo "- OWFMS_S3_KEY - access key that is used for OWFms access to firmwares S3 bucket";
+  echo;
+  echo "- TRAEFIK_ACME_EMAIL - Email address used for ACME registration"
 }
 
 # Check if required environment variables were passed
@@ -164,5 +166,9 @@ sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owanalytics.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWSUB_SYSTEM_URI_PUBLIC~" owsub.env
 sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owsub.env
 
+if [[ ! -z "$TRAEFIK_ACME_EMAIL" ]]; then
+  sed -i "s~.*TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL=.*~TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL=$TRAEFIK_ACME_EMAIL~" traefik.env
+fi
+
 # Run the deployment
-docker-compose up -d
+docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt up -d
