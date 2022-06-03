@@ -29,7 +29,7 @@ dependencies:
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-userportal@helm?ref=main"
   version: 0.1.0
 - name: kafka
-  repository: https://charts.bitnami.com/bitnami
+  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
   version: 13.0.2
 - name: owls
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owls@helm?ref=main"
@@ -40,6 +40,6 @@ dependencies:
   version: 0.1.0
   condition: owlsui.enabled
 - name: haproxy
-  repository: https://charts.bitnami.com/bitnami
+  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
   version: 0.2.21
   condition: haproxy.enabled
