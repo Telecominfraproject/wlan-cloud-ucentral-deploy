@@ -196,6 +196,12 @@ services:
       - "./traefik/openwifi_letsencrypt.yaml:/etc/traefik/openwifi.yaml"
       - "./certs/restapi-ca.pem:/certs/restapi-ca.pem"
       - "letsencrypt_certs:/letsencrypt"
+    command:
+      - /bin/sh
+      - -c
+      - |
+      timeout 10m sh -c 'until [[ $(getent hosts $SDKHOSTNAME) ]]; do echo "Waiting until DNS record for $SDKHOSTNAME is resolvable"; sleep 5; done' \
+      && ./entrypoint.sh traefik
     ports:
       - "15002:15002"
       - "16002:16002"
