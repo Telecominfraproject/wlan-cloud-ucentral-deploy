@@ -49,6 +49,7 @@ usage () {
   echo "- OWFMS_S3_SECRET - secret key that is used for OWFms access to firmwares S3 bucket";
   echo "- OWFMS_S3_KEY - access key that is used for OWFms access to firmwares S3 bucket";
   echo;
+  echo "- SDKHOSTNAME - Public hostname which is used for cert generation when using the Letsencrypt deployment method"
   echo "- TRAEFIK_ACME_EMAIL - Email address used for ACME registration"
 }
 
@@ -113,12 +114,17 @@ fi
 #sed -i "s~\(^INTERNAL_OWANALYTICS_HOSTNAME=\).*~\1$INTERNAL_OWANALYTICS_HOSTNAME~" .env
 #sed -i "s~\(^INTERNAL_OWSUB_HOSTNAME=\).*~\1$INTERNAL_OWSUB_HOSTNAME~" .env
 
+if [[ ! -z "$SDKHOSTNAME" ]]; then
+  sed -i "s~.*SDKHOSTNAME=.*~SDKHOSTNAME=$SDKHOSTNAME~" .env.letsencrypt
+fi
+
 if [[ ! -z "$WEBSOCKET_CERT" ]]; then
   echo "$WEBSOCKET_CERT" > certs/websocket-cert.pem
 fi
 if [[ ! -z "$WEBSOCKET_KEY" ]]; then
   echo "$WEBSOCKET_KEY" > certs/websocket-key.pem
 fi
+
 sed -i "s~.*FILEUPLOADER_HOST_NAME=.*~FILEUPLOADER_HOST_NAME=$OWGW_FILEUPLOADER_HOST_NAME~" owgw.env
 sed -i "s~.*FILEUPLOADER_URI=.*~FILEUPLOADER_URI=$OWGW_FILEUPLOADER_URI~" owgw.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWGW_SYSTEM_URI_PUBLIC~" owgw.env
