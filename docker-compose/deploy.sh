@@ -178,7 +178,7 @@ fi
 
 # Run the deployment
 if [[ ! -z "$SDKHOSTNAME" ]]; then
-  timeout 10m bash -c 'until [[ $(getent hosts $SDKHOSTNAME) ]]; do echo "Waiting until DNS record for $SDKHOSTNAME is resolvable"; sleep 5; done'
+  timeout 10m bash -c 'until [[ $(getent hosts $SDKHOSTNAME) ]]; do echo "Waiting until DNS record for $SDKHOSTNAME is resolvable"; sleep 5; done' &
   docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt up -d
 else
   docker-compose up -d
