@@ -7,6 +7,8 @@ volumes:
     driver: local
   kafka_data:
     driver: local
+  mysql_data:
+    driver: local
 
 networks:
   openwifi:
@@ -49,6 +51,8 @@ services:
       - owgw
       - owfms
       - owprov
+      - owanalytics
+      - owsub
     restart: unless-stopped
     volumes:
       - "./owgw-ui/default.conf:/etc/nginx/conf.d/default.conf"
@@ -123,6 +127,8 @@ services:
       - owgw
       - owfms
       - owprov
+      - owanalytics
+      - owsub
     restart: unless-stopped
     volumes:
       - "./owprov-ui/default.conf:/etc/nginx/conf.d/default.conf"
@@ -168,6 +174,26 @@ services:
       - "16006:16006"
       - "16106:16106"
 
+  owrrm:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owrrm:${OWRRM_TAG}"
+    networks:
+      openwifi:
+        aliases:
+          - ${INTERNAL_OWRRM_HOSTNAME}
+    env_file:
+      - owrrm.env
+    depends_on:
+      - owsec
+      - owgw
+      - owfms
+      - owprov
+      - owanalytics
+      - owsub
+      - mysql
+    restart: unless-stopped
+    ports:
+      - "16789:16789"
+
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
     networks:
@@ -188,3 +214,13 @@ services:
       - zookeeper
     volumes:
       - kafka_data:/bitnami/kafka
+
+  mysql:
+    image: "mysql:${MYSQL_TAG}"
+    networks:
+      openwifi:
+    env_file:
+      - mysql.env
+    restart: unless-stopped
+    volumes:
+      - mysql_data:/var/lib/mysql

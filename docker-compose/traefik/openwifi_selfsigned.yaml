@@ -15,6 +15,11 @@ http:
         servers:
           - url: "http://owprov-ui.wlan.local:80/"
 
+    owrrm-openapi:
+      loadBalancer:
+        servers:
+          - url: "http://owrrm.wlan.local:16789/"
+
   routers:
     owgw-ui-http:
       entryPoints: "owgwuihttp"
@@ -35,6 +40,12 @@ http:
     owprov-ui-https:
       entryPoints: "owprovuihttps"
       service: "owprov-ui"
+      rule: "PathPrefix(`/`)"
+      tls: {}
+
+    owrrm-openapi:
+      entryPoints: "owrrmopenapi"
+      service: "owrrm-openapi"
       rule: "PathPrefix(`/`)"
       tls: {}
 
