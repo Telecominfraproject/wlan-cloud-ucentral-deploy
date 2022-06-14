@@ -122,7 +122,7 @@ if [[ ! -z "$WEBSOCKET_CERT" ]]; then
   echo "$WEBSOCKET_CERT" > certs/websocket-cert.pem
 fi
 if [[ ! -z "$WEBSOCKET_KEY" ]]; then
-  echo "$WEBSOCKET_KEY" > certs/websocket-key.pem
+  echo "$WEBSOCKET_KEY" > certs/websocket-key.pem && chmod 600 websocket-key.pem
 fi
 
 sed -i "s~.*FILEUPLOADER_HOST_NAME=.*~FILEUPLOADER_HOST_NAME=$OWGW_FILEUPLOADER_HOST_NAME~" owgw.env
