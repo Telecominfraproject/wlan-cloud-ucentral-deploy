@@ -14,8 +14,8 @@ Be aware that the non-LB deployment exposes the generated config files on the ho
 #### Required password changing on the first startup
 One important action that must be done before using the deployment is changing password for the default user in owsec as described in [owsec docs](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/tree/main#changing-default-password). Please use these docs to find the actions that must be done **after** the deployment in order to start using your deployment.
 ### Ports
-Every OpenWifi service is exposed via a separate port either directly on the host or through Traefik. For an overview of the exposed ports have a look into the deployment specific Docker Compose file. If you use your own certificates or make use of the [Letsencrypt LB deployment](#lb-deployment-with-letsencrypt-certificates), you can also configure different hostnames for the microservices.
-Please note that the OWProv-UI is exposed on port `8080(HTTP)/8443(HTTPS)` by default except for the Letsencrypt LB deployment, where the service listens on the default `80/443` HTTP(S) ports.
+Every OpenWifi service is exposed via a separate port either directly on the host or through Traefik. For an overview of the exposed ports have a look into the deployment specific Docker Compose file. If you use your own certificates, you can also configure different hostnames for the microservices.
+Please note that the OWProv-UI is exposed on port `8080(HTTP)/8443(HTTPS)` by default.
 ### owsec templates and wwwassets
 On the startup of owsec directories for wwwassets and mailer templates are created from the base files included in Docker image. After the initial startup you may edit those files as you wish in the [owsec-data/persist](./owsec-data/persist) directory.
 ## Non-LB deployment with self-signed certificates
@@ -153,66 +153,58 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 ## LB deployment with self-signed certificates
 Follow the same instructions as for the self-signed deployment without Traefik. The only difference is that you have to spin up the deployment with `docker-compose -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned up -d`. Make sure to specify the Compose and the according .env file every time you're working with the deployment or create an alias, for example `alias docker-compose-lb-selfsigned="docker-compose -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned"`. You also have the possibility to scale specific services to a specified number of instances with `docker-compose-lb-selfsigned up -d --scale SERVICE=NUM`, where `SERVICE` is the service name as defined in the Compose file.
 ## LB deployment with Letsencrypt certificates
-For the Letsencrypt challenge to work you need a public IP address. The hostnames which you set for the microservices have to resolve to this IP address to pass the HTTP-01 challenge (https://letsencrypt.org/docs/challenge-types/#http-01-challenge).
+For the Letsencrypt challenge to work you need a public IP address. The hostname which you set in the `$SDKHOSTNAME` env variable has to resolve to this IP address to pass the HTTP-01 challenge (https://letsencrypt.org/docs/challenge-types/#http-01-challenge).
 1. Switch into the project directory with `cd docker-compose/`.
 2. Adapt the following hostname and URI variables according to your environment.
 ### .env.letsencrypt
-| Variable                  | Description                                                                   |
-| ------------------------- | ----------------------------------------------------------------------------- |
-| `OWGW_HOSTNAME`           | Set this to your OWGW hostname, for example `owgw.example.com`.               |
-| `OWGWUI_HOSTNAME`         | Set this to your OWGW-UI hostname, for example `owgw-ui.example.com`.         |
-| `OWGWFILEUPLOAD_HOSTNAME` | Set this to your OWGW fileupload hostname, for example `owgw.example.com`.    |
-| `OWSEC_HOSTNAME`          | Set this to your OWSec hostname, for example `owsec.example.com`.             |
-| `OWFMS_HOSTNAME`          | Set this to your OWFms hostname, for example `owfms.example.com`.             |
-| `OWPROV_HOSTNAME`         | Set this to your OWProv hostname, for example `owprov.example.com`.           |
-| `OWPROVUI_HOSTNAME`       | Set this to your OWProv-UI hostname, for example `owprov-ui.example.com`.     |
-| `OWANALYTICS_HOSTNAME`    | Set this to your OWAnalytics hostname, for example `owanalytics.example.com`. |
-| `OWSUB_HOSTNAME`          | Set this to your OWSub hostname, for example `owsub.example.com`.          |
+| Variable      | Description                                                                                                |
+| ------------- | ---------------------------------------------------------------------------------------------------------- |
+| `SDKHOSTNAME` | Set this to the public hostname you want to use for all microservices, for example `openwifi.example.com`. |
 
 ### owgw.env
-| Variable                 | Description                                                                         |
-| -----------------------  | ----------------------------------------------------------------------------------- |
-| `FILEUPLOADER_HOST_NAME` | Set this to your OWGW fileupload hostname, for example `owgw.example.com`.          |
-| `FILEUPLOADER_URI`       | Set this to your OWGW fileupload URL, for example `https://owgw.example.com:16003`. |
-| `SYSTEM_URI_PUBLIC`      | Set this to your OWGW REST API URL, for example `https://owgw.example.com:16002`.   |
-| `RTTY_SERVER`            | Set this to your OWGW RTTYS hostname, for example `owgw.example.com`.               |
-| `SYSTEM_URI_UI`          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.            |
+| Variable                 | Description                                                                             |
+| -----------------------  | --------------------------------------------------------------------------------------- |
+| `FILEUPLOADER_HOST_NAME` | Set this to your OWGW fileupload hostname, for example `openwifi.example.com`.          |
+| `FILEUPLOADER_URI`       | Set this to your OWGW fileupload URL, for example `https://openwifi.example.com:16003`. |
+| `SYSTEM_URI_PUBLIC`      | Set this to your OWGW REST API URL, for example `https://openwifi.example.com:16002`.   |
+| `RTTY_SERVER`            | Set this to your OWGW RTTYS hostname, for example `openwifi.example.com`.               |
+| `SYSTEM_URI_UI`          | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.               |
 
 ### owgw-ui.env
-| Variable            | Description                                                                |
-| ------------------- | -------------------------------------------------------------------------- |
-| `DEFAULT_OWSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
+| Variable            | Description                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
+| `DEFAULT_OWSEC_URL` | Set this to your OWSec URL, for example `https://openwifi.example.com:16001`. |
 
 ### owsec.env
-| Variable            | Description                                                                |
-| ------------------- | -------------------------------------------------------------------------- |
-| `SYSTEM_URI_PUBLIC` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
-| `SYSTEM_URI_UI`     | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.   |
+| Variable            | Description                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
+| `SYSTEM_URI_PUBLIC` | Set this to your OWSec URL, for example `https://openwifi.example.com:16001`. |
+| `SYSTEM_URI_UI`     | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.     |
 
 ### owfms.env
-| Variable            | Description                                                                |
-| ------------------- | -------------------------------------------------------------------------- |
-| `SYSTEM_URI_PUBLIC` | Set this to your OWFms URL, for example `https://owfms.example.com:16004`. |
-| `SYSTEM_URI_UI`     | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.   |
+| Variable            | Description                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
+| `SYSTEM_URI_PUBLIC` | Set this to your OWFms URL, for example `https://openwifi.example.com:16004`. |
+| `SYSTEM_URI_UI`     | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.     |
 ### owprov.env
-| Variable             | Description                                                                  |
-| -------------------- | ---------------------------------------------------------------------------- |
-| `SYSTEM_URI_PUBLIC`  | Set this to your OWProv URL, for example `https://owprov.example.com:16005`. |
-| `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.     |
+| Variable             | Description                                                                    | 
+| -------------------- | ------------------------------------------------------------------------------ |
+| `SYSTEM_URI_PUBLIC`  | Set this to your OWProv URL, for example `https://openwifi.example.com:16005`. |
+| `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.      |
 ### owprov-ui.env
-| Variable                    | Description                                                                |
-| --------------------------- | -------------------------------------------------------------------------- |
-| `REACT_APP_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
+| Variable                    | Description                                                                   |
+| --------------------------- | ----------------------------------------------------------------------------- |
+| `REACT_APP_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://openwifi.example.com:16001`. |
 ### owanalytics.env
-| Variable             | Description                                                                            |
-| -------------------- | -------------------------------------------------------------------------------------- |
-| `SYSTEM_URI_PUBLIC`  | Set this to your OWAnalytics URL, for example `https://owanalytics.example.com:16009`. |
-| `SYSTEM_URI_UI`      | Set this to your OWProv-UI URL, for example `https://owprov-ui.example.com`.           |
+| Variable             | Description                                                                         |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| `SYSTEM_URI_PUBLIC`  | Set this to your OWAnalytics URL, for example `https://openwifi.example.com:16009`. |
+| `SYSTEM_URI_UI`      | Set this to your OWProv-UI URL, for example `https://openwifi.example.com`.         |
 ### owsub.env
-| Variable             | Description                                                                  |
-| -------------------- | ---------------------------------------------------------------------------- |
-| `SYSTEM_URI_PUBLIC`  | Set this to your OWSub URL, for example `https://owsub.example.com:16006`.   |
-| `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.     |
+| Variable             | Description                                                                   |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `SYSTEM_URI_PUBLIC`  | Set this to your OWSub URL, for example `https://openwifi.example.com:16006`. |
+| `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.     |
 ### traefik.env
 | Variable                                            | Description                               |
 | --------------------------------------------------- | ----------------------------------------- |

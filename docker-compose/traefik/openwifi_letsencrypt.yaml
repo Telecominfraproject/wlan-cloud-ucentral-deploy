@@ -45,69 +45,69 @@ http:
     owgw-ui-http:
       entryPoints: "owgwuihttp"
       service: "owgw-ui"
-      rule: "Host(`{{ env "OWGWUI_HOSTNAME" }}`)"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
     owgw-ui-https:
       entryPoints: "owgwuihttps"
       service: "owgw-ui"
-      rule: "Host(`{{ env "OWGWUI_HOSTNAME" }}`)"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
     owgw-fileupload:
       entryPoints: "owgwfileupload"
       service: "owgw-fileupload"
-      rule: "Host(`{{ env "OWGWFILEUPLOAD_HOSTNAME" }}`)"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
     owgw-restapi:
       entryPoints: "owgwrestapi"
       service: "owgw-restapi"
-      rule: "Host(`{{ env "OWGW_HOSTNAME" }}`)"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
     owgw-rttys-view:
       entryPoints: "owgwrttysview"
       service: "owgw-rttys-view"
-      rule: "Host(`{{ env "OWGW_HOSTNAME" }}`)"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
     owsec-restapi:
       entryPoints: "owsecrestapi"
       service: "owsec-restapi"
-      rule: "Host(`{{ env "OWSEC_HOSTNAME" }}`)"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
     owfms-restapi:
       entryPoints: "owfmsrestapi"
       service: "owfms-restapi"
-      rule: "Host(`{{env "OWFMS_HOSTNAME"}}`)"
+      rule: "Host(`{{env "SDKHOSTNAME"}}`)"
       tls:
         certResolver: "openwifi"
     owprov-restapi:
       entryPoints: "owprovrestapi"
       service: "owprov-restapi"
-      rule: "Host(`{{env "OWPROV_HOSTNAME"}}`)"
+      rule: "Host(`{{env "SDKHOSTNAME"}}`)"
       tls:
         certResolver: "openwifi"
     owprov-ui-http:
-      entryPoints: "owgwuihttp"
+      entryPoints: "owprovuihttp"
       service: "owprov-ui"
-      rule: "Host(`{{ env "OWPROVUI_HOSTNAME" }}`)"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
     owprov-ui-https:
-      entryPoints: "owgwuihttps"
+      entryPoints: "owprovuihttps"
       service: "owprov-ui"
-      rule: "Host(`{{ env "OWPROVUI_HOSTNAME" }}`)"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
       tls:
         certResolver: "openwifi"
     owanalytics-restapi:
       entryPoints: "owanalyticsrestapi"
       service: "owanalytics-restapi"
-      rule: "Host(`{{env "OWANALYTICS_HOSTNAME"}}`)"
+      rule: "Host(`{{env "SDKHOSTNAME"}}`)"
       tls:
         certResolver: "openwifi"
     owsub-restapi:
       entryPoints: "owsubrestapi"
       service: "owsub-restapi"
-      rule: "Host(`{{env "OWSUB_HOSTNAME"}}`)"
+      rule: "Host(`{{env "SDKHOSTNAME"}}`)"
       tls:
         certResolver: "openwifi"
 
@@ -134,6 +134,6 @@ tcp:
     owgw-rttys:
       entryPoints: "owgwrttys"
       service: "owgw-rttys"
-      rule: "HostSNI(`{{ env "OWGW_HOSTNAME" }}`)"
+      rule: "HostSNI(`{{ env "SDKHOSTNAME" }}`)"
       tls:
         certResolver: openwifi
