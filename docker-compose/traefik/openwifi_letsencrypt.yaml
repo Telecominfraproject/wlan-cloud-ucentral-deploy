@@ -117,7 +117,7 @@ http:
     owrrm-openapi:
       entryPoints: "owrrmopenapi"
       service: "owrrm-openapi"
-      rule: "Host(`{{env "OWRRM_HOSTNAME"}}`)"
+      rule: "Host(`{{env "SDKHOSTNAME"}}`)"
       tls:
         certResolver: "openwifi"
 
