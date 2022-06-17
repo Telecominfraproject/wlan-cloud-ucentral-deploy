@@ -26,13 +26,9 @@ usage () {
   echo;
 #  echo "- OWSEC_SYSTEM_URI_PRIVATE - private URL to be used for OWSec";
   echo "- OWSEC_SYSTEM_URI_PUBLIC - public URL to be used for OWSec";
-  echo "- OWSEC_AUTHENTICATION_DEFAULT_USERNAME - username to be used for requests to OWSec";
-  echo "- OWSEC_AUTHENTICATION_DEFAULT_PASSWORD - hashed password for OWSec (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
   echo;
 #  echo "- OWFMS_SYSTEM_URI_PRIVATE - private URL to be used for OWFms";
   echo "- OWFMS_SYSTEM_URI_PUBLIC - public URL to be used for OWFms";
-  echo "- OWFMS_S3_SECRET - secret key that is used for OWFms access to firmwares S3 bucket";
-  echo "- OWFMS_S3_KEY - access key that is used for OWFms access to firmwares S3 bucket";
   echo;
 #  echo "- OWPROV_SYSTEM_URI_PRIVATE - private URL to be used for OWProv";
   echo "- OWPROV_SYSTEM_URI_PUBLIC - public URL to be used for OWProv";
@@ -42,6 +38,19 @@ usage () {
   echo;
 #  echo "- OWSUB_SYSTEM_URI_PRIVATE - private URL to be used for OWSub";
   echo "- OWSUB_SYSTEM_URI_PUBLIC - public URL to be used for OWSub";
+  echo;
+  echo "Optional environment variables:"
+  echo "- WEBSOCKET_CERT - Your Digicert-signed websocket certificate"
+  echo "- WEBSOCKET_KEY - The key to your Digicert-signed websocket certificate"
+  echo;
+  echo "- OWSEC_AUTHENTICATION_DEFAULT_USERNAME - username to be used for requests to OWSec";
+  echo "- OWSEC_AUTHENTICATION_DEFAULT_PASSWORD - hashed password for OWSec (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
+  echo;
+  echo "- OWFMS_S3_SECRET - secret key that is used for OWFms access to firmwares S3 bucket";
+  echo "- OWFMS_S3_KEY - access key that is used for OWFms access to firmwares S3 bucket";
+  echo;
+  echo "- SDKHOSTNAME - Public hostname which is used for cert generation when using the Letsencrypt deployment method"
+  echo "- TRAEFIK_ACME_EMAIL - Email address used for ACME registration"
 }
 
 # Check if required environment variables were passed
@@ -62,15 +71,11 @@ usage () {
 [ -z ${OWGW_SYSTEM_URI_PUBLIC+x} ] && echo "OWGW_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
 [ -z ${OWGW_RTTY_SERVER+x} ] && echo "OWGW_RTTY_SERVER is unset" && usage && exit 1
 ## OWSec configuration variables
-[ -z ${OWSEC_AUTHENTICATION_DEFAULT_USERNAME+x} ] && echo "OWSEC_AUTHENTICATION_DEFAULT_USERNAME is unset" && usage && exit 1
-[ -z ${OWSEC_AUTHENTICATION_DEFAULT_PASSWORD+x} ] && echo "OWSEC_AUTHENTICATION_DEFAULT_PASSWORD is unset" && usage && exit 1
 #[ -z ${OWSEC_SYSTEM_URI_PRIVATE+x} ] && echo "OWSEC_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWSEC_SYSTEM_URI_PUBLIC+x} ] && echo "OWSEC_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
 ## OWFms configuration variables
 #[ -z ${OWFMS_SYSTEM_URI_PRIVATE+x} ] && echo "OWFMS_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWFMS_SYSTEM_URI_PUBLIC+x} ] && echo "OWFMS_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
-[ -z ${OWFMS_S3_SECRET+x} ] && echo "OWFMS_S3_SECRET is unset" && usage && exit 1
-[ -z ${OWFMS_S3_KEY+x} ] && echo "OWFMS_S3_KEY is unset" && usage && exit 1
 ## OWProv configuration variables
 #[ -z ${OWPROV_SYSTEM_URI_PRIVATE+x} ] && echo "OWPROV_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWPROV_SYSTEM_URI_PUBLIC+x} ] && echo "OWPROV_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
@@ -109,6 +114,17 @@ fi
 #sed -i "s~\(^INTERNAL_OWANALYTICS_HOSTNAME=\).*~\1$INTERNAL_OWANALYTICS_HOSTNAME~" .env
 #sed -i "s~\(^INTERNAL_OWSUB_HOSTNAME=\).*~\1$INTERNAL_OWSUB_HOSTNAME~" .env
 
+if [[ ! -z "$SDKHOSTNAME" ]]; then
+  sed -i "s~.*SDKHOSTNAME=.*~SDKHOSTNAME=$SDKHOSTNAME~" .env.letsencrypt
+fi
+
+if [[ ! -z "$WEBSOCKET_CERT" ]]; then
+  echo "$WEBSOCKET_CERT" > certs/websocket-cert.pem
+fi
+if [[ ! -z "$WEBSOCKET_KEY" ]]; then
+  echo "$WEBSOCKET_KEY" > certs/websocket-key.pem && chmod 600 websocket-key.pem
+fi
+
 sed -i "s~.*FILEUPLOADER_HOST_NAME=.*~FILEUPLOADER_HOST_NAME=$OWGW_FILEUPLOADER_HOST_NAME~" owgw.env
 sed -i "s~.*FILEUPLOADER_URI=.*~FILEUPLOADER_URI=$OWGW_FILEUPLOADER_URI~" owgw.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWGW_SYSTEM_URI_PUBLIC~" owgw.env
@@ -122,8 +138,12 @@ fi
 
 sed -i "s~.*DEFAULT_UCENTRALSEC_URL=.*~DEFAULT_UCENTRALSEC_URL=$DEFAULT_UCENTRALSEC_URL~" owgw-ui.env
 
-sed -i "s~.*AUTHENTICATION_DEFAULT_USERNAME=.*~AUTHENTICATION_DEFAULT_USERNAME=$OWSEC_AUTHENTICATION_DEFAULT_USERNAME~" owsec.env
-sed -i "s~.*AUTHENTICATION_DEFAULT_PASSWORD=.*~AUTHENTICATION_DEFAULT_PASSWORD=$OWSEC_AUTHENTICATION_DEFAULT_PASSWORD~" owsec.env
+if [[ ! -z "$OWSEC_AUTHENTICATION_DEFAULT_USERNAME" ]]; then
+  sed -i "s~.*AUTHENTICATION_DEFAULT_USERNAME=.*~AUTHENTICATION_DEFAULT_USERNAME=$OWSEC_AUTHENTICATION_DEFAULT_USERNAME~" owsec.env
+fi
+if [[ ! -z "$OWSEC_AUTHENTICATION_DEFAULT_PASSWORD" ]]; then
+  sed -i "s~.*AUTHENTICATION_DEFAULT_PASSWORD=.*~AUTHENTICATION_DEFAULT_PASSWORD=$OWSEC_AUTHENTICATION_DEFAULT_PASSWORD~" owsec.env
+fi
 #sed -i "s~.*SYSTEM_URI_PRIVATE=.*~SYSTEM_URI_PRIVATE=$OWSEC_SYSTEM_URI_PRIVATE~" owsec.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWSEC_SYSTEM_URI_PUBLIC~" owsec.env
 sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owsec.env
@@ -131,8 +151,12 @@ sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owsec.env
 #sed -i "s~.*SYSTEM_URI_PRIVATE=.*~SYSTEM_URI_PRIVATE=$OWFMS_SYSTEM_URI_PRIVATE~" owfms.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWFMS_SYSTEM_URI_PUBLIC~" owfms.env
 sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owfms.env
-sed -i "s~.*S3_SECRET=.*~S3_SECRET=$OWFMS_S3_SECRET~" owfms.env
-sed -i "s~.*S3_KEY=.*~S3_KEY=$OWFMS_S3_KEY~" owfms.env
+if [[ ! -z "$OWFMS_S3_SECRET" ]]; then
+  sed -i "s~.*S3_SECRET=.*~S3_SECRET=$OWFMS_S3_SECRET~" owfms.env
+fi
+if [[ ! -z "$OWFMS_S3_KEY" ]]; then
+  sed -i "s~.*S3_KEY=.*~S3_KEY=$OWFMS_S3_KEY~" owfms.env
+fi
 
 #sed -i "s~.*SYSTEM_URI_PRIVATE=.*~SYSTEM_URI_PRIVATE=$OWPROV_SYSTEM_URI_PRIVATE~" owprov.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWPROV_SYSTEM_URI_PUBLIC~" owprov.env
@@ -148,5 +172,13 @@ sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owanalytics.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWSUB_SYSTEM_URI_PUBLIC~" owsub.env
 sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owsub.env
 
+if [[ ! -z "$TRAEFIK_ACME_EMAIL" ]]; then
+  sed -i "s~.*TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL=.*~TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL=$TRAEFIK_ACME_EMAIL~" traefik.env
+fi
+
 # Run the deployment
-docker-compose up -d
+if [[ ! -z "$SDKHOSTNAME" ]]; then
+  docker-compose -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt up -d
+else
+  docker-compose up -d
+fi
