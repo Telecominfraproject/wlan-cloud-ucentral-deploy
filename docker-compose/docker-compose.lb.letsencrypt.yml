@@ -19,6 +19,8 @@ volumes:
     driver: local
   kafka_data:
     driver: local
+  mysql_data:
+    driver: local
   letsencrypt_certs:
     driver: local
 
@@ -156,6 +158,24 @@ services:
       - owsub_data:${OWSUB_ROOT}
       - ./certs:/${OWSUB_ROOT}/certs
 
+  owrrm:
+    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owrrm:${OWRRM_TAG}"
+    networks:
+      openwifi:
+        aliases:
+          - ${INTERNAL_OWRRM_HOSTNAME}
+    env_file:
+      - owrrm.env
+    depends_on:
+      - owsec
+      - owgw
+      - owfms
+      - owprov
+      - owanalytics
+      - owsub
+      - mysql
+    restart: unless-stopped
+
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
     networks:
@@ -177,6 +197,16 @@ services:
     volumes:
       - kafka_data:/bitnami/kafka
 
+  mysql:
+    image: "mysql:${MYSQL_TAG}"
+    networks:
+      openwifi:
+    env_file:
+      - mysql.env
+    restart: unless-stopped
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   traefik:
     image: "traefik:${TRAEFIK_TAG}"
     networks:
@@ -191,6 +221,9 @@ services:
       - owfms
       - owprov
       - owprov-ui
+      - owanalytics
+      - owsub
+      - owrrm
     restart: unless-stopped
     volumes:
       - "./traefik/openwifi_letsencrypt.yaml:/etc/traefik/openwifi.yaml"
@@ -217,3 +250,4 @@ services:
       - "16006:16006"
       - "5912:5912"
       - "5913:5913"
+      - "16789:16789"

@@ -40,6 +40,10 @@ http:
       loadBalancer:
         servers:
           - url: "http://owgw.wlan.local:5913/"
+    owrrm-openapi:
+      loadBalancer:
+        servers:
+          - url: "http://owrrm.wlan.local:16789/"
 
   routers:
     owgw-ui-http:
@@ -107,6 +111,12 @@ http:
     owsub-restapi:
       entryPoints: "owsubrestapi"
       service: "owsub-restapi"
+      rule: "Host(`{{env "SDKHOSTNAME"}}`)"
+      tls:
+        certResolver: "openwifi"
+    owrrm-openapi:
+      entryPoints: "owrrmopenapi"
+      service: "owrrm-openapi"
       rule: "Host(`{{env "SDKHOSTNAME"}}`)"
       tls:
         certResolver: "openwifi"

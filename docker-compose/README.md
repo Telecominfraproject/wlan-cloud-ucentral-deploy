@@ -80,6 +80,16 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | ---------------------------------------- | -------------------------------------------------------------------------------------- |
 | `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWAnalytics URL, for example `https://owanalytics.example.com:16009`. |
 | `SYSTEM_URI_UI`                          | Set this to your OWProv-UI URL, for example `https://owprov-ui.example.com`.           |
+### owrrm.env
+| Variable                                 | Description                                               |
+| ---------------------------------------- | --------------------------------------------------------- |
+| `UCENTRALCONFIG_UCENTRALSECHOST` | Set this to your OWSec hostname, for example `owsec.example.com`. |
+| `DATABASECONFIG_PASSWORD`        | Set this to a random and safe password.                           |
+### mysql.env
+| Variable                                 | Description                                      |
+| ---------------- | ------------------------------------------------------------------------ |
+| `MYSQL_PASSWORD` | Set this to the same value as `$DATABASECONFIG_PASSWORD` in `owrrm.env`. |
+
 3. Spin up the deployment with `docker-compose up -d`.
 4. Check if the containers are up and running with `docker-compose ps`.
 5. Login to the UI and and follow the instructions to change your default password.
@@ -205,6 +215,14 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 | -------------------- | ----------------------------------------------------------------------------- |
 | `SYSTEM_URI_PUBLIC`  | Set this to your OWSub URL, for example `https://openwifi.example.com:16006`. |
 | `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.     |
+### owrrm.env
+| Variable                                 | Description                     |
+| ---------------------------------------- | ------------------------------- |
+| `DATABASECONFIG_PASSWORD`        | Set this to a random and safe password. |
+### mysql.env
+| Variable         | Description                                                              |
+| ---------------- | ------------------------------------------------------------------------ |
+| `MYSQL_PASSWORD` | Set this to the same value as `$DATABASECONFIG_PASSWORD` in `owrrm.env`. |
 ### traefik.env
 | Variable                                            | Description                               |
 | --------------------------------------------------- | ----------------------------------------- |
