@@ -403,7 +403,7 @@ haproxy:
 
     # owsub
     frontend front_owsub_rest
-      bind :16009
+      bind :16006
       mode tcp
       default_backend back_owsub_rest
     backend back_owsub_rest
