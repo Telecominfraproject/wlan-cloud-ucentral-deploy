@@ -12,3 +12,10 @@ owgw:
     postgresqlDatabase: owgw
     postgresqlUsername: owgw
     postgresqlPassword: owgw
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
