@@ -9,8 +9,8 @@ The repository also contains a separate Docker Compose deployment to set up the 
 - [LB deployment with Letsencrypt certificates](#lb-deployment-with-letsencrypt-certificates)
 - [OWLS deployment with self-signed certificates](owls/README.md)
 ### Configuration
-If you don't bind mount your own config files they are generated on every startup based on the environment variables in the microservice specific env files. For an overview of the supported configuration properties have a look into the microservice specific env files. For an explanation of the configuration properties please see the README in the respective microservice repository.
-Be aware that the non-LB deployment exposes the generated config files on the host. So if you want to make configuration changes afterwards, please do them directly in the config files located in the microservice data directories.
+Config files for the microservices are generated on every startup based on the environment variables in the microservice specific env files. For an overview of the supported configuration properties have a look into these files. For an explanation of the configuration properties please see the README in the respective microservice repository.
+Be aware that local changes to the config files will be overwritten on every startup if `TEMPLATE_CONFIG` is set to `true` in the microservice env files. If you want to bind mount your own config file or make local changes, please set this variable to `false`.
 #### Required password changing on the first startup
 One important action that must be done before using the deployment is changing password for the default user in owsec as described in [owsec docs](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/tree/main#changing-default-password). Please use these docs to find the actions that must be done **after** the deployment in order to start using your deployment.
 ### Ports
