@@ -622,7 +622,7 @@ haproxy:
       memory: 20Mi
     limits:
       cpu: 10m
-      memory: 20Gi
+      memory: 20Mi
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
