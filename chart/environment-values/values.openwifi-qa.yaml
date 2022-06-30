@@ -5,10 +5,13 @@ owgw:
       readiness:
         exec:
           command: ["true"]
+        failureThreshold: 5
+      readiness:
+        failureThreshold: 5
 
   resources:
     requests:
-      cpu: 1000m
+      cpu: 2000m
       memory: 100Mi
     limits:
       cpu: 2000m
