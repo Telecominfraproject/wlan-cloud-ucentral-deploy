@@ -54,6 +54,16 @@ owsub:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
 
+# OpenWIFI radio resource management (https://github.com/Telecominfraproject/wlan-cloud-rrm/)
+owrrm:
+  fullnameOverride: owrrm
+
+  public_env_variables:
+    UCENTRALCONFIG_PRIVATEENDPOINT: http://owrrm-owrrm:17007
+
+  mysql:
+    enabled: true
+
 # kafka (https://github.com/bitnami/charts/blob/master/bitnami/kafka/)
 kafka:
   enabled: true
@@ -219,6 +229,15 @@ haproxy:
         protocol: TCP
         port: 17006
         targetPort: owsubrint
+      # owrrm
+      - name: owrrmrest
+        protocol: TCP
+        port: 16789
+        targetPort: owsubrest
+      - name: owrrmrint
+        protocol: TCP
+        port: 17007
+        targetPort: owsubrint
 
   containerPorts:
     # healthcheck
@@ -262,6 +281,11 @@ haproxy:
       containerPort: 16006
     - name: owsubrint
       containerPort: 17006
+    # owsub
+    - name: owrrmrest
+      containerPort: 16789
+    - name: owrrmrint
+      containerPort: 17007
 
   configuration: |
     global
@@ -418,6 +442,23 @@ haproxy:
       mode tcp
       server svc_owsub_rest_internal owsub-owsub:17006
 
+    # owrrm
+    frontend front_owrrm_rest
+      bind :16789
+      mode tcp
+      default_backend back_owrrm_rest
+    backend back_owrrm_rest
+      mode tcp
+      server svc_owrrm_rest owrrm-owrrm:16789
+
+    frontend front_owrrm_rest_internal
+      bind :17007
+      mode tcp
+      default_backend back_owrrm_rest_internal
+    backend back_owrrm_rest_internal
+      mode tcp
+      server svc_owrrm_rest_internal owrrm-owrrm:17007
+
 # Cert-manager RESTAPI certs
 restapiCerts:
   enabled: false
@@ -430,5 +471,6 @@ restapiCerts:
     - owls-owls
     - owanalytics-owanalytics
     - owsub-owsub
+    - owrrm-owrrm
 
   clusterDomain: cluster.local

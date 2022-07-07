@@ -31,6 +31,7 @@ usage () {
   echo "- OWPROVUI_VERSION - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
   echo "- OWANALYTICS_VERSION - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
   echo "- OWSUB_VERSION - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo "- OWRRM_VERSION - OpenWIFI radio resource management service (RRM) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
   echo >&2;
   echo "Optional environment variables:" >&2;
   echo >&2;
@@ -74,6 +75,7 @@ else
   [ -z ${OWPROVUI_VERSION+x} ] && echo "OWPROVUI_VERSION is unset" >&2 && usage && exit 1
   [ -z ${OWANALYTICS_VERSION+x} ] && echo "OWANALYTICS_VERSION is unset" >&2 && usage && exit 1
   [ -z ${OWSUB_VERSION+x} ] && echo "OWSUB_VERSION is unset" >&2 && usage && exit 1
+  [ -z ${OWRRM_VERSION+x} ] && echo "OWRRM_VERSION is unset" >&2 && usage && exit 1
 fi
 ## Environment specifics
 [ -z ${NAMESPACE+x} ] && echo "NAMESPACE is unset" >&2 && usage && exit 1
@@ -102,6 +104,7 @@ export OWPROV_VERSION_TAG=$(echo ${OWPROV_VERSION} | tr '/' '-')
 export OWPROVUI_VERSION_TAG=$(echo ${OWPROVUI_VERSION} | tr '/' '-')
 export OWANALYTICS_VERSION_TAG=$(echo ${OWANALYTICS_VERSION} | tr '/' '-')
 export OWSUB_VERSION_TAG=$(echo ${OWSUB_VERSION} | tr '/' '-')
+export OWRRM_VERSION_TAG=$(echo ${OWRRM_VERSION} | tr '/' '-')
 
 # Debug get bash version
 bash --version >&2
@@ -124,6 +127,7 @@ if [[ "$DEPLOY_METHOD" == "git" ]]; then
     sed -i '/wlan-cloud-owprov-ui@/s/ref=.*/ref='${OWPROVUI_VERSION}'\"/g' Chart.yaml
     sed -i '/wlan-cloud-analytics@/s/ref=.*/ref='${OWANALYTICS_VERSION}'\"/g' Chart.yaml
     sed -i '/wlan-cloud-userportal@/s/ref=.*/ref='${OWSUB_VERSION}'\"/g' Chart.yaml
+    sed -i '/wlan-cloud-rrm@/s/ref=.*/ref='${OWRRM_VERSION}'\"/g' Chart.yaml
   fi
   helm repo add bitnami https://charts.bitnami.com/bitnami
   helm repo update
@@ -152,10 +156,10 @@ for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
 done
 
 if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
-  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build\,rrm-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build"
 else
-  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build\,rrm-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS=""
 fi
 

@@ -586,6 +586,75 @@ owsub:
           secret:
             secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
 
+owrrm:
+  fullnameOverride: owrrm
+
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 2048Mi
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+    UCENTRALCONFIG_UCENTRALSECHOST: owsec-owsec
+    UCENTRALCONFIG_UCENTRALSECPORT: "17001"
+    UCENTRALCONFIG_PRIVATEENDPOINT: http://owrrm-owrrm:17007
+    UCENTRALSOCKETPARAMS_CONNECTTIMEOUTMS: "2000"
+    UCENTRALSOCKETPARAMS_SOCKETTIMEOUTMS: "15000"
+    UCENTRALSOCKETPARAMS_WIFISCANTIMEOUTMS: "45000"
+    KAFKACONFIG_BOOTSTRAPSERVER: kafka:9092
+    KAFKACONFIG_STATETOPIC: state
+    KAFKACONFIG_WIFISCANTOPIC: wifiscan
+    KAFKACONFIG_SERVICEEVENTSTOPIC: service_events
+    KAFKACONFIG_GROUPID: rrm-service
+    KAFKACONFIG_AUTOOFFSETRESET: latest
+    DATABASECONFIG_SERVER: owrrm-mysql:3306
+    DATABASECONFIG_DBNAME: owrrm
+    DATABASECONFIG_DATARETENTIONINTERVALDAYS: "14"
+    DATACOLLECTORPARAMS_UPDATEINTERVALMS: "5000"
+    DATACOLLECTORPARAMS_DEVICESTATSINTERVALSEC: "60"
+    DATACOLLECTORPARAMS_WIFISCANINTERVALSEC: "60"
+    DATACOLLECTORPARAMS_CAPABILITIESINTERVALSEC: "3600"
+    DATACOLLECTORPARAMS_EXECUTORTHREADCOUNT: "3"
+    CONFIGMANAGERPARAMS_UPDATEINTERVALMS: "60000"
+    CONFIGMANAGERPARAMS_CONFIGENABLED: "true"
+    CONFIGMANAGERPARAMS_CONFIGDEBOUNCEINTERVALSEC: "30"
+    MODELERPARAMS_WIFISCANBUFFERSIZE: "10"
+    APISERVERPARAMS_HTTPPORT: "16789"
+    APISERVERPARAMS_USEBASICAUTH: "false"
+
+  secret_env_variables:
+    DATABASECONFIG_USER: root
+    DATABASECONFIG_PASSWORD: openwifi
+    APISERVERPARAMS_BASICAUTHUSER: admin
+    APISERVERPARAMS_BASICAUTHPASSWORD: openwifi
+
+  volumes:
+    owrrm:
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owrrm.fullname" . }}-owrrm-restapi-tls
+
+  mysql:
+    enabled: true
+    fullnameOverride: "owrrm-mysql"
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 100m
+        memory: 512Mi
 
 kafka:
   commonAnnotations:
