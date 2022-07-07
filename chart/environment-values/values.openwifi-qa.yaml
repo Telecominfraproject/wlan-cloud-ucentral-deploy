@@ -5,10 +5,13 @@ owgw:
       readiness:
         exec:
           command: ["true"]
+        failureThreshold: 5
+      readiness:
+        failureThreshold: 5
 
   resources:
     requests:
-      cpu: 1000m
+      cpu: 2000m
       memory: 100Mi
     limits:
       cpu: 2000m
@@ -685,6 +688,13 @@ clustersysteminfo:
   delay: 60 # delaying to wait for AWS Route53 DNS propagation
 
 haproxy:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 20Mi
+    limits:
+      cpu: 10m
+      memory: 20Mi
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
