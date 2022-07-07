@@ -443,21 +443,21 @@ haproxy:
       server svc_owsub_rest_internal owsub-owsub:17006
 
     # owrrm
-    frontend front_owrrm_rest
-      bind :16789
-      mode tcp
-      default_backend back_owrrm_rest
-    backend back_owrrm_rest
-      mode tcp
-      server svc_owrrm_rest owrrm-owrrm:16789
+    #frontend front_owrrm_rest
+    #  bind :16789
+    #  mode tcp
+    #  default_backend back_owrrm_rest
+    #backend back_owrrm_rest
+    #  mode tcp
+    #  server svc_owrrm_rest owrrm-owrrm:16789
 
-    frontend front_owrrm_rest_internal
-      bind :17007
-      mode tcp
-      default_backend back_owrrm_rest_internal
-    backend back_owrrm_rest_internal
-      mode tcp
-      server svc_owrrm_rest_internal owrrm-owrrm:17007
+    #frontend front_owrrm_rest_internal
+    #  bind :17007
+    #  mode tcp
+    #  default_backend back_owrrm_rest_internal
+    #backend back_owrrm_rest_internal
+    #  mode tcp
+    #  server svc_owrrm_rest_internal owrrm-owrrm:17007
 
 # Cert-manager RESTAPI certs
 restapiCerts:
