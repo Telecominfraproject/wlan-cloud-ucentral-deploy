@@ -51,7 +51,7 @@ usage() {
   echo "    docker_compose_name: OWPROVUI # name of environment variable in docker-compose .env file containing image tag for the service"
   log_notice
   log_notice "List of required environment variables:"
-  log_notice "- RELEASE_VERSION - release version that should be applied to repositories. Should comply release nameing policy (valid example - 'v2.0.0')"
+  log_notice "- RELEASE_VERSION - release version that should be applied to repositories. Should comply release nameing policy (valid example - 'v2.0.0' or 'v2.0.1')"
   log_notice "- TAG_TYPE - type of tag that should be created for release (supported values - RC / FINAL)"
   log_notice "- GIT_PUSH_CONFIRMED - confirmation that any changes should be pushed to git (dry-run if unset, set to 'true' to enable)"
   log_notice
@@ -99,7 +99,7 @@ modify_deploy_repo_values() {
     sed "s/$REPO_DOCKER_COMPOSE_NAME=.*/$REPO_DOCKER_COMPOSE_NAME=$SERVICE_TAG/" -i docker-compose/.env.selfsigned
     sed "/${REPO_NAME_WITHOUT_SUFFIX#*/}@/s/ref=.*/ref=$SERVICE_TAG\"/g" -i chart/Chart.yaml
   done
-  LATEST_RELEASE_TAG=$(git tag | grep $CURRENT_RELEASE_VERSION | tail -1)
+  LATEST_RELEASE_TAG=$(git tag | grep $RELEASE_VERSION | tail -1)
   if [[ "$(git diff | wc -l)" -eq "0" ]] && [[ "$(git diff $LATEST_RELEASE_TAG)" -eq "0" ]]; then
     log_info "No changes in microservices and since the latest tag are found, new release is not required"
   else
@@ -135,21 +135,20 @@ push_changes() {
 }
 
 create_tag() {
-  CURRENT_RELEASE_VERSION=$(git rev-parse --abbrev-ref HEAD | awk -F 'release/' '{print $2}')
   TAG_TYPE_LOWERED=$(echo $TAG_TYPE | tr '[:upper:]' '[:lower:]')
   if [[ "$TAG_TYPE_LOWERED" == "final" ]]; then
     log_debug "Creating final tag"
-    modify_values $CURRENT_RELEASE_VERSION
-    git tag $CURRENT_RELEASE_VERSION
+    modify_values $RELEASE_VERSION
+    git tag $RELEASE_VERSION
     push_changes
-    REPO_TAGS_ARRAY+=($CURRENT_RELEASE_VERSION)
+    REPO_TAGS_ARRAY+=($RELEASE_VERSION)
   else
     log_debug "Checking if there are tags in the current release branch"
-    LATEST_RELEASE_TAG=$(git tag | grep $CURRENT_RELEASE_VERSION | tail -1)
+    LATEST_RELEASE_TAG=$(git tag | grep $RELEASE_VERSION | tail -1)
     log_debug "Latest release tag found - '$LATEST_RELEASE_TAG'"
     if [[ -z "$LATEST_RELEASE_TAG" ]]; then
       log_info "There are no tags in the release branch, creating the first one"
-      NEW_RELEASE_TAG=$CURRENT_RELEASE_VERSION-RC1
+      NEW_RELEASE_TAG=$RELEASE_VERSION-RC1
       log_debug "New tag - $NEW_RELEASE_TAG"
       modify_values $NEW_RELEASE_TAG
       git tag $NEW_RELEASE_TAG
@@ -160,7 +159,7 @@ create_tag() {
         NEW_RC=$(echo $LATEST_RELEASE_TAG | awk -F 'RC' '{print $2}')
         NEW_RC=$(expr $NEW_RC + 1)
         log_debug "New RC to create - $NEW_RC"
-        NEW_RELEASE_TAG=$CURRENT_RELEASE_VERSION-RC$NEW_RC
+        NEW_RELEASE_TAG=$RELEASE_VERSION-RC$NEW_RC
         modify_deploy_repo_values $NEW_RELEASE_TAG
         if [[ "v$(cat chart/Chart.yaml | yq '.version' -r)" == "$NEW_RELEASE_TAG" ]]; then
           git add .
@@ -186,7 +185,7 @@ create_tag() {
           NEW_RC=$(echo $LATEST_RELEASE_TAG | awk -F 'RC' '{print $2}')
           NEW_RC=$(expr $NEW_RC + 1)
           log_debug "New RC to create - $NEW_RC"
-          NEW_RELEASE_TAG=$CURRENT_RELEASE_VERSION-RC$NEW_RC
+          NEW_RELEASE_TAG=$RELEASE_VERSION-RC$NEW_RC
           modify_values $NEW_RELEASE_TAG
           git tag $NEW_RELEASE_TAG
           push_changes
@@ -199,22 +198,47 @@ create_tag() {
 }
 
 check_final_tag() {
-  CURRENT_RELEASE_VERSION=$(git rev-parse --abbrev-ref HEAD | awk -F 'release/' '{print $2}')
-  log_debug "Amount of final tags found - $(git tag | grep -x $CURRENT_RELEASE_VERSION | wc -l)"
-  if [[ "$(git tag | grep -x $CURRENT_RELEASE_VERSION | wc -l)" -gt "0" ]]; then
-    log_error "Final tag $CURRENT_RELEASE_VERSION already exists in release branch"
+  log_debug "Amount of final tags found - $(git tag | grep -x $RELEASE_VERSION | wc -l)"
+  if [[ "$(git tag | grep -x $RELEASE_VERSION | wc -l)" -gt "0" ]]; then
+    log_error "Final tag $RELEASE_VERSION already exists in release branch"
     exit 1
   fi
 }
 
 check_git_tags() {
-  CURRENT_RELEASE_VERSION=$(git rev-parse --abbrev-ref HEAD | awk -F 'release/' '{print $2}')
-  RELEASE_TAGS_AMOUNT=$(git tag | grep $CURRENT_RELEASE_VERSION | wc -l)
+  RELEASE_TAGS_AMOUNT=$(git tag | grep $RELEASE_VERSION | wc -l)
+  log_info "Checking if there are any tags for current version ($RELEASE_VERSION)"
   log_debug "Amount of tags linked with the release - $RELEASE_TAGS_AMOUNT"
   if [[ "$RELEASE_TAGS_AMOUNT" -gt "0" ]]; then
+    log_info "Tags for release $RELEASE_VERSION are found, checking if final tag exist"
     check_final_tag
+    create_tag
+  else
+    log_info "No tags found for current version, checking if there are any tags for release branch ($RELEASE_BRANCH_VERSION_BASE)"
+    RELEASE_BRANCH_TAGS_AMOUNT=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | wc -l)
+    log_debug "Amount of tags linked with the release branch - $RELEASE_BRANCH_TAGS_AMOUNT"
+    if [[ "$RELEASE_BRANCH_TAGS_AMOUNT" -gt "0" ]]; then
+      log_info "Tags for $RELEASE_BRANCH_VERSION_BASE are found, finding the latest one"
+      RELEASE_BRANCH_TAG_FINAL=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | grep -v 'RC' | tail -1)
+      if [[ ! -z "$RELEASE_BRANCH_TAG_FINAL" ]]; then
+        RELEASE_BRANCH_TAG=$RELEASE_BRANCH_TAG_FINAL
+      else
+        RELEASE_BRANCH_TAG=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | tail -1)
+      fi
+      log_info "Latest release tag in $RELEASE_BRANCH_VERSION_BASE - $RELEASE_BRANCH_TAG. Checking if there are changes since then"
+      DIFF_LINES_AMOUNT=$(git diff $RELEASE_BRANCH_TAG | wc -l)
+      if [[ "$DIFF_LINES_AMOUNT" -eq "0" ]]; then
+        log_info "No changes found since the latest release tag ($RELEASE_BRANCH_TAG), using it for new version"
+        REPO_TAGS_ARRAY+=($RELEASE_BRANCH_TAG)
+      else
+        log_info "Changes are found in the branch, creating a new tag"
+        create_tag
+      fi
+    else
+      log_info "Tags for $RELEASE_BRANCH_VERSION_BASE not found, creating new one"
+      create_tag
+    fi
   fi
-  create_tag
 }
 
 check_release_branch() {
@@ -224,8 +248,8 @@ check_release_branch() {
 }
 
 create_release_branch() {
-  git checkout -b release/$RELEASE_VERSION -q
-  check_release_branch release/$RELEASE_VERSION
+  git checkout -b release/$RELEASE_BRANCH_VERSION -q
+  check_release_branch release/$RELEASE_BRANCH_VERSION
 }
 
 check_if_release_branch_required() {
@@ -233,13 +257,22 @@ check_if_release_branch_required() {
   log_debug "Latest release branch available - $LATEST_RELEASE_BRANCH"
   if [[ -z "$LATEST_RELEASE_BRANCH" ]]; then
     log_info "Could not find a single release branch, creating it"
-    create_release_branch $RELEASE_VERSION
+    create_release_branch $RELEASE_BRANCH_VERSION
   else
     LAST_RELEASE_DIFF_LINES_AMOUNT=$(git diff $LATEST_RELEASE_BRANCH ':(exclude)helm/values.yaml' | wc -l)
     if [[ "$LAST_RELEASE_DIFF_LINES_AMOUNT" -eq "0" ]]; then
       log_info "There are no changes in project since the latest release branch $LATEST_RELEASE_BRANCH so we will use tag from it"
-      LATEST_RELEASE=$(echo $LATEST_RELEASE_BRANCH | awk -F 'origin/' '{print $2}')
-      LATEST_RELEASE_TAG=$(git tag | grep -x $LATEST_RELEASE | tail -1)
+      LATEST_RELEASE=$(echo $LATEST_RELEASE_BRANCH | awk -F 'origin/release/' '{print $2}')
+      LATEST_RELEASE_BASE=$(echo $LATEST_RELEASE | cut -f 1,2 -d '.')
+      LATEST_RELEASE_TAG_FINAL=$(git tag | grep $LATEST_RELEASE_BASE | grep -v 'RC' | tail -1)
+      if [[ ! -z "$LATEST_RELEASE_TAG_FINAL" ]]; then
+        LATEST_RELEASE_TAG=$LATEST_RELEASE_TAG_FINAL
+      else
+        LATEST_RELEASE=$(git tag | grep $LATEST_RELEASE_BASE | tail -1)
+      fi
+      log_debug "Latest release - $LATEST_RELEASE"
+      log_debug "Latest release base - $LATEST_RELEASE_BASE"
+      log_debug "Latest release tag - $LATEST_RELEASE_TAG"
       if [[ -z "$LATEST_RELEASE_TAG" ]]; then
         log_info "Could not find any tags for $LATEST_RELEASE release, creating it"
         check_release_branch $LATEST_RELEASE
@@ -248,8 +281,17 @@ check_if_release_branch_required() {
         REPO_TAGS_ARRAY+=($LATEST_RELEASE_TAG)
       fi 
     else
-      create_release_branch $RELEASE_VERSION
+      log_info "New release branch for $RELEASE_BRANCH_VERSION is required, creating it"
+      create_release_branch $RELEASE_BRANCH_VERSION
     fi
+  fi
+}
+
+get_release_branch_version() {
+  RELEASE_BRANCH_VERSION_BASE=$(echo $RELEASE_VERSION | cut -f 1,2 -d '.')
+  RELEASE_BRANCH_VERSION="$RELEASE_BRANCH_VERSION_BASE.0"
+  if [[ "$RELEASE_BRANCH_VERSION" != "$RELEASE_VERSION" ]]; then
+    log_info "Minor release version ($RELEASE_VERSION) deployment is detected, work will be checked in branch for $RELEASE_BRANCH_VERSION"
   fi
 }
 
@@ -260,8 +302,10 @@ create_repo_version() {
   rm -rf $REPO_NAME
   git clone -q $REPO_URL $REPO_NAME
   cd $REPO_NAME
+  get_release_branch_version
+  log_debug "Release branch version - $RELEASE_BRANCH_VERSION"
   DEFAULT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  RELEASE_BRANCH=$(git branch -r | grep $RELEASE_VERSION | awk -F 'origin/' '{print $2}' | xargs)
+  RELEASE_BRANCH=$(git branch -r | grep $RELEASE_BRANCH_VERSION | awk -F 'origin/' '{print $2}' | xargs)
   log_debug "Release branch to check - '$RELEASE_BRANCH'"
   if [[ ! -z "$RELEASE_BRANCH" ]]; then
     log_info "Release branch $RELEASE_BRANCH exists in the repository, checking if it has tags"
@@ -304,7 +348,7 @@ fi
 # Check variables
 log_debug "Release version: ${RELEASE_VERSION}"
 [ -z ${RELEASE_VERSION+x} ] && echo "RELEASE_VERSION is unset" && usage && exit 3
-echo "${RELEASE_VERSION}" | grep -xP "v(\d)+\.(\d)+\.\d+" >/dev/null || (log_error "RELEASE_VERSION is not in the right notation (correct example - v2.2.0)" && usage && exit 3)
+echo "${RELEASE_VERSION}" | grep -xP "v(\d)+\.(\d)+\.\d+" >/dev/null || (log_error "RELEASE_VERSION is not in the right notation (correct example - v2.2.0 or v2.2.2)" && usage && exit 3)
 log_debug "Tag type: ${TAG_TYPE}"
 [ -z ${TAG_TYPE+x} ] && echo "TAG_TYPE is unset" && usage && exit 3
 echo "${TAG_TYPE}" | tr '[:upper:]' '[:lower:]' | grep -xP "(rc|final)" >/dev/null || (log_error "TAG_TYPE is not in the supported values ('rc' or 'final', case insensitive)" && usage && exit 3)
