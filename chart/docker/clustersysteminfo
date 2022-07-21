@@ -94,6 +94,24 @@ do
   let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
   sleep 1
 
+  ./owanalytics_cli systeminfo
+  let "exit_code_sum+=$?"
+  if [[ ! -s result.json ]]
+  then
+    let "exit_code_sum+=1"
+  fi
+  let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+  sleep 1
+
+  ./owsub_cli systeminfo
+  let "exit_code_sum+=$?"
+  if [[ ! -s result.json ]]
+  then
+    let "exit_code_sum+=1"
+  fi
+  let "exit_code_sum+=$(grep ErrorCode result.json | wc -l)"
+  sleep 1
+
   let "CHECK_RETRIES-=1"
   echo "Exit code sum: $exit_code_sum"
   echo "Left retries: $CHECK_RETRIES"

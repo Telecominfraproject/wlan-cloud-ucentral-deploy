@@ -40,6 +40,24 @@ RUN git clone https://github.com/Telecominfraproject/wlan-cloud-owprov.git owpro
   && cp owprov/test_scripts/curl/cli owprov_cli \
   && rm -rf owprov
 
+# OWAnalytics
+ARG OWANALYTICS_VERSION=main
+RUN git clone https://github.com/Telecominfraproject/wlan-cloud-analytics.git owanalytics \
+  && cd owanalytics \
+  && git checkout $OWANALYTICS_VERSION \
+  && cd /cli \
+  && cp owanalytics/test_scripts/curl/cli owanalytics_cli \
+  && rm -rf owanalytics
+
+# OWSub
+ARG OWSUB_VERSION=main
+RUN git clone https://github.com/Telecominfraproject/wlan-cloud-userportal.git owsub \
+  && cd owsub \
+  && git checkout $OWSUB_VERSION \
+  && cd /cli \
+  && cp owsub/test_scripts/curl/cli owsub_cli \
+  && rm -rf owsub
+
 COPY clustersysteminfo clustersysteminfo
 COPY change_credentials change_credentials
 
