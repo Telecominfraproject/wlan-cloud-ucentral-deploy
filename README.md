@@ -18,3 +18,4 @@ This is a short version of [uCentral branching model](https://telecominfraprojec
 3. Also increase the microservice image tags used by the Docker Compose deployments according to the release in the 'Image tags' section of the `docker-compose/.env`, `docker-compose/.env.selfsigned` and `docker-compose/.env.letsencrypt` files.
 4. Create new git tag from release branch. The Git tag should have the same name as the intended release version. Once the tag is pushed to the repo, Github will trigger a build process that will create an assembly Helm chart bundle with all version fixed to the release equal to the Git tag name and will publish it to the public Artifactory and as GitHub release asset.
 5. Release to the QA namespace using the packaged Helm assembly chart to verify there are no issues related to the deployment.
+
