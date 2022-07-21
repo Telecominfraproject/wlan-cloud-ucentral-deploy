@@ -86,18 +86,19 @@ set_log_verbosity_number() {
 modify_deploy_repo_values() {
   NEW_RELEASE_TAG=$1
   log_debug "NEW_RELEASE_TAG - $NEW_RELEASE_TAG"
-  REPOSITORIES_AMOUNT=$(cat ../repositories.yaml | yq ".repositories[].name" -r | wc -l)
+  REPOSITORIES_AMOUNT=$(cat ../release.repositories.yaml | yq ".repositories[].name" -r | wc -l)
   for REPO_INDEX in $(seq 0 $(expr $REPOSITORIES_AMOUNT - 1)); do
-    REPO_URL=$(cat ../repositories.yaml | yq ".repositories[$REPO_INDEX].url" -r)
+    REPO_URL=$(cat ../release.repositories.yaml | yq ".repositories[$REPO_INDEX].url" -r)
     REPO_NAME_SUFFIXED=$(echo $REPO_URL | awk -F '/' '{print $NF}')
     REPO_NAME_WITHOUT_SUFFIX=${REPO_NAME_SUFFIXED%.git}
-    REPO_DOCKER_COMPOSE_NAME=$(cat ../repositories.yaml | yq ".repositories[$REPO_INDEX].docker_compose_name" -r)
+    REPO_DOCKER_COMPOSE_NAME=$(cat ../release.repositories.yaml | yq ".repositories[$REPO_INDEX].docker_compose_name" -r)
     SERVICE_TAG="${REPO_TAGS_ARRAY[$REPO_INDEX]}"
     log_debug "REPO_NAME_WITHOUT_SUFFIX - $REPO_NAME_WITHOUT_SUFFIX"
     sed "s/$REPO_DOCKER_COMPOSE_NAME=.*/$REPO_DOCKER_COMPOSE_NAME=$SERVICE_TAG/" -i docker-compose/.env
     sed "s/$REPO_DOCKER_COMPOSE_NAME=.*/$REPO_DOCKER_COMPOSE_NAME=$SERVICE_TAG/" -i docker-compose/.env.letsencrypt
     sed "s/$REPO_DOCKER_COMPOSE_NAME=.*/$REPO_DOCKER_COMPOSE_NAME=$SERVICE_TAG/" -i docker-compose/.env.selfsigned
     sed "/${REPO_NAME_WITHOUT_SUFFIX#*/}@/s/ref=.*/ref=$SERVICE_TAG\"/g" -i chart/Chart.yaml
+    sed "/repository: tip-tip-wlan-cloud-ucentral.jfrog.io\/clustersysteminfo/!b;n;s/tag: .*/tag: $NEW_RELEASE_TAG/" -i chart/values.yaml
   done
   LATEST_RELEASE_TAG=$(git tag | grep $RELEASE_VERSION | tail -1)
   if [[ "$(git diff | wc -l)" -eq "0" ]] && [[ "$(git diff $LATEST_RELEASE_TAG)" -eq "0" ]]; then
@@ -206,37 +207,41 @@ check_final_tag() {
 }
 
 check_git_tags() {
-  RELEASE_TAGS_AMOUNT=$(git tag | grep $RELEASE_VERSION | wc -l)
-  log_info "Checking if there are any tags for current version ($RELEASE_VERSION)"
-  log_debug "Amount of tags linked with the release - $RELEASE_TAGS_AMOUNT"
-  if [[ "$RELEASE_TAGS_AMOUNT" -gt "0" ]]; then
-    log_info "Tags for release $RELEASE_VERSION are found, checking if final tag exist"
-    check_final_tag
-    create_tag
+  if [[ "${#REPO_TAGS_ARRAY[@]}" -eq "0" ]] && [[ "$(basename $PWD)" == "deploy" ]]; then
+    log_info "This deploy clone run is required to get repositories tied to the release, we will make changes later."
   else
-    log_info "No tags found for current version, checking if there are any tags for release branch ($RELEASE_BRANCH_VERSION_BASE)"
-    RELEASE_BRANCH_TAGS_AMOUNT=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | wc -l)
-    log_debug "Amount of tags linked with the release branch - $RELEASE_BRANCH_TAGS_AMOUNT"
-    if [[ "$RELEASE_BRANCH_TAGS_AMOUNT" -gt "0" ]]; then
-      log_info "Tags for $RELEASE_BRANCH_VERSION_BASE are found, finding the latest one"
-      RELEASE_BRANCH_TAG_FINAL=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | grep -v 'RC' | tail -1)
-      if [[ ! -z "$RELEASE_BRANCH_TAG_FINAL" ]]; then
-        RELEASE_BRANCH_TAG=$RELEASE_BRANCH_TAG_FINAL
+    RELEASE_TAGS_AMOUNT=$(git tag | grep $RELEASE_VERSION | wc -l)
+    log_info "Checking if there are any tags for current version ($RELEASE_VERSION)"
+    log_debug "Amount of tags linked with the release - $RELEASE_TAGS_AMOUNT"
+    if [[ "$RELEASE_TAGS_AMOUNT" -gt "0" ]]; then
+      log_info "Tags for release $RELEASE_VERSION are found, checking if final tag exist"
+      check_final_tag
+      create_tag
+    else
+      log_info "No tags found for current version, checking if there are any tags for release branch ($RELEASE_BRANCH_VERSION_BASE)"
+      RELEASE_BRANCH_TAGS_AMOUNT=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | wc -l)
+      log_debug "Amount of tags linked with the release branch - $RELEASE_BRANCH_TAGS_AMOUNT"
+      if [[ "$RELEASE_BRANCH_TAGS_AMOUNT" -gt "0" ]]; then
+        log_info "Tags for $RELEASE_BRANCH_VERSION_BASE are found, finding the latest one"
+        RELEASE_BRANCH_TAG_FINAL=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | grep -v 'RC' | tail -1)
+        if [[ ! -z "$RELEASE_BRANCH_TAG_FINAL" ]]; then
+          RELEASE_BRANCH_TAG=$RELEASE_BRANCH_TAG_FINAL
+        else
+          RELEASE_BRANCH_TAG=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | tail -1)
+        fi
+        log_info "Latest release tag in $RELEASE_BRANCH_VERSION_BASE - $RELEASE_BRANCH_TAG. Checking if there are changes since then"
+        DIFF_LINES_AMOUNT=$(git diff $RELEASE_BRANCH_TAG | wc -l)
+        if [[ "$DIFF_LINES_AMOUNT" -eq "0" ]]; then
+          log_info "No changes found since the latest release tag ($RELEASE_BRANCH_TAG), using it for new version"
+          REPO_TAGS_ARRAY+=($RELEASE_BRANCH_TAG)
+        else
+          log_info "Changes are found in the branch, creating a new tag"
+          create_tag
+        fi
       else
-        RELEASE_BRANCH_TAG=$(git tag | grep $RELEASE_BRANCH_VERSION_BASE | tail -1)
-      fi
-      log_info "Latest release tag in $RELEASE_BRANCH_VERSION_BASE - $RELEASE_BRANCH_TAG. Checking if there are changes since then"
-      DIFF_LINES_AMOUNT=$(git diff $RELEASE_BRANCH_TAG | wc -l)
-      if [[ "$DIFF_LINES_AMOUNT" -eq "0" ]]; then
-        log_info "No changes found since the latest release tag ($RELEASE_BRANCH_TAG), using it for new version"
-        REPO_TAGS_ARRAY+=($RELEASE_BRANCH_TAG)
-      else
-        log_info "Changes are found in the branch, creating a new tag"
+        log_info "Tags for $RELEASE_BRANCH_VERSION_BASE not found, creating new one"
         create_tag
       fi
-    else
-      log_info "Tags for $RELEASE_BRANCH_VERSION_BASE not found, creating new one"
-      create_tag
     fi
   fi
 }
@@ -317,7 +322,6 @@ create_repo_version() {
   log_info "Release commit info:"
   git show
   cd $CWD
-  rm -rf $REPO_NAME
 }
 
 # Log level setup
@@ -354,22 +358,28 @@ log_debug "Tag type: ${TAG_TYPE}"
 echo "${TAG_TYPE}" | tr '[:upper:]' '[:lower:]' | grep -xP "(rc|final)" >/dev/null || (log_error "TAG_TYPE is not in the supported values ('rc' or 'final', case insensitive)" && usage && exit 3)
 
 # Main body
-REPOSITORIES_AMOUNT=$(cat repositories.yaml | yq ".repositories[].name" -r | wc -l)
 DEPLOY_REPO_URL=$(cat repositories.yaml | yq ".deploy_repo_url" -r)
 log_debug "DEPLOY_REPO_URL - $DEPLOY_REPO_URL"
 
+log_info "First we need to get repository list for tied deployment version"
+create_repo_version "deploy" $DEPLOY_REPO_URL
+cp deploy/.github/git-release-tool/repositories.yaml release.repositories.yaml
+rm -rf deploy
+
 log_info "Checking repositories"
+REPOSITORIES_AMOUNT=$(cat release.repositories.yaml | yq ".repositories[].name" -r | wc -l)
 log_info "Found $REPOSITORIES_AMOUNT repos to process"
 for REPO_INDEX in $(seq 0 $(expr $REPOSITORIES_AMOUNT - 1)); do
   echo
-  REPO_NAME=$(cat repositories.yaml | yq ".repositories[$REPO_INDEX].name" -r)
-  REPO_URL=$(cat repositories.yaml | yq ".repositories[$REPO_INDEX].url" -r)
-  REPO_DOCKER_COMPOSE_NAME=$(cat repositories.yaml | yq ".repositories[$REPO_INDEX].docker_compose_name" -r)
+  REPO_NAME=$(cat release.repositories.yaml | yq ".repositories[$REPO_INDEX].name" -r)
+  REPO_URL=$(cat release.repositories.yaml | yq ".repositories[$REPO_INDEX].url" -r)
+  REPO_DOCKER_COMPOSE_NAME=$(cat release.repositories.yaml | yq ".repositories[$REPO_INDEX].docker_compose_name" -r)
   log_debug "REPO_NAME - $REPO_NAME"
   log_debug "REPO_URL - $REPO_URL"
   log_debug "REPO_DOCKER_COMPOSE_NAME - $REPO_DOCKER_COMPOSE_NAME"
   log_info "Processing repository '$REPO_NAME'"
   create_repo_version $REPO_NAME $REPO_URL
+  rm -rf $REPO_NAME
 done
 log_debug "Tags per project: ${REPO_TAGS_ARRAY[*]}"
 
@@ -380,10 +390,11 @@ create_repo_version "deploy" $DEPLOY_REPO_URL
 echo
 log_info "Services versions:"
 for REPO_INDEX in $(seq 0 $(expr $REPOSITORIES_AMOUNT - 1)); do
-  REPO_NAME=$(cat repositories.yaml | yq ".repositories[$REPO_INDEX].name" -r)
+  REPO_NAME=$(cat release.repositories.yaml | yq ".repositories[$REPO_INDEX].name" -r)
   log_info "- $REPO_NAME - ${REPO_TAGS_ARRAY[$REPO_INDEX]}"
 done
 log_info "Deployment repo version - ${REPO_TAGS_ARRAY[-1]}"
+rm release.repositories.yaml
 if [[ "$GIT_PUSH_CONFIRMED" != "true" ]]; then
   log_info "To apply changes described above, set GIT_PUSH_CONFIRMED to 'true' and rerun this script"
 fi
