@@ -98,6 +98,7 @@ modify_deploy_repo_values() {
     sed "s/$REPO_DOCKER_COMPOSE_NAME=.*/$REPO_DOCKER_COMPOSE_NAME=$SERVICE_TAG/" -i docker-compose/.env.letsencrypt
     sed "s/$REPO_DOCKER_COMPOSE_NAME=.*/$REPO_DOCKER_COMPOSE_NAME=$SERVICE_TAG/" -i docker-compose/.env.selfsigned
     sed "/${REPO_NAME_WITHOUT_SUFFIX#*/}@/s/ref=.*/ref=$SERVICE_TAG\"/g" -i chart/Chart.yaml
+    sed "/repository: tip-tip-wlan-cloud-ucentral.jfrog.io\/clustersysteminfo/!b;n;s/tag: .*/tag: $NEW_RELEASE_TAG/" -i chart/values.yaml
   done
   LATEST_RELEASE_TAG=$(git tag | grep $RELEASE_VERSION | tail -1)
   if [[ "$(git diff | wc -l)" -eq "0" ]] && [[ "$(git diff $LATEST_RELEASE_TAG)" -eq "0" ]]; then
