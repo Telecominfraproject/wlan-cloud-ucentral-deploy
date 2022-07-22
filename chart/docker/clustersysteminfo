@@ -55,6 +55,9 @@ sed '/^password/s/password=.*/password="'$OWSEC_NEW_PASSWORD'"/' owsec_cli -i
 sed '/^password/s/password=.*/password="'$OWSEC_NEW_PASSWORD'"/' owgw_cli  -i
 sed '/^password/s/password=.*/password="'$OWSEC_NEW_PASSWORD'"/' owfms_cli -i
 sed '/^password/s/password=.*/password="'$OWSEC_NEW_PASSWORD'"/' owprov_cli -i
+# -> Configuration using env variables
+export OWSEC_USERNAME=${OWSEC_DEFAULT_USERNAME}
+export OWSEC_PASSWORD=${OWSEC_NEW_PASSWORD}
 
 echo "Running systeminfo checks for all components until all of them are available OR check tries are exausted ($CHECK_RETRIES)"
 exit_code_sum=1
