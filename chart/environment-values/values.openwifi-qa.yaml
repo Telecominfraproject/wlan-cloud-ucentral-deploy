@@ -1,4 +1,15 @@
 owgw:
+  services:
+    owgw:
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+        service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16102"
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003"
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+
   # https://telecominfraproject.atlassian.net/browse/WIFI-5840
   checks:
     owgw:
@@ -103,6 +114,17 @@ owgw:
             secretName: {{ include "owgw.fullname" . }}-owgw-restapi-tls
 
 owsec:
+  services:
+    owsec:
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+        service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16101"
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16001"
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+
   # https://telecominfraproject.atlassian.net/browse/WIFI-5840
   checks:
     owsec:
@@ -190,6 +212,17 @@ owsec:
             secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
 
 rttys:
+  services:
+    rttys:
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+        service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "5912"
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "5912,5913"
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+
   resources:
     requests:
       cpu: 10m
@@ -202,6 +235,9 @@ rttys:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 
 owgwui:
+  services:
+    owgwui:
+      type: NodePort
   ingresses:
     default:
       enabled: true
@@ -229,6 +265,17 @@ owgwui:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 
 owfms:
+  services:
+    owfms:
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+        service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16104"
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004"
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+
   # https://telecominfraproject.atlassian.net/browse/WIFI-5840
   checks:
     owfms:
@@ -316,6 +363,17 @@ owfms:
             secretName: {{ include "owfms.fullname" . }}-owfms-restapi-tls
 
 owprov:
+  services:
+    owprov:
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+        service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16105"
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16005"
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+
   checks:
     owprov:
       readiness:
@@ -402,6 +460,9 @@ owprov:
             secretName: {{ include "owprov.fullname" . }}-owprov-restapi-tls
 
 owprovui:
+  services:
+    owprovui:
+      type: NodePort
   ingresses:
     default:
       enabled: true
@@ -419,7 +480,6 @@ owprovui:
 
   podAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-
 
 kafka:
   commonAnnotations:
@@ -451,16 +511,6 @@ kafka:
 clustersysteminfo:
   enabled: true
   delay: 60 # delaying to wait for AWS Route53 DNS propagation
-
-haproxy:
-  service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-      service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
-      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285
-      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,16001,17001,5912,5913,16009"
-      service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
 
 restapiCerts:
   enabled: true
