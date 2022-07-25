@@ -39,7 +39,7 @@ http:
     owgw-rttys-view:
       loadBalancer:
         servers:
-          - url: "http://owgw.wlan.local:5913/"
+          - url: "https://owgw.wlan.local:5913/"
 
   routers:
     owgw-ui-http:
@@ -134,6 +134,6 @@ tcp:
     owgw-rttys:
       entryPoints: "owgwrttys"
       service: "owgw-rttys"
-      rule: "HostSNI(`{{ env "SDKHOSTNAME" }}`)"
+      rule: "HostSNI(`*`)"
       tls:
-        certResolver: openwifi
+        passthrough: true
