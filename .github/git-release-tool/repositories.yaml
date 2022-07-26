@@ -24,3 +24,6 @@ repositories:
   - name: owsub
     url: https://github.com/Telecominfraproject/wlan-cloud-userportal.git
     docker_compose_name: OWSUB_TAG
+  - name: owrrm
+    url: https://github.com/Telecominfraproject/wlan-cloud-rrm.git
+    docker_compose_name: OWRRM_TAG
