@@ -13,6 +13,8 @@ volumes:
     driver: local
   owsub_data:
     driver: local
+  owrrm_data:
+    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -167,14 +169,11 @@ services:
     env_file:
       - owrrm.env
     depends_on:
-      - owsec
-      - owgw
-      - owfms
-      - owprov
-      - owanalytics
-      - owsub
       - mysql
+      - kafka
     restart: unless-stopped
+    volumes:
+      - owrrm_data:/owrrm-data
 
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"

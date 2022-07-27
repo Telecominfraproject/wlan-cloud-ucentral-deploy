@@ -1,6 +1,8 @@
 version: '3'
 
 volumes:
+  owrrm_data:
+    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -183,14 +185,11 @@ services:
     env_file:
       - owrrm.env
     depends_on:
-      - owsec
-      - owgw
-      - owfms
-      - owprov
-      - owanalytics
-      - owsub
       - mysql
+      - kafka
     restart: unless-stopped
+    volumes:
+      - owrrm_data:/owrrm-data
     ports:
       - "16789:16789"
 
