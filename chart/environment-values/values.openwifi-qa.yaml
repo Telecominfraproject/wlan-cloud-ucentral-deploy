@@ -613,6 +613,12 @@ owrrm:
 
   volumes:
     owrrm:
+      - name: persist
+        mountPath: /owrrm-data/
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owrrm.fullname" . }}-pvc
+
       - name: restapi-ca
         mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
         subPath: ca.crt
