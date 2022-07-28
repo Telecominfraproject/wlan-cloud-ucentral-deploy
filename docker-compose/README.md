@@ -36,14 +36,15 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 1. Switch into the project directory with `cd docker-compose/`. Copy your websocket and REST API certificates into the `certs/` directory. Make sure to reference the certificates accordingly in the service config if you use different file names or if you want to use different certificates for the respective microservices.
 2. Adapt the following hostname and URI variables according to your environment:
 ### .env
-| Variable                   | Description                                                         |
-| -------------------------- | ------------------------------------------------------------------- |
-| `INTERNAL_OWGW_HOSTNAME`   | Set this to your OWGW hostname, for example `owgw.example.com`.     |
-| `INTERNAL_OWSEC_HOSTNAME`  | Set this to your OWSec hostname, for example `owsec.example.com`.   |
-| `INTERNAL_OWFMS_HOSTNAME`  | Set this to your OWFms hostname, for example `owfms.example.com`.   |
-| `INTERNAL_OWPROV_HOSTNAME` | Set this to your OWProv hostname, for example `owprov.example.com`. |
-| `INTERNAL_OWANALYTICS_HOSTNAME` | Set this to your OWAnalytics hostname, for example `owanalytics.example.com`. |
-| `INTERNAL_OWSUB_HOSTNAME`  | Set this to your OWSub hostname, for example `owsub.example.com`.   |
+| Variable                        | Description                                                                        |
+| ------------------------------- | ---------------------------------------------------------------------------------- |
+| `INTERNAL_OWGW_HOSTNAME`        | Set this to your OWGW hostname, for example `owgw.example.com`.                    |
+| `INTERNAL_OWSEC_HOSTNAME`       | Set this to your OWSec hostname, for example `owsec.example.com`.                  |
+| `INTERNAL_OWFMS_HOSTNAME`       | Set this to your OWFms hostname, for example `owfms.example.com`.                  |
+| `INTERNAL_OWPROV_HOSTNAME`      | Set this to your OWProv hostname, for example `owprov.example.com`.                |
+| `INTERNAL_OWANALYTICS_HOSTNAME` | Set this to your OWAnalytics hostname, for example `owanalytics.example.com`.      |
+| `INTERNAL_OWSUB_HOSTNAME`       | Set this to your OWSub hostname, for example `owsub.example.com`.                  |
+| `INTERNAL_OWRRM_HOSTNAME`       | Set this to your OWRRM hostname, for example `owrrm.example.com`.                  |
 ### owgw.env
 | Variable                                 | Description                                                                         |
 | ---------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -81,10 +82,10 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWAnalytics URL, for example `https://owanalytics.example.com:16009`. |
 | `SYSTEM_URI_UI`                          | Set this to your OWProv-UI URL, for example `https://owprov-ui.example.com`.           |
 ### owrrm.env
-| Variable                                 | Description                                               |
-| ---------------------------------------- | --------------------------------------------------------- |
-| `UCENTRALCONFIG_UCENTRALSECHOST` | Set this to your OWSec hostname, for example `owsec.example.com`. |
-| `DATABASECONFIG_PASSWORD`        | Set this to a random and safe password.                           |
+| Variable                                 | Description                                                                                     |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `SERVICECONFIG_PRIVATEENDPOINT`, `SERVICECONFIG_PUBLICENDPOINT` | Set this to your OWRRM URL, for example https://owrrm.example.com:16789. |
+| `DATABASECONFIG_PASSWORD`                                       | Set this to a random and safe password.                                  |
 ### mysql.env
 | Variable                                 | Description                                      |
 | ---------------- | ------------------------------------------------------------------------ |
@@ -218,7 +219,8 @@ For the Letsencrypt challenge to work you need a public IP address. The hostname
 ### owrrm.env
 | Variable                                 | Description                     |
 | ---------------------------------------- | ------------------------------- |
-| `DATABASECONFIG_PASSWORD`        | Set this to a random and safe password. |
+| `SERVICECONFIG_PUBLICENDPOINT`   | Set this to your OWRRM URL, for example https://openwifi.example.com:16789. |
+| `DATABASECONFIG_PASSWORD`        | Set this to a random and safe password.                                     |
 ### mysql.env
 | Variable         | Description                                                              |
 | ---------------- | ------------------------------------------------------------------------ |
