@@ -224,6 +224,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owlsui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=lsui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owlsui.ingresses.default.hosts={lsui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owlsui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owrrm.public_env_variables.SERVICECONFIG_PUBLICENDPOINT=https://rrm-${NAMESPACE}.cicd.lab.wlan.tip.build:16789 \
   --set haproxy.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$HAPROXY_SERVICE_DNS_RECORDS \
   --set owgw.services.owgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$OWGW_SERVICE_DNS_RECORDS \
   ${EXTRA_VALUES_FLAGS[*]} \
