@@ -28,9 +28,9 @@ dependencies:
 - name: owsub
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-userportal@helm?ref=main"
   version: 0.1.0
-#- name: owrrm
-#  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-rrm@helm?ref=main"
-#  version: 0.1.0
+- name: owrrm
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-rrm@helm?ref=main"
+  version: 0.1.0
 - name: kafka
   repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
   version: 13.0.2
