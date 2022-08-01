@@ -156,10 +156,10 @@ for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
 done
 
 if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
-  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build\,rrm-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build"
 else
-  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build\,rrm-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS=""
 fi
 
@@ -225,6 +225,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owlsui.ingresses.default.hosts={lsui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owlsui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owrrm.public_env_variables.SERVICECONFIG_PUBLICENDPOINT=https://rrm-${NAMESPACE}.cicd.lab.wlan.tip.build:16789 \
+  --set owrrm.services.owrrm.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=rrm-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set haproxy.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$HAPROXY_SERVICE_DNS_RECORDS \
   --set owgw.services.owgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$OWGW_SERVICE_DNS_RECORDS \
   ${EXTRA_VALUES_FLAGS[*]} \
