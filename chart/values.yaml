@@ -229,15 +229,6 @@ haproxy:
         protocol: TCP
         port: 17006
         targetPort: owsubrint
-      # owrrm
-      - name: owrrmrest
-        protocol: TCP
-        port: 16789
-        targetPort: owsubrest
-      - name: owrrmrint
-        protocol: TCP
-        port: 17007
-        targetPort: owsubrint
 
   containerPorts:
     # healthcheck
@@ -281,11 +272,6 @@ haproxy:
       containerPort: 16006
     - name: owsubrint
       containerPort: 17006
-    # owsub
-    - name: owrrmrest
-      containerPort: 16789
-    - name: owrrmrint
-      containerPort: 17007
 
   configuration: |
     global
@@ -441,23 +427,6 @@ haproxy:
     backend back_owsub_rest_internal
       mode tcp
       server svc_owsub_rest_internal owsub-owsub:17006
-
-    # owrrm
-    #frontend front_owrrm_rest
-    #  bind :16789
-    #  mode tcp
-    #  default_backend back_owrrm_rest
-    #backend back_owrrm_rest
-    #  mode tcp
-    #  server svc_owrrm_rest owrrm-owrrm:16789
-
-    #frontend front_owrrm_rest_internal
-    #  bind :17007
-    #  mode tcp
-    #  default_backend back_owrrm_rest_internal
-    #backend back_owrrm_rest_internal
-    #  mode tcp
-    #  server svc_owrrm_rest_internal owrrm-owrrm:17007
 
 # Cert-manager RESTAPI certs
 restapiCerts:
