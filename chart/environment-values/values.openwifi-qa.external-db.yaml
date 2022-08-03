@@ -21,74 +21,74 @@ owgw:
         cpu: 250m
         memory: 1024Mi
 
-#owsec:
-#  configProperties:
-#    storage.type: postgresql
-#    storage.type.postgresql.host: owsec-pgsql
-#    storage.type.postgresql.database: owsec
-#    storage.type.postgresql.username: owsec
-#    storage.type.postgresql.password: owsec
-#
-#  postgresql:
-#    enabled: true
-#    nameOverride: owsec-pgsql
-#    fullnameOverride: owsec-pgsql
-#    postgresqlDatabase: owsec
-#    postgresqlUsername: owsec
-#    postgresqlPassword: owsec
-#    resources:
-#      requests:
-#        cpu: 250m
-#        memory: 1024Mi
-#      limits:
-#        cpu: 250m
-#        memory: 1024Mi
+owsec:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: owsec-pgsql
+    storage.type.postgresql.database: owsec
+    storage.type.postgresql.username: owsec
+    storage.type.postgresql.password: owsec
 
-#owfms:
-#  configProperties:
-#    storage.type: postgresql
-#    storage.type.postgresql.host: owfms-pgsql
-#    storage.type.postgresql.database: owfms
-#    storage.type.postgresql.username: owfms
-#    storage.type.postgresql.password: owfms
-#
-#  postgresql:
-#    enabled: true
-#    nameOverride: owfms-pgsql
-#    fullnameOverride: owfms-pgsql
-#    postgresqlDatabase: owfms
-#    postgresqlUsername: owfms
-#    postgresqlPassword: owfms
-#    resources:
-#      requests:
-#        cpu: 250m
-#        memory: 1024Mi
-#      limits:
-#        cpu: 250m
-#        memory: 1024Mi
+  postgresql:
+    enabled: true
+    nameOverride: owsec-pgsql
+    fullnameOverride: owsec-pgsql
+    postgresqlDatabase: owsec
+    postgresqlUsername: owsec
+    postgresqlPassword: owsec
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
 
-#owprov:
-#  configProperties:
-#    storage.type: postgresql
-#    storage.type.postgresql.host: owprov-pgsql
-#    storage.type.postgresql.database: owprov
-#    storage.type.postgresql.username: owprov
-#    storage.type.postgresql.password: owprov
-#
-#  postgresql:
-#    enabled: true
-#    nameOverride: owprov-pgsql
-#    fullnameOverride: owprov-pgsql
-#    postgresqlDatabase: owprov
-#    postgresqlUsername: owprov
-#    postgresqlPassword: owprov
-#    resources:
-#      requests:
-#        cpu: 250m
-#        memory: 1024Mi
-#      limits:
-#        cpu: 250m
-#        memory: 1024Mi
+owfms:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: owfms-pgsql
+    storage.type.postgresql.database: owfms
+    storage.type.postgresql.username: owfms
+    storage.type.postgresql.password: owfms
+
+  postgresql:
+    enabled: true
+    nameOverride: owfms-pgsql
+    fullnameOverride: owfms-pgsql
+    postgresqlDatabase: owfms
+    postgresqlUsername: owfms
+    postgresqlPassword: owfms
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
+
+owprov:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: owprov-pgsql
+    storage.type.postgresql.database: owprov
+    storage.type.postgresql.username: owprov
+    storage.type.postgresql.password: owprov
+
+  postgresql:
+    enabled: true
+    nameOverride: owprov-pgsql
+    fullnameOverride: owprov-pgsql
+    postgresqlDatabase: owprov
+    postgresqlUsername: owprov
+    postgresqlPassword: owprov
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
 
 owanalytics:
   configProperties:
@@ -113,25 +113,25 @@ owanalytics:
         cpu: 250m
         memory: 1024Mi
 
-#owsub:
-#  configProperties:
-#    storage.type: postgresql
-#    storage.type.postgresql.host: owsub-pgsql
-#    storage.type.postgresql.database: owsub
-#    storage.type.postgresql.username: owsub
-#    storage.type.postgresql.password: owsub
-#
-#  postgresql:
-#    enabled: true
-#    nameOverride: owsub-pgsql
-#    fullnameOverride: owsub-pgsql
-#    postgresqlDatabase: owsub
-#    postgresqlUsername: owsub
-#    postgresqlPassword: owsub
-#    resources:
-#      requests:
-#        cpu: 250m
-#        memory: 1024Mi
-#      limits:
-#        cpu: 250m
-#        memory: 1024Mi
+owsub:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: owsub-pgsql
+    storage.type.postgresql.database: owsub
+    storage.type.postgresql.username: owsub
+    storage.type.postgresql.password: owsub
+
+  postgresql:
+    enabled: true
+    nameOverride: owsub-pgsql
+    fullnameOverride: owsub-pgsql
+    postgresqlDatabase: owsub
+    postgresqlUsername: owsub
+    postgresqlPassword: owsub
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
