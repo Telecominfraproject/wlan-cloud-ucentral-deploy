@@ -5,7 +5,8 @@ The template creates a CloudFormation stack based on the Docker Compose Let's En
 1. Login into the AWS Management Console (https://aws.amazon.com/de/console).
 2. Go to the AWS Systems Manager Parameter Store page and create two parameters according to these instructions https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-create-console.html: one for your Digicert-signed websocket certificate and the other one for the corresponding key. You can leave the default parameter details: you need two standard parameters with type `String` and data type `text`. Just copy and paste your certificate and key into the `Value` field of the respective parameter and remember the parameter names.
 3. Go to the CloudFormation service page and follow the instructions described here https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-using-console-create-stack-template.html to upload a template file and choose the template included in this repository.
-4. In the next step you have to enter multiple input parameters required for a successful deployment. Here's an explanation of all parameters:  
+4. In the next step you have to enter multiple input parameters required for a successful deployment. Here's an explanation of all parameters:
+
 **InstanceType**: Choose an AWS EC2 instance type (https://aws.amazon.com/ec2/instance-types). The smallest instance type you can choose is t2.small.  
 **KeyName**: Specify the name of the SSH key pair you want to use to connect the instance. If you don't have a key pair yet, please create or import one according to these instructions https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html.  
 **SSHLocation**: If you want to restrict the IP range which is allowed to connect to the instance via SSH, please specify a valid CIDR IP range here.  
