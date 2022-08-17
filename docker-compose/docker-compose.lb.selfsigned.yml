@@ -196,6 +196,25 @@ services:
     volumes:
       - kafka_data:/bitnami/kafka
 
+  init-kafka:
+    image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
+    networks:
+      openwifi:
+    depends_on:
+      - kafka
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        TOPICS="command connection device_event_queue device telemetry healthcheck \
+        provisioning_change service_events state wifiscan"
+        echo "Creating all required Kafka topics..."
+        for topic in $$TOPICS; do
+          /opt/bitnami/kafka/bin/kafka-topics.sh \
+          --create --if-not-exists --topic $$topic --replication-factor 1 \
+          --partitions 1 --bootstrap-server kafka:9092
+        done && echo "Successfully created Kafka topics, exiting." && exit 0
+
   mysql:
     image: "mysql:${MYSQL_TAG}"
     networks:
