@@ -220,12 +220,12 @@ services:
       openwifi:
     depends_on:
       - kafka
+    env_file:
+      - kafka.env
     entrypoint:
       - /bin/sh
       - -c
       - |
-        TOPICS="command connection device_event_queue device telemetry healthcheck \
-        provisioning_change service_events state wifiscan"
         echo "Creating all required Kafka topics..."
         for topic in $$TOPICS; do
           /opt/bitnami/kafka/bin/kafka-topics.sh \
