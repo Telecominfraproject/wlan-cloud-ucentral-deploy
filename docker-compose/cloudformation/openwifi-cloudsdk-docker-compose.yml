@@ -1,0 +1,341 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  OpenWiFi Cloud SDK Docker Compose Deployment: This template creates an
+  OpenWiFi Cloud SDK deployment using Docker Compose and Letsencrypt for
+  northbound certificates (https://github.com/Telecominfraproject/
+  wlan-cloud-ucentral-deploy/tree/main/docker-compose
+  #lb-deployment-with-letsencrypt-certificates).
+  **WARNING** You will be billed for the AWS resources used if you create a
+  stack from this template.
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Amazon EC2 configuration"
+        Parameters:
+          - InstanceType
+          - LatestUbuntuFocalAMI
+          - KeyName
+          - SSHLocation
+      - Label:
+          default: "Amazon Route53 configuration"
+        Parameters:
+          - CreateRoute53Record
+          - ExistingHostedZoneId
+          - HostedZoneName
+      - Label:
+          default: "OpenWiFi cloud SDK configuration"
+        Parameters:
+          - SDKVersion
+          - SDKHostname
+          - WebsocketCertParameter
+          - WebsocketKeyParameter
+          - TraefikAcmeEmail
+Parameters:
+  KeyName:
+    Description: Name of the EC2 KeyPair to enable SSH access to the instance.
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: Must be the name of an existing EC2 KeyPair.
+  SDKHostname:
+    Description: Hostname you want to use for your OpenWiFi Cloud SDK installation.
+    Default: openwifi.wlan.local
+    Type: String
+    AllowedPattern: "^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$"
+  TraefikAcmeEmail:
+    Description: Email address used for ACME registration
+    Type: String
+  CreateRoute53Record:
+    Description: |
+      Set this to "True" if you want to create a DNS record for the SDK
+      hostname.
+      This will resolve to the public IP of the created EC2 instance.
+    AllowedValues:
+      - "True"
+      - "False"
+    Default: "False"
+    Type: String
+  ExistingHostedZoneId:
+    Description: |
+      If you want to create the Route53 record in an existing hosted zone,
+      please specify the according hosted zone ID. 
+    Type: String
+#    MinLength: 21
+#    MaxLength: 21
+#    AllowedPattern: "[A-Z0-9]+"
+  HostedZoneName:
+    Description: |
+      If you want to create a new hosted zone for the Route53 record, please
+      specify the name of the domain.
+    Type: String
+#    AllowedPattern: "^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$"
+  SDKVersion:
+    Description: OpenWiFi Cloud SDK version to be deployed.
+    Default: main
+    Type: String
+  WebsocketCertParameter:
+    Description: |
+      The AWS Systems Manager parameter containing your Digicert-signed
+      websocket certificate.
+    Type: AWS::SSM::Parameter::Value<String>
+  WebsocketKeyParameter:
+    Description: |
+      The AWS Systems Manager parameter containing the key to your
+      Digicert-signed websocket certificate.
+    Type: AWS::SSM::Parameter::Value<String>
+  LatestUbuntuFocalAMI:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: "/aws/service/canonical/ubuntu/server/focal/stable/current/amd64/hvm/ebs-gp2/ami-id"
+  InstanceType:
+    Description: Cloud SDK EC2 instance type
+    Type: String
+    Default: t2.small
+    AllowedValues:
+      - t2.small
+      - t2.medium
+      - t2.large
+      - m1.small
+      - m1.medium
+      - m1.large
+      - m1.xlarge
+      - m2.xlarge
+      - m2.2xlarge
+      - m2.4xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - c1.medium
+      - c1.xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - g2.2xlarge
+      - g2.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - i2.xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - hi1.4xlarge
+      - hs1.8xlarge
+      - cr1.8xlarge
+      - cc2.8xlarge
+      - cg1.4xlarge
+    ConstraintDescription: must be a valid EC2 instance type.
+  SSHLocation:
+    Description: |
+      The IP address range that can be used to SSH to the EC2 instances
+    Type: String
+    MinLength: "9"
+    MaxLength: "18"
+    Default: 0.0.0.0/0
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+Conditions:
+  HasExistingHostedZoneId: !Not [ !Equals [ !Ref ExistingHostedZoneId, "" ] ]
+  HasHostedZoneName: !Not [ !Equals [ !Ref HostedZoneName, "" ] ]
+  CreateRoute53Record: !Equals [ !Ref CreateRoute53Record, "True" ]
+  CreateRecordInExistingZone: !And [ Condition: HasExistingHostedZoneId, Condition: CreateRoute53Record ]
+  CreateRecordInNewZone: !And [ Condition: HasHostedZoneName, Condition: CreateRoute53Record ]
+Resources:
+  CloudSDKInstance:
+    Type: "AWS::EC2::Instance"
+    Metadata:
+      "AWS::CloudFormation::Init":
+        configSets:
+          InstallDockerAndCreateDeployment:
+            - InstallDocker
+            - CreateCloudSDKDeployment
+        InstallDocker:
+          packages:
+            apt:
+              ca-certificates: []
+              curl: []
+              gnupg: []
+              lsb-release: []
+              php-mysql: []
+          commands:
+            a_add_repo_gpg_key:
+              command: |
+                curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+                | sudo gpg --dearmor -o \
+                /usr/share/keyrings/docker-archive-keyring.gpg
+            b_add_docker_repo:
+              command: |
+                echo "deb [arch=$(dpkg --print-architecture) \
+                signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+                https://download.docker.com/linux/ubuntu $(lsb_release -cs) \
+                stable" | sudo tee /etc/apt/sources.list.d/docker.list \
+                > /dev/null
+            c_install_docker:
+              command: |
+                sudo apt-get update \
+                && sudo apt-get install -y docker-ce docker-ce-cli \
+                containerd.io docker-compose-plugin docker-compose
+            d_enable_and_start_docker:
+              command: |
+                sudo systemctl enable docker && sudo systemctl start docker
+            e_add_ubuntu_user_to_docker_group:
+              command: "sudo usermod -aG docker ubuntu"
+        CreateCloudSDKDeployment:
+          files:
+            /etc/profile.d/aliases.sh:
+              content: |
+                alias docker-compose-lb-letsencrypt="docker-compose -f \
+                docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt"
+                alias docker-compose-lb-selfsigned="docker-compose -f \
+                docker-compose.lb.selfsigned.yml --env-file .env.selfsigned"
+                alias docker-compose-postgresql="docker-compose -f \
+                docker-compose.yml -f docker-compose.postgresql.yml"
+              mode: "000644"
+              owner: "root"
+              group: "root"
+          commands:
+            a_clone_deploy_repo:
+              command: |
+                git clone https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy
+              cwd: "~"
+            b_checkout_deploy_version:
+              command: !Sub "git checkout ${SDKVersion}"
+              cwd: "~/wlan-cloud-ucentral-deploy"
+            c_create_deployment:
+              command: "./deploy.sh"
+              env:
+                DEFAULT_UCENTRALSEC_URL: !Sub "https://${SDKHostname}:16001"
+                SYSTEM_URI_UI: !Sub "https://${SDKHostname}"
+                SDKHOSTNAME: !Sub "${SDKHostname}"
+                WEBSOCKET_CERT: !Ref WebsocketCertParameter
+                WEBSOCKET_KEY: !Ref WebsocketKeyParameter
+                OWGW_FILEUPLOADER_HOST_NAME: !Sub "${SDKHostname}"
+                OWGW_FILEUPLOADER_URI: !Sub "https://${SDKHostname}:16003"
+                OWGW_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16002"
+                OWGW_RTTY_SERVER: !Sub "${SDKHostname}"
+                OWSEC_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16001"
+                OWFMS_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16004"
+                OWPROV_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16005"
+                OWANALYTICS_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16009"
+                OWSUB_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16006"
+                OWRRM_SERVICECONFIG_PRIVATEENDPOINT: !Sub "http://owrrm.wlan.local:17007"
+                OWRRM_SERVICECONFIG_PUBLICENDPOINT: !Sub "https://${SDKHostname}:16789"
+                TRAEFIK_ACME_EMAIL: !Sub "${TraefikAcmeEmail}"
+              cwd: "~/wlan-cloud-ucentral-deploy/docker-compose"
+    Properties:
+      ImageId: !Ref LatestUbuntuFocalAMI
+      InstanceType: !Ref InstanceType
+      SecurityGroups:
+        - !Ref CloudSDKSecurityGroup
+      KeyName: !Ref KeyName
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          apt-get update -y
+          mkdir -p /opt/aws/bin
+          wget https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-latest.tar.gz
+          python3 -m easy_install --script-dir /opt/aws/bin aws-cfn-bootstrap-py3-latest.tar.gz
+          /opt/aws/bin/cfn-init -v \
+            --stack ${AWS::StackName} \
+            --resource CloudSDKInstance \
+            --configsets InstallDockerAndCreateDeployment \
+            --region ${AWS::Region}
+          /opt/aws/bin/cfn-signal -e $? \
+            --stack ${AWS::StackName} \
+            --resource CloudSDKInstance \
+            --region ${AWS::Region}
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
+  CloudSDKSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Enable OpenWiFi Cloud SDK and SSH access
+      SecurityGroupIngress:
+        - IpProtocol: icmp
+          FromPort: "-1"
+          ToPort: "-1"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "80"
+          ToPort: "80"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "443"
+          ToPort: "443"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "15002"
+          ToPort: "15002"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "16001"
+          ToPort: "16006"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "16009"
+          ToPort: "16009"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "16789"
+          ToPort: "16789"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "5912"
+          ToPort: "5913"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: !Ref SSHLocation
+  CloudSDKHostedZone:
+    Condition: HasHostedZoneName
+    Type: AWS::Route53::HostedZone
+    Properties: 
+      Name: !Ref HostedZoneName
+  CloudSDKRoute53RecordExistingHostedZone:
+    Condition: CreateRecordInExistingZone
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref ExistingHostedZoneId
+      Name: !Ref SDKHostname
+      Type: A
+      TTL: 900
+      ResourceRecords:
+      - !GetAtt CloudSDKInstance.PublicIp
+  CloudSDKRoute53RecordNewHostedZone:
+    Condition: CreateRecordInNewZone
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !GetAtt CloudSDKHostedZone.Id
+      Name: !Ref SDKHostname
+      Type: A
+      TTL: 900
+      ResourceRecords:
+      - !GetAtt CloudSDKInstance.PublicIp
+Outputs:
+  WebsiteURL:
+    Description: |
+      Visit this URL and login with user 'tip@ucentral.com' and password
+      'openwifi'.
+    Value: !Join
+      - ""
+      - - "https://"
+        - !Ref SDKHostname
