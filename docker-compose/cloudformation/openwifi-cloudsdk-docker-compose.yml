@@ -153,10 +153,10 @@ Parameters:
     ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
 Conditions:
   HasExistingHostedZoneId: !Not [ !Equals [ !Ref ExistingHostedZoneId, "" ] ]
-  HasNotExistingHostedZoneId: !Not [ Condition: HasExistingHostedZoneId ]
+  HasHostedZoneName: !Not [ !Equals [ !Ref HostedZoneName, "" ] ]
   CreateRoute53Record: !Equals [ !Ref CreateRoute53Record, "True" ]
   CreateRecordInExistingZone: !And [ Condition: HasExistingHostedZoneId, Condition: CreateRoute53Record ]
-  CreateRecordInNewZone: !And [ Condition: HasNotExistingHostedZoneId, Condition: CreateRoute53Record ]
+  CreateRecordInNewZone: !And [ Condition: HasHostedZoneName, Condition: CreateRoute53Record ]
 Resources:
   CloudSDKInstance:
     Type: "AWS::EC2::Instance"
@@ -306,7 +306,7 @@ Resources:
           ToPort: "22"
           CidrIp: !Ref SSHLocation
   CloudSDKHostedZone:
-    Condition: HasNotExistingHostedZoneId
+    Condition: HasHostedZoneName
     Type: AWS::Route53::HostedZone
     Properties: 
       Name: !Ref HostedZoneName
