@@ -46,3 +46,7 @@ dependencies:
   repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
   version: 0.2.21
   condition: haproxy.enabled
+- name: postgresql-ha
+  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
+  version: 8.6.13
+  condition: postgresql-ha.enabled

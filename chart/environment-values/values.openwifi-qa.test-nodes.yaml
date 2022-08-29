@@ -217,3 +217,19 @@ kafka:
     - key: "tests"
       operator: "Exists"
       effect: "NoSchedule"
+
+postgresql-ha:
+  pgpool:
+    nodeSelector:
+      env: tests
+    tolerations:
+    - key: "tests"
+      operator: "Exists"
+      effect: "NoSchedule"
+  postgresql:
+    nodeSelector:
+      env: tests
+    tolerations:
+    - key: "tests"
+      operator: "Exists"
+      effect: "NoSchedule"
