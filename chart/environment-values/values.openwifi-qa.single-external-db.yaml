@@ -1,0 +1,74 @@
+owgw:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.database: owgw
+    storage.type.postgresql.username: owgw
+    storage.type.postgresql.password: owgw
+
+owsec:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.database: owsec
+    storage.type.postgresql.username: owsec
+    storage.type.postgresql.password: owsec
+
+owfms:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.database: owfms
+    storage.type.postgresql.username: owfms
+    storage.type.postgresql.password: owfms
+
+owprov:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.database: owprov
+    storage.type.postgresql.username: owprov
+    storage.type.postgresql.password: owprov
+
+owanalytics:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.database: owanalytics
+    storage.type.postgresql.username: owanalytics
+    storage.type.postgresql.password: owanalytics
+
+owsub:
+  configProperties:
+    storage.type: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.database: owsub
+    storage.type.postgresql.username: owsub
+    storage.type.postgresql.password: owsub
+
+postgresql-ha:
+  enabled: true
+  initDbScriptSecret:
+    enabled: true
+  pgpool:
+    adminPassword: admin
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
+    initdbScriptsSecret: tip-openwifi-initdb-scripts
+  postgresql:
+    replicaCount: 1 # TODO change after tests
+    password: password
+    postgresPassword: postgres
+    repmgrPassword: repmgr
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi

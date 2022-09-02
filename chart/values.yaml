@@ -443,3 +443,17 @@ restapiCerts:
     - owrrm-owrrm
 
   clusterDomain: cluster.local
+
+postgresql-ha:
+  enabled: false
+  nameOverride: pgsql
+  fullnameOverride: pgsql
+  initDbScriptSecret:
+    enabled: false
+    services:
+      - owgw
+      - owsec
+      - owfms
+      - owprov
+      - owanalytics
+      - owsub
