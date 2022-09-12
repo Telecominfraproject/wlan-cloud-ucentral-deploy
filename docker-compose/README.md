@@ -9,6 +9,7 @@ The repository also contains a separate Docker Compose deployment to set up the 
 - [LB deployment with Let's Encrypt certificates](#lb-deployment-with-letsencrypt-certificates)
 - [OWLS deployment with self-signed certificates](owls/README.md)
 - [AWS CloudFormation template](cloudformation/openwifi-cloudsdk-docker-compose.yml)
+
 ### Configuration
 Config files for the microservices are generated on every startup based on the environment variables in the microservice specific env files. For an overview of the supported configuration properties have a look into these files. For an explanation of the configuration properties please see the README in the respective microservice repository.
 Be aware that local changes to the config files will be overwritten on every startup if `TEMPLATE_CONFIG` is set to `true` in the microservice env files. If you want to bind mount your own config file or make local changes, please set this variable to `false`.

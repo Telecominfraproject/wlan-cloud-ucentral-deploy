@@ -176,6 +176,7 @@ services:
       - "16006:16006"
       - "16106:16106"
 
+# NOTE currently OWRRM is only supported in LB installations
 #  owrrm:
 #    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owrrm:${OWRRM_TAG}"
 #    networks:
