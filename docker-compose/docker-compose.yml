@@ -1,8 +1,8 @@
 version: '3'
 
 volumes:
-  owrrm_data:
-    driver: local
+#  owrrm_data:
+#    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
@@ -176,22 +176,22 @@ services:
       - "16006:16006"
       - "16106:16106"
 
-  owrrm:
-    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owrrm:${OWRRM_TAG}"
-    networks:
-      openwifi:
-        aliases:
-          - ${INTERNAL_OWRRM_HOSTNAME}
-    env_file:
-      - owrrm.env
-    depends_on:
-      - mysql
-      - kafka
-    restart: unless-stopped
-    volumes:
-      - owrrm_data:/owrrm-data
-    ports:
-      - "16789:16789"
+#  owrrm:
+#    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owrrm:${OWRRM_TAG}"
+#    networks:
+#      openwifi:
+#        aliases:
+#          - ${INTERNAL_OWRRM_HOSTNAME}
+#    env_file:
+#      - owrrm.env
+#    depends_on:
+#      - mysql
+#      - kafka
+#    restart: unless-stopped
+#    volumes:
+#      - owrrm_data:/owrrm-data
+#    ports:
+#      - "16789:16789"
 
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
