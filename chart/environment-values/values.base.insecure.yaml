@@ -1,0 +1,87 @@
+owgw:
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.public: http://localhost:16002
+    openwifi.system.uri.private: http://owgw-owgw:17002
+    openwifi.system.uri.ui: http://localhost
+
+owsec:
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.public: http://localhost:16001
+    openwifi.system.uri.private: http://owsec-owsec:17001
+    openwifi.system.uri.ui: http://localhost
+
+owfms:
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.public: http://localhost:16004
+    openwifi.system.uri.private: http://owfms-owfms:17004
+    openwifi.system.uri.ui: http://localhost
+
+owprov:
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.public: http://localhost:16005
+    openwifi.system.uri.private: http://owprov-owprov:17005
+    openwifi.system.uri.ui: http://localhost
+
+owanalytics:
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.public: http://localhost:16009
+    openwifi.system.uri.private: http://owanalytics-owanalytics:17009
+    openwifi.system.uri.ui: http://localhost
+
+owsub:
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.security.restapi.disable: "true"
+    openwifi.system.uri.public: http://localhost:16006
+    openwifi.system.uri.private: http://owsub-owsub:17006
+    openwifi.system.uri.ui: http://localhost
+
+owrrm:
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+    KAFKACONFIG_BOOTSTRAPSERVER: kafka:9092
+    DATABASECONFIG_SERVER: owrrm-mysql:3306
+    DATABASECONFIG_DBNAME: owrrm
+    DATABASECONFIG_DATARETENTIONINTERVALDAYS: "1"
+
+  secret_env_variables:
+    DATABASECONFIG_USER: root
+    DATABASECONFIG_PASSWORD: openwifi
+
+  mysql:
+    enabled: true
+    fullnameOverride: "owrrm-mysql"
+
+owgwui:
+  public_env_variables:
+    DEFAULT_UCENTRALSEC_URL: http://localhost:16001
+
+owprovui:
+  public_env_variables:
+    DEFAULT_UCENTRALSEC_URL: http://localhost:16001
+    REACT_APP_UCENTRALSEC_URL: http://localhost:16001
+
+kafka:
+  heapOpts: -Xmx512m -Xms512m
+  readinessProbe:
+    initialDelaySeconds: 45
+  livenessProbe:
+    initialDelaySeconds: 60
+  zookeeper:
+    heapSize: 256

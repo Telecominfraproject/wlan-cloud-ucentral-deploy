@@ -6,12 +6,66 @@ This Helm chart helps to deploy OpenWIFI Cloud SDK with all required dependencie
 
 [helm-git](https://github.com/aslafy-z/helm-git) is required for remote the installation as it pull charts from other repositories for the deployment, so intall it if you don't have it already.
 
+Using that you can deploy Cloud SDK with 2 setups - without TLS certificates for RESTAPI endpoints and with them.
+
+In both cases Websocket endpoint should be exposed through LoadBalancer. In order to get IP address or DNS FQDN of that endpoint you may refer to `kubectl get svc | grep proxy | awk -F ' ' '{print $4}'`. Used port is 15002, but you would need to disable TLS check on AP side since certificate is issued for `*.wlan.local`.
+
+### Deployment with TLS certificates
+
+This deployment method requires usage of [cert-manager](https://cert-manager.io/docs/) (tested minimal Helm chart version is `v1.6.1`) in your Kubernetes installation in order to issue self-signed PKI for internal communication. In this case you will have to trust the self-signed certificates via your browser. Just like in previous method you still need OWGW Websocket TLS certificate, so you can use the same certificates with another values file using these commands:
+
 ```bash
 $ helm dependency update
-$ helm install .
+$ kubectl create secret generic openwifi-certs --from-file=../docker-compose/certs/
+$ helm upgrade --install -f environment-values/values.base.secure.yaml openwifi .
 ```
 
+In order to acces the UI and other RESTAPI endpoints you should run the following commands after the deployment:
+
+```
+$ kubectl port-forward deployment/proxy 5912 5913 16001 16002 16003 16004 16005 16006 16009 &
+$ kubectl port-forward deployment/owrrm 16789 &
+$ kubectl port-forward deployment/owgwui 8080:80 &
+$ kubectl port-forward deployment/owprovui 8088:80 &
+```
+
+From here Web UI may be accessed using http://localhost:8080 and Provisioning UI may be accessed using http://localhost:8088 .
+
+### Deployment without TLS certificates
+
+**IMPORTANT** Currently this method is not available due to issues in current implementation on microservices side (not being able to use Web UI because of error on Websocket upgrade on OWGW connections), please use TLS method for now.
+
+For this deployment method you will need to disable usage of TLS certificates, yet you will still need a TLS certificate for Websocket endpoint of OWGW. Here are the required steps for the deployment where websocket certificates from [docker-compose certs directory](../docker-compose/certs) and special values file to disable TLS for REST API endpoint will be used:
+
+```bash
+$ helm dependency update
+$ kubectl create secret generic openwifi-certs --from-file=../docker-compose/certs/
+$ helm upgrade --install -f environment-values/values.base.insecure.yaml openwifi .
+```
+
+In order to acces the UI and other RESTAPI endpoints you should run the following commands after the deployment:
+
+```
+$ kubectl port-forward deployment/proxy 5912 5913 16001 16002 16003 16004 16005 16006 16009 &
+$ kubectl port-forward deployment/owrrm 16789 &
+$ kubectl port-forward deployment/owgwui 8080:80 &
+$ kubectl port-forward deployment/owprovui 8088:80 &
+```
+
+From here Web UI may be accessed using http://localhost:8080 and Provisioning UI may be accessed using http://localhost:8088 .
+
+During the requests through UI errors may happen - that means that you haven't added certificate exception in browser. In order to that open browser dev tools (F12), open Network tab and see what requests are failing, open them and accept the exceptions.
+
+### Default password change
+
 Then change the default password as described in [owsec docs](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/tree/main#changing-default-password).
+
+Values files passed in the installation is using default certificates that may be used for initial evaluation (same certificates are used in [docker-compose](../docker-compose/certs) method) using `*.wlan.local` domains. If you want to change those certificates, please set them in Helm values files instead of default certificates (see default values in `values.yaml` file).
+
+If you are using default values without changing [OWSEC config properties](https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/blob/939869948f77575ba0e92c0fb12f2197802ffe71/helm/values.yaml#L212-L213) in your values file, you may access the WebUI using following credentials:
+
+> Username: tip@ucentral.com
+> Password: openwifi
 
 ## Introduction
 
@@ -71,20 +125,27 @@ The following table lists the configurable parameters that overrides microservic
 |-----------|------|-------------|---------|
 | `owgw.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Gateway to use Kafka for communication | `'true'` |
 | `owgw.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Gateway to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
+| `owgw.certs` | map | Map with multiline string containing TLS certificates and private keys required for service (see [OWGW repo](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/) for details) |  |
+| `owgw.certsCAs` | map | Map with multiline string containing TLS CAs required for service (see [OWGW repo](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/) for details) |  |
 | `owsec.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Security to use Kafka for communication | `'true'` |
+| `owsec.certs` | map | Map with multiline string containing TLS certificates and private keys required for REST API |  |
 | `owsec.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Security to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
 | `owfms.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Firmware to use Kafka for communication | `'true'` |
 | `owfms.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Firmware to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
+| `owfms.certs` | map | Map with multiline string containing TLS certificates and private keys required for REST API |  |
 | `owprov.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Provisioning to use Kafka for communication | `'true'` |
 | `owprov.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Provisioning to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
+| `owprov.certs` | map | Map with multiline string containing TLS certificates and private keys required for REST API |  |
 | `owanalytics.enabled` | boolean | Install OpenWIFI Analytics in the release | `false` |
 | `owanalytics.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Analytics to use Kafka for communication | `'true'` |
 | `owanalytics.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Analytics to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
-| `rttys.enabled` | boolean | Enables [rttys](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-rtty) deployment | `True` |
-| `rttys.internal` | boolean | Whether to use the built-in rttys server | `True` |
-| `rttys.enabled` | boolean | Enable or disable rttys | `True` |
-| `rttys.config.token` | string | Sets default rttys token |  |
-| `kafka.enabled` | boolean | Enables [kafka](https://github.com/bitnami/charts/blob/master/bitnami/kafka/) deployment | `True` |
+| `owanalytics.certs` | map | Map with multiline string containing TLS certificates and private keys required for REST API |  |
+| `owsub.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Subscription to use Kafka for communication | `'true'` |
+| `owsub.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Subscription to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
+| `owsub.certs` | map | Map with multiline string containing TLS certificates and private keys required for REST API |  |
+| `owrrm.public_env_variables` | map | Map of public environment variables passed to OpenWIFI RRM service |  |
+| `owrrm.mysql.enabled` | boolean | Flag to enable MySQL database deployment of OpenWIFI RRM service using subchart | `true` |
+| `kafka.enabled` | boolean | Enables [kafka](https://github.com/bitnami/charts/blob/master/bitnami/kafka/) deployment | `true` |
 | `kafka.fullnameOverride` | string | Overrides Kafka Kubernetes service name so it could be predictable and set in microservices configs | `'kafka'` |
 | `kafka.image.registry` | string | Kafka Docker image registry | `'docker.io'` |
 | `kafka.image.repository` | string | Kafka Docker image repository | `'bitnami/kafka'` |
@@ -194,6 +255,10 @@ You may see example values to enable this feature in [values.restapi-certmanager
 If you want, you may use configuration property `openwifi.security.restapi.disable=true` in order to disable TLS requirements on REST API endpoints which basically only requires OWGW Websocket TLS certificate in order to deploy the whole environment. If you will pass certificates into the container they will be ignored.
 
 You may see example values to enable this feature in [values.restapi-disable-tls.yaml](./feature-values/values.restapi-disable-tls.yaml).
+
+### PostgreSQL storage option for services
+
+By default all microservices except RRM service use SQLite as default storage driver, but it is possible to use PostgreSQL for that purpose. Both [cluster-per-microservice](environment-values/values.openwifi-qa.external-db.yaml) and [cluster per installation](environment-values/values.openwifi-qa.single-external-db.yaml) deployments method may be used.
 
 ## Environment specific values
 
