@@ -153,3 +153,29 @@ tcp:
       rule: "HostSNI(`*`)"
       tls:
         passthrough: true
+
+udp:
+  services:
+    owgw-radius-acc:
+      loadBalancer:
+        servers:
+          - address: "owgw.wlan.local:1813"
+    owgw-radius-auth:
+      loadBalancer:
+        servers:
+          - address: "owgw.wlan.local:1812"
+    owgw-radius-coa:
+      loadBalancer:
+        servers:
+          - address: "owgw.wlan.local:3799"
+
+  routers:
+    owgw-radius-acc:
+      entryPoints: "owgwradacc"
+      service: "owgw-radius-acc"
+    owgw-radius-auth:
+      entryPoints: "owgwradauth"
+      service: "owgw-radius-auth"
+    owgw-radius-coa:
+      entryPoints: "owgwradcoa"
+      service: "owgw-radius-coa"
