@@ -60,7 +60,7 @@ services:
       - owsub
     restart: unless-stopped
     volumes:
-      - "./owgw-ui/default.conf:/etc/nginx/conf.d/default.conf"
+      #- "./owgw-ui/default.conf:/etc/nginx/conf.d/default.conf"
       - "./certs/restapi-cert.pem:/etc/nginx/restapi-cert.pem"
       - "./certs/restapi-key.pem:/etc/nginx/restapi-key.pem"
     ports:
@@ -136,7 +136,7 @@ services:
       - owsub
     restart: unless-stopped
     volumes:
-      - "./owprov-ui/default.conf:/etc/nginx/conf.d/default.conf"
+      #- "./owprov-ui/default.conf:/etc/nginx/conf.d/default.conf"
       - "./certs/restapi-cert.pem:/etc/nginx/restapi-cert.pem"
       - "./certs/restapi-key.pem:/etc/nginx/restapi-key.pem"
     ports:
