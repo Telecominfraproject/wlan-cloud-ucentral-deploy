@@ -2,7 +2,7 @@ apiVersion: v2
 name: openwifi
 appVersion: "1.0"
 description: A Helm chart for Kubernetes
-version: 2.7.0-RC4
+version: 2.7.0-RC5
 dependencies:
 - name: owgw
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.7.0-RC4"
@@ -29,7 +29,7 @@ dependencies:
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-userportal@helm?ref=v2.7.0-RC3"
   version: 0.1.0
 - name: owrrm
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-rrm@helm?ref=v2.7.0-RC2"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-rrm@helm?ref=v2.7.0-RC3"
   version: 0.1.0
 - name: kafka
   repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
