@@ -253,7 +253,7 @@ owgw:
           secret:
             secretName: {{ include "owgw.fullname" . }}-owgw-restapi-tls
       - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
         subPath: ca.crt
         volumeDefinition: |
           secret:
@@ -341,7 +341,7 @@ owsec:
           secret:
             secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
       - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
         subPath: ca.crt
         volumeDefinition: |
           secret:
@@ -459,7 +459,7 @@ owfms:
           secret:
             secretName: {{ include "owfms.fullname" . }}-owfms-restapi-tls
       - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
         subPath: ca.crt
         volumeDefinition: |
           secret:
@@ -545,7 +545,7 @@ owprov:
           secret:
             secretName: {{ include "owprov.fullname" . }}-owprov-restapi-tls
       - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
         subPath: ca.crt
         volumeDefinition: |
           secret:
@@ -654,7 +654,7 @@ owanalytics:
           secret:
             secretName: {{ include "owanalytics.fullname" . }}-owanalytics-restapi-tls
       - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
         subPath: ca.crt
         volumeDefinition: |
           secret:
@@ -734,7 +734,7 @@ owsub:
           secret:
             secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
       - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
         subPath: ca.crt
         volumeDefinition: |
           secret:
@@ -786,7 +786,7 @@ owrrm:
             claimName: {{ template "owrrm.fullname" . }}-pvc
 
       - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
         subPath: ca.crt
         volumeDefinition: |
           secret:
