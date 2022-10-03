@@ -140,7 +140,7 @@ owls:
           secret:
             secretName: {{ include "owls.fullname" . }}-owls-restapi-tls
       - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
         subPath: ca.crt
         volumeDefinition: |
           secret:
