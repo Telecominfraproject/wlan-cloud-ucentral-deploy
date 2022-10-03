@@ -20,3 +20,7 @@
 .idea/
 *.tmproj
 .vscode/
+# Chart dependencies
+docker/
+environment-values/
+feature-values/

@@ -1,0 +1,336 @@
+owgw:
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.system.uri.public: https://localhost:16002
+    openwifi.system.uri.private: https://owgw-owgw:17002
+    openwifi.system.uri.ui: http://localhost:8443
+    openwifi.internal.restapi.host.0.rootca: $OWGW_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWGW_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWGW_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWGW_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWGW_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWGW_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owgw:
+      - name: config
+        mountPath: /owgw-data/owgw.properties
+        subPath: owgw.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-config
+      - name: certs
+        mountPath: /owgw-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ if .Values.existingCertsSecret }}{{ .Values.existingCertsSecret }}{{ else }}{{ include "owgw.fullname" . }}-certs{{ end }}
+      - name: certs-cas
+        mountPath: /owgw-data/certs/cas
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-certs-cas
+      - name: persist
+        mountPath: /owgw-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owgw.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owgw-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-owgw-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-owgw-restapi-tls
+
+owsec:
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.system.uri.public: https://localhost:16001
+    openwifi.system.uri.private: https://owsec-owsec:17001
+    openwifi.system.uri.ui: http://localhost:8080
+    openwifi.internal.restapi.host.0.rootca: $OWSEC_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWSEC_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWSEC_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWSEC_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWSEC_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWSEC_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owsec:
+      - name: config
+        mountPath: /owsec-data/owsec.properties
+        subPath: owsec.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsec.fullname" . }}-config
+      - name: certs
+        mountPath: /owsec-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ if .Values.existingCertsSecret }}{{ .Values.existingCertsSecret }}{{ else }}{{ include "owsec.fullname" . }}-certs{{ end }}
+      - name: persist
+        mountPath: /owsec-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owsec.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owsec-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
+
+owfms:
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.system.uri.public: https://localhost:16004
+    openwifi.system.uri.private: https://owfms-owfms:17004
+    openwifi.system.uri.ui: http://localhost:8080
+    openwifi.internal.restapi.host.0.rootca: $OWFMS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWFMS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWFMS_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWFMS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWFMS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWFMS_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owfms:
+      - name: config
+        mountPath: /owfms-data/owfms.properties
+        subPath: owfms.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owfms.fullname" . }}-config
+      - name: certs
+        mountPath: /owfms-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ if .Values.existingCertsSecret }}{{ .Values.existingCertsSecret }}{{ else }}{{ include "owfms.fullname" . }}-certs{{ end }}
+      - name: persist
+        mountPath: /owfms-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owfms.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owfms-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owfms.fullname" . }}-owfms-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owfms.fullname" . }}-owfms-restapi-tls
+
+owprov:
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.system.uri.public: https://localhost:16005
+    openwifi.system.uri.private: https://owprov-owprov:17005
+    openwifi.system.uri.ui: http://localhost:8080
+    openwifi.internal.restapi.host.0.rootca: $OWPROV_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWPROV_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWPROV_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWPROV_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWPROV_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWPROV_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owprov:
+      - name: config
+        mountPath: /owprov-data/owprov.properties
+        subPath: owprov.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owprov.fullname" . }}-config
+      - name: certs
+        mountPath: /owprov-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ if .Values.existingCertsSecret }}{{ .Values.existingCertsSecret }}{{ else }}{{ include "owprov.fullname" . }}-certs{{ end }}
+      - name: persist
+        mountPath: /owprov-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owprov.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owprov-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owprov.fullname" . }}-owprov-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owprov.fullname" . }}-owprov-restapi-tls
+
+owanalytics:
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.system.uri.public: https://localhost:16009
+    openwifi.system.uri.private: https://owanalytics-owanalytics:17009
+    openwifi.system.uri.ui: http://localhost:8080
+    openwifi.internal.restapi.host.0.rootca: $OWANALYTICS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWANALYTICS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWANALYTICS_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWANALYTICS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWANALYTICS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWANALYTICS_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owanalytics:
+      - name: config
+        mountPath: /owanalytics-data/owanalytics.properties
+        subPath: owanalytics.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-config
+      - name: certs
+        mountPath: /owanalytics-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ if .Values.existingCertsSecret }}{{ .Values.existingCertsSecret }}{{ else }}{{ include "owanalytics.fullname" . }}-certs{{ end }}
+      - name: persist
+        mountPath: /owanalytics-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owanalytics.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owanalytics-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-owanalytics-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-owanalytics-restapi-tls
+
+
+owsub:
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  existingCertsSecret: openwifi-certs
+
+  configProperties:
+    openwifi.system.uri.public: https://localhost:16006
+    openwifi.system.uri.private: https://owsub-owsub:17006
+    openwifi.system.uri.ui: http://localhost:8080
+    openwifi.internal.restapi.host.0.rootca: $OWSUB_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWSUB_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWSUB_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWSUB_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWSUB_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWSUB_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owsub:
+      - name: config
+        mountPath: /owsub-data/owsub.properties
+        subPath: owsub.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-config
+      - name: certs
+        mountPath: /owsub-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ if .Values.existingCertsSecret }}{{ .Values.existingCertsSecret }}{{ else }}{{ include "owsub.fullname" . }}-certs{{ end }}
+      - name: persist
+        mountPath: /owsub-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owsub.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owsub-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
+
+owrrm:
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+    KAFKACONFIG_BOOTSTRAPSERVER: kafka:9092
+    DATABASECONFIG_SERVER: owrrm-mysql:3306
+    DATABASECONFIG_DBNAME: owrrm
+    DATABASECONFIG_DATARETENTIONINTERVALDAYS: "1"
+
+  secret_env_variables:
+    DATABASECONFIG_USER: root
+    DATABASECONFIG_PASSWORD: openwifi
+
+  mysql:
+    enabled: true
+    fullnameOverride: "owrrm-mysql"
+
+owgwui:
+  public_env_variables:
+    DEFAULT_UCENTRALSEC_URL: https://localhost:16001
+
+owprovui:
+  public_env_variables:
+    DEFAULT_UCENTRALSEC_URL: https://localhost:16001
+    REACT_APP_UCENTRALSEC_URL: https://localhost:16001
+
+kafka:
+  heapOpts: -Xmx512m -Xms512m
+  readinessProbe:
+    initialDelaySeconds: 45
+  livenessProbe:
+    initialDelaySeconds: 60
+  zookeeper:
+    heapSize: 256
+
+restapiCerts:
+  enabled: true

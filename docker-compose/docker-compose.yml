@@ -37,6 +37,9 @@ services:
       - "16003:16003"
       - "5912:5912"
       - "5913:5913"
+      - "1812:1812/udp"
+      - "1813:1813/udp"
+      - "3799:3799/udp"
     sysctls:
       - net.ipv4.tcp_keepalive_intvl=5
       - net.ipv4.tcp_keepalive_probes=2
