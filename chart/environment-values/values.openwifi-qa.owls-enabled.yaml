@@ -60,10 +60,10 @@ owls:
 
   resources:
     requests:
-      cpu: 3000m
+      cpu: 5000m
       memory: 8000Mi
     limits:
-      cpu: 3000m
+      cpu: 5000m
       memory: 8000Mi
 
   checks:
