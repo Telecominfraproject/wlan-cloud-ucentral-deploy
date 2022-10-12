@@ -58,9 +58,6 @@ owsub:
 owrrm:
   fullnameOverride: owrrm
 
-  public_env_variables:
-    UCENTRALCONFIG_PRIVATEENDPOINT: http://owrrm-owrrm:17007
-
   mysql:
     enabled: true
 
