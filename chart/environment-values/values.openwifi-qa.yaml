@@ -15,7 +15,7 @@ owgw:
       memory: 100Mi
     limits:
       cpu: 2000m
-      memory: 500Mi
+      memory: 2Gi
 
   securityContext:
     sysctls:
