@@ -56,9 +56,9 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `RTTY_SERVER`                            | Set this to your OWGW RTTYS hostname, for example `owgw.example.com`.               |
 | `SYSTEM_URI_UI`                          | Set this to your OWGW-UI URL, for example `https://owgw-ui.example.com`.            |
 ### owgw-ui.env
-| Variable                  | Description                                                                |
-| ------------------------- | -------------------------------------------------------------------------- |
-| `DEFAULT_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
+| Variable                    | Description                                                                |
+| --------------------------- | -------------------------------------------------------------------------- |
+| `REACT_APP_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://owsec.example.com:16001`. |
 ### owsec.env
 | Variable                                 | Description                                                                         |
 | ---------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -184,9 +184,9 @@ For the Let's Encrypt challenge to work you need a public IP address. The hostna
 | `SYSTEM_URI_UI`          | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.               |
 
 ### owgw-ui.env
-| Variable            | Description                                                                   |
-| ------------------- | ----------------------------------------------------------------------------- |
-| `DEFAULT_OWSEC_URL` | Set this to your OWSec URL, for example `https://openwifi.example.com:16001`. |
+| Variable                    | Description                                                                   |
+| --------------------------- | ----------------------------------------------------------------------------- |
+| `REACT_APP_UCENTRALSEC_URL` | Set this to your OWSec URL, for example `https://openwifi.example.com:16001`. |
 
 ### owsec.env
 | Variable            | Description                                                                   |

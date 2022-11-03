@@ -29,7 +29,7 @@ owgwui:
         servicePort: http
 
   public_env_variables:
-    DEFAULT_UCENTRALSEC_URL: https://sec.cicd.lab.wlan.tip.build:16001 # TODO change to OWSEC RESTAPI url
+    REACT_APP_UCENTRALSEC_URL: https://sec.cicd.lab.wlan.tip.build:16001 # TODO change to OWSEC RESTAPI url
 
 owsec:
   configProperties: # TODO change FQDNs and credentials
