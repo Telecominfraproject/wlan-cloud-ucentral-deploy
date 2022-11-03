@@ -70,11 +70,10 @@ owrrm:
 
 owgwui:
   public_env_variables:
-    DEFAULT_UCENTRALSEC_URL: http://localhost:16001
+    REACT_APP_UCENTRALSEC_URL: http://localhost:16001
 
 owprovui:
   public_env_variables:
-    DEFAULT_UCENTRALSEC_URL: http://localhost:16001
     REACT_APP_UCENTRALSEC_URL: http://localhost:16001
 
 kafka:
