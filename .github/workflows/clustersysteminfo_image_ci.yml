@@ -22,7 +22,7 @@ jobs:
       DOCKER_REGISTRY_URL: tip-tip-wlan-cloud-ucentral.jfrog.io
       DOCKER_REGISTRY_USERNAME: ucentral
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Build Docker image
       working-directory: chart/docker
@@ -55,7 +55,7 @@ jobs:
 
     - name: Log into Docker registry
       if: startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/pull/') || github.ref == 'refs/heads/main'
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
         registry: ${{ env.DOCKER_REGISTRY_URL }}
         username: ${{ env.DOCKER_REGISTRY_USERNAME }}
