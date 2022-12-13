@@ -769,9 +769,12 @@ owrrm:
     SELFSIGNED_CERTS: "true"
     SERVICECONFIG_PRIVATEENDPOINT: http://owrrm-owrrm:16789
     KAFKACONFIG_BOOTSTRAPSERVER: kafka:9092
-    DATABASECONFIG_SERVER: owrrm-mysql:3306
     DATABASECONFIG_DBNAME: owrrm
     DATABASECONFIG_DATARETENTIONINTERVALDAYS: "1"
+    # Empty string will disable DB usage
+    DATABASECONFIG_SERVER: ""
+    # Uncomment these parameters to enable DB usage + enable mysql below
+    #DATABASECONFIG_SERVER: owrrm-mysql:3306
 
   secret_env_variables:
     DATABASECONFIG_USER: root
@@ -793,7 +796,7 @@ owrrm:
             secretName: {{ include "owrrm.fullname" . }}-owrrm-restapi-tls
 
   mysql:
-    enabled: true
+    enabled: false
     fullnameOverride: "owrrm-mysql"
 
     resources:
