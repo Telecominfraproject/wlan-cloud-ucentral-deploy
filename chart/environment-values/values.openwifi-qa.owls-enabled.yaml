@@ -17,6 +17,7 @@ owgw:
     storage.type.postgresql.database: owgw
     storage.type.postgresql.username: owgw
     storage.type.postgresql.password: owgw
+    openwifi.certificates.allowmismatch: "true"
 
   resources:
     requests:

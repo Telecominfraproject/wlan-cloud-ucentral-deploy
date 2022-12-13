@@ -53,7 +53,10 @@ usage () {
   echo "- OWFMS_S3_KEY - access key that is used for OWFms access to firmwares S3 bucket";
   echo;
   echo "- SDKHOSTNAME - Public hostname which is used for cert generation when using the Letsencrypt deployment method"
+  echo;
   echo "- TRAEFIK_ACME_EMAIL - Email address used for ACME registration"
+  echo;
+  echo "- CERTIFICATES_ALLOWMISMATCH - boolean flag to allow certificates serial mismatch";
 }
 
 # Check if required environment variables were passed
@@ -183,6 +186,10 @@ sed -i "s~.*SERVICECONFIG_PUBLICENDPOINT=.*~SERVICECONFIG_PUBLICENDPOINT=$OWRRM_
 
 if [[ ! -z "$TRAEFIK_ACME_EMAIL" ]]; then
   sed -i "s~.*TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL=.*~TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL=$TRAEFIK_ACME_EMAIL~" traefik.env
+fi
+
+if [[ ! -z "$CERTIFICATES_ALLOWMISMATCH" ]]; then
+  sed -i "s~.*CERTIFICATES_ALLOWMISMATCH=.*~CERTIFICATES_ALLOWMISMATCH=$CERTIFICATES_ALLOWMISMATCH~" owgw.env
 fi
 
 # Run the deployment
