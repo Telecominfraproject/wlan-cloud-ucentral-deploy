@@ -112,7 +112,7 @@ owprovui:
 
 owls:
   nodeSelector:
-    env: tests
+    env: owls
   tolerations:
   - key: "tests"
     operator: "Exists"
