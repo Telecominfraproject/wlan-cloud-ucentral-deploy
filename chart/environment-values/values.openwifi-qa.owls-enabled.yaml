@@ -38,12 +38,6 @@ owgw:
 owls:
   enabled: true
 
-  # NOTE this was added for debug purposes in WIFI-10926
-  images:
-    owls:
-      tag: 2c720c28a4a185404c81ca3b9027b28d3138b365
-  # NOTE end, delete all above up to the previous NOTE
-
   services:
     owls:
       type: LoadBalancer
