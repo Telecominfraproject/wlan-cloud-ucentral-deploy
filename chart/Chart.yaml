@@ -2,31 +2,31 @@ apiVersion: v2
 name: openwifi
 appVersion: "1.0"
 description: A Helm chart for Kubernetes
-version: 2.9.0-RC1
+version: 2.9.0-RC2
 dependencies:
 - name: owgw
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.9.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v2.9.0-RC2"
   version: 0.1.0
 - name: owsec
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=v2.9.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=v2.9.0-RC2"
   version: 0.1.0
 - name: owfms
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=v2.9.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=v2.9.0-RC2"
   version: 0.1.0
 - name: owprov
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov@helm?ref=v2.9.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov@helm?ref=v2.9.0-RC2"
   version: 0.1.0
 - name: owanalytics
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-analytics@helm?ref=v2.9.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-analytics@helm?ref=v2.9.0-RC2"
   version: 0.1.0
 - name: owgwui
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=v2.9.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=v2.9.0-RC2"
   version: 0.1.0
 - name: owprovui
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov-ui@helm?ref=v2.9.0-RC1"
   version: 0.1.0
 - name: owsub
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-userportal@helm?ref=v2.9.0-RC1"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-userportal@helm?ref=v2.9.0-RC2"
   version: 0.1.0
 - name: owrrm
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-rrm@helm?ref=v2.8.0"
