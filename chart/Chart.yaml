@@ -36,7 +36,7 @@ dependencies:
   version: 13.0.2
   condition: kafka.enabled
 - name: owls
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owls@helm?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owls@helm?ref=v2.9.0"
   version: 0.1.0
   condition: owls.enabled
 - name: owlsui
