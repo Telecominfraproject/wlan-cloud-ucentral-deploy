@@ -425,6 +425,7 @@ owfms:
 
   public_env_variables:
     SELFSIGNED_CERTS: "true"
+    FIRMWAREDB_MAXAGE: "360"
 
   configProperties:
     openwifi.internal.restapi.host.0.rootca: $OWFMS_ROOT/certs/restapi-certs/ca.crt
