@@ -198,7 +198,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owprov.services.owprov.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=prov-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprov.configProperties."openwifi\.system\.uri\.public"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:16005 \
   --set owprov.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owprov-owprov:17005 \
-  --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprov.configProperties."iptocountry\.ipinfo\.token"="${IPTOCOUNTRY_IPINFO_TOKEN}" \
   --set owprov.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
