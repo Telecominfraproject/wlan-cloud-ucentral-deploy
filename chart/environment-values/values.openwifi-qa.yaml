@@ -520,6 +520,7 @@ owprov:
     openwifi.restapi.host.0.rootca: $OWPROV_ROOT/certs/restapi-certs/ca.crt
     openwifi.restapi.host.0.cert: $OWPROV_ROOT/certs/restapi-certs/tls.crt
     openwifi.restapi.host.0.key: $OWPROV_ROOT/certs/restapi-certs/tls.key
+    rrm.providers: owrrm
 
   volumes:
     owprov:
