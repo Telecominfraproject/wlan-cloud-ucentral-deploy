@@ -13,6 +13,7 @@ usage () {
   echo "- CHART_VERSION - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)" >&2;
   echo >&2;
   echo "- VALUES_FILE_LOCATION - path to file with override values that may be used for deployment" >&2;
+  echo "- DOMAIN - Domain name. default: cicd.lab.wlan.tip.build" >&2;
   echo "- OWGW_AUTH_USERNAME - username to be used for requests to OpenWIFI Security" >&2;
   echo "- OWGW_AUTH_PASSWORD - hashed password for OpenWIFI Security (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)" >&2;
   echo "- OWFMS_S3_SECRET - secret key that is used for OpenWIFI Firmware access to firmwares S3 bucket" >&2;
@@ -51,7 +52,7 @@ EXTRA_VALUES_SPLITTED=()
 
 # Helper functions
 check_if_chart_version_is_release() {
-  PARSED_CHART_VERSION=$(echo $CHART_VERSION | grep -xP "v\d+\.\d+\.\d+.*")
+  PARSED_CHART_VERSION=$(echo $CHART_VERSION | grep -xE "v\d+\.\d+\.\d+.*")
   if [[ -z "$PARSED_CHART_VERSION" ]]; then
     return 1
   else
@@ -94,6 +95,7 @@ fi
 [ -z ${INTERNAL_RESTAPI_ENDPOINT_SCHEMA+x} ] && echo "INTERNAL_RESTAPI_ENDPOINT_SCHEMA is unset, setting it to 'https'" && export INTERNAL_RESTAPI_ENDPOINT_SCHEMA=https
 export MAILER_ENABLED="false"
 [ ! -z ${MAILER_USERNAME+x} ] && [ ! -z ${MAILER_PASSWORD+x} ] && echo "MAILER_USERNAME and MAILER_PASSWORD are set, mailer will be enabled" && export MAILER_ENABLED="true"
+[ -z "${DOMAIN}" ] && echo "DOMAIN is unset, using cicd.lab.wlan.tip.build" && DOMAIN="cicd.lab.wlan.tip.build"
 
 # Transform some environment variables
 export OWGW_VERSION_TAG=$(echo ${OWGW_VERSION} | tr '/' '-')
@@ -134,14 +136,12 @@ if [[ "$DEPLOY_METHOD" == "git" ]]; then
   helm dependency update
   cd ../..
   export DEPLOY_SOURCE="wlan-cloud-ucentral-deploy/chart"
+elif [[ "$DEPLOY_METHOD" == "bundle" ]]; then
+  helm repo add tip-wlan-cloud-ucentral-helm https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/ || true
+  export DEPLOY_SOURCE="tip-wlan-cloud-ucentral-helm/openwifi --version $CHART_VERSION"
 else
-  if [[ "$DEPLOY_METHOD" == "bundle" ]]; then
-    helm repo add tip-wlan-cloud-ucentral-helm https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/ || true
-    export DEPLOY_SOURCE="tip-wlan-cloud-ucentral-helm/openwifi --version $CHART_VERSION"
-  else
-    echo "Deploy method is not correct: $DEPLOY_METHOD. Valid value - git or bundle" >&2
-    exit 1
-  fi
+  echo "Deploy method is not correct: $DEPLOY_METHOD. Valid values: git or bundle" >&2
+  exit 1
 fi
 
 VALUES_FILES_FLAGS=()
@@ -156,75 +156,112 @@ for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
 done
 
 if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
-  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build"
-  export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.${DOMAIN}\,fms-${NAMESPACE}.${DOMAIN}\,prov-${NAMESPACE}.${DOMAIN}\,analytics-${NAMESPACE}.${DOMAIN}\,sub-${NAMESPACE}.${DOMAIN}"
+  export HAPROXY_SERVICE_DNS_RECORDSNE="sec-${NAMESPACE}.${DOMAIN},fms-${NAMESPACE}.${DOMAIN},prov-${NAMESPACE}.${DOMAIN},analytics-${NAMESPACE}.${DOMAIN},sub-${NAMESPACE}.${DOMAIN}"
+  export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.${DOMAIN}"
 else
-  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.${DOMAIN}\,sec-${NAMESPACE}.${DOMAIN}\,fms-${NAMESPACE}.${DOMAIN}\,prov-${NAMESPACE}.${DOMAIN}\,analytics-${NAMESPACE}.${DOMAIN}\,sub-${NAMESPACE}.${DOMAIN}"
+  export HAPROXY_SERVICE_DNS_RECORDSNE="gw-${NAMESPACE}.${DOMAIN},sec-${NAMESPACE}.${DOMAIN},fms-${NAMESPACE}.${DOMAIN},prov-${NAMESPACE}.${DOMAIN},analytics-${NAMESPACE}.${DOMAIN},sub-${NAMESPACE}.${DOMAIN}"
   export OWGW_SERVICE_DNS_RECORDS=""
 fi
+
+set -x
+echo "Deploying into openwifi-${NAMESPACE} with the following values files:"
+echo ${VALUES_FILES_FLAGS[*]}
+echo
+envsubst < values.custom.tpl.yaml > values.custom-${NAMESPACE}.yaml || true
+echo "----"
+cat values.custom-${NAMESPACE}.yaml | base64
+echo "----"
+
+exit
+#helm upgrade --install --create-namespace --wait --timeout 60m \
+#  --namespace openwifi-${NAMESPACE} \
+#  ${VALUES_FILES_FLAGS[*]} \
+#  ${EXTRA_VALUES_FLAGS[*]} \
+#  -f values.custom-${NAMESPACE}.yaml \
+#  --set-file owgw.certs."restapi-cert\.pem"=$CERT_LOCATION \
+#  --set-file owgw.certs."restapi-key\.pem"=$KEY_LOCATION \
+#  --set-file owgw.certs."websocket-cert\.pem"=$CERT_LOCATION \
+#  --set-file owgw.certs."websocket-key\.pem"=$KEY_LOCATION \
+#  --set-file owsec.certs."restapi-cert\.pem"=$CERT_LOCATION \
+#  --set-file owsec.certs."restapi-key\.pem"=$KEY_LOCATION \
+#  --set-file owfms.certs."restapi-cert\.pem"=$CERT_LOCATION \
+#  --set-file owfms.certs."restapi-key\.pem"=$KEY_LOCATION \
+#  --set-file owprov.certs."restapi-cert\.pem"=$CERT_LOCATION \
+#  --set-file owprov.certs."restapi-key\.pem"=$KEY_LOCATION \
+#  --set-file owls.certs."restapi-cert\.pem"=$CERT_LOCATION \
+#  --set-file owls.certs."restapi-key\.pem"=$KEY_LOCATION \
+#  --set-file owls.certs."device-cert\.pem"=$DEVICE_CERT_LOCATION \
+#  --set-file owls.certs."device-key\.pem"=$DEVICE_KEY_LOCATION \
+#  --set-file owanalytics.certs."restapi-cert\.pem"=$CERT_LOCATION \
+#  --set-file owanalytics.certs."restapi-key\.pem"=$KEY_LOCATION \
+#  --set-file owsub.certs."restapi-cert\.pem"=$CERT_LOCATION \
+#  --set-file owsub.certs."restapi-key\.pem"=$KEY_LOCATION \
+#  tip-openwifi $DEPLOY_SOURCE
 
 # Run the deployment
 helm upgrade --install --create-namespace --wait --timeout 60m \
   --namespace openwifi-${NAMESPACE} \
   ${VALUES_FILES_FLAGS[*]} \
-  --set owgw.services.owgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owgw.configProperties."openwifi\.fileuploader\.host\.0\.name"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owgw.configProperties."rtty\.server"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owgw.configProperties."openwifi\.system\.uri\.public"=https://gw-${NAMESPACE}.cicd.lab.wlan.tip.build:16002 \
+  --set owgw.services.owgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$OWGW_SERVICE_DNS_RECORDS \
+  --set owgw.configProperties."openwifi\.fileuploader\.host\.0\.name"=gw-${NAMESPACE}.${DOMAIN} \
+  --set owgw.configProperties."rtty\.server"=gw-${NAMESPACE}.${DOMAIN} \
+  --set owgw.configProperties."openwifi\.system\.uri\.public"=https://gw-${NAMESPACE}.${DOMAIN}:16002 \
   --set owgw.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owgw-owgw:17002 \
-  --set owgw.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owgw.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.${DOMAIN} \
   --set owgw.configProperties."iptocountry\.ipinfo\.token"="${IPTOCOUNTRY_IPINFO_TOKEN}" \
-  --set owgw.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owgw.public_env_variables.OWSEC=sec-${NAMESPACE}.${DOMAIN}:16001 \
   --set owsec.configProperties."authentication\.default\.username"=${OWGW_AUTH_USERNAME} \
   --set owsec.configProperties."authentication\.default\.password"=${OWGW_AUTH_PASSWORD} \
-  --set owsec.services.owsec.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sec-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owsec.configProperties."openwifi\.system\.uri\.public"=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owsec.services.owsec.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sec-${NAMESPACE}.${DOMAIN} \
+  --set owsec.configProperties."openwifi\.system\.uri\.public"=https://sec-${NAMESPACE}.${DOMAIN}:16001 \
   --set owsec.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsec-owsec:17001 \
-  --set owsec.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owsec.configProperties."mailer\.sender"=sec-${NAMESPACE}@cicd.lab.wlan.tip.build \
+  --set owsec.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.${DOMAIN} \
+  --set owsec.configProperties."mailer\.sender"=sec-${NAMESPACE}@${DOMAIN} \
   --set owsec.configProperties."mailer\.enabled"=$MAILER_ENABLED \
   --set owsec.configProperties."mailer\.username"=$MAILER_USERNAME \
   --set owsec.configProperties."mailer\.password"=$MAILER_PASSWORD \
   --set owfms.configProperties."s3\.secret"=${OWFMS_S3_SECRET} \
   --set owfms.configProperties."s3\.key"=${OWFMS_S3_KEY} \
-  --set owfms.services.owfms.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=fms-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owfms.configProperties."openwifi\.system\.uri\.public"=https://fms-${NAMESPACE}.cicd.lab.wlan.tip.build:16004 \
+  --set owfms.services.owfms.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=fms-${NAMESPACE}.${DOMAIN} \
+  --set owfms.configProperties."openwifi\.system\.uri\.public"=https://fms-${NAMESPACE}.${DOMAIN}:16004 \
   --set owfms.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owfms-owfms:17004 \
-  --set owfms.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owfms.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set owgwui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owgwui.ingresses.default.hosts={webui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
-  --set owgwui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set owprov.services.owprov.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=prov-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owprov.configProperties."openwifi\.system\.uri\.public"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:16005 \
+  --set owfms.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.${DOMAIN} \
+  --set owfms.public_env_variables.OWSEC=sec-${NAMESPACE}.${DOMAIN}:16001 \
+  --set owgwui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=webui-${NAMESPACE}.${DOMAIN} \
+  --set owgwui.ingresses.default.hosts={webui-${NAMESPACE}.${DOMAIN}} \
+  --set owgwui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.${DOMAIN}:16001 \
+  --set owprov.services.owprov.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=prov-${NAMESPACE}.${DOMAIN} \
+  --set owprov.configProperties."openwifi\.system\.uri\.public"=https://prov-${NAMESPACE}.${DOMAIN}:16005 \
   --set owprov.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owprov-owprov:17005 \
-  --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://provui-${NAMESPACE}.${DOMAIN} \
   --set owprov.configProperties."iptocountry\.ipinfo\.token"="${IPTOCOUNTRY_IPINFO_TOKEN}" \
-  --set owprov.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
-  --set owprovui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set owanalytics.services.owanalytics.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=analytics-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owanalytics.configProperties."openwifi\.system\.uri\.public"=https://analytics-${NAMESPACE}.cicd.lab.wlan.tip.build:16009 \
+  --set owprov.public_env_variables.OWSEC=sec-${NAMESPACE}.${DOMAIN}:16001 \
+  --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.${DOMAIN} \
+  --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.${DOMAIN}} \
+  --set owprovui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.${DOMAIN}:16001 \
+  --set owanalytics.services.owanalytics.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=analytics-${NAMESPACE}.${DOMAIN} \
+  --set owanalytics.configProperties."openwifi\.system\.uri\.public"=https://analytics-${NAMESPACE}.${DOMAIN}:16009 \
   --set owanalytics.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owanalytics-owanalytics:17009 \
-  --set owanalytics.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owanalytics.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set owsub.services.owsub.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sub-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owsub.configProperties."openwifi\.system\.uri\.public"=https://sub-${NAMESPACE}.cicd.lab.wlan.tip.build:16006 \
+  --set owanalytics.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.${DOMAIN} \
+  --set owanalytics.public_env_variables.OWSEC=sec-${NAMESPACE}.${DOMAIN}:16001 \
+  --set owsub.services.owsub.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sub-${NAMESPACE}.${DOMAIN} \
+  --set owsub.configProperties."openwifi\.system\.uri\.public"=https://sub-${NAMESPACE}.${DOMAIN}:16006 \
   --set owsub.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsub-owsub:17006 \
-  --set owsub.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owsub.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owsub.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.${DOMAIN} \
+  --set owsub.public_env_variables.OWSEC=sec-${NAMESPACE}.${DOMAIN}:16001 \
+  --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.${DOMAIN}:16001 \
   --set clustersysteminfo.secret_env_variables.OWSEC_NEW_PASSWORD=${OWSEC_NEW_PASSWORD} \
-  --set owls.services.owls.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=ls-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owls.configProperties."openwifi\.system\.uri\.public"=https://ls-${NAMESPACE}.cicd.lab.wlan.tip.build:16007 \
+  --set owls.services.owls.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=ls-${NAMESPACE}.${DOMAIN} \
+  --set owls.configProperties."openwifi\.system\.uri\.public"=https://ls-${NAMESPACE}.${DOMAIN}:16007 \
   --set owls.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owls-owls:17007 \
-  --set owls.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owlsui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=lsui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owlsui.ingresses.default.hosts={lsui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
-  --set owlsui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set owrrm.public_env_variables.SERVICECONFIG_PUBLICENDPOINT=https://rrm-${NAMESPACE}.cicd.lab.wlan.tip.build:16789 \
-  --set owrrm.services.owrrm.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=rrm-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owls.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.${DOMAIN} \
+  --set owlsui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=lsui-${NAMESPACE}.${DOMAIN} \
+  --set owlsui.ingresses.default.hosts={lsui-${NAMESPACE}.${DOMAIN}} \
+  --set owlsui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.${DOMAIN}:16001 \
+  --set owrrm.public_env_variables.SERVICECONFIG_PUBLICENDPOINT=https://rrm-${NAMESPACE}.${DOMAIN}:16789 \
+  --set owrrm.services.owrrm.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=rrm-${NAMESPACE}.${DOMAIN} \
   --set haproxy.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$HAPROXY_SERVICE_DNS_RECORDS \
   --set owgw.services.owgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$OWGW_SERVICE_DNS_RECORDS \
   ${EXTRA_VALUES_FLAGS[*]} \
