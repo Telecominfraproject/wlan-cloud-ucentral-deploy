@@ -95,7 +95,7 @@ fi
 [ -z ${INTERNAL_RESTAPI_ENDPOINT_SCHEMA+x} ] && echo "INTERNAL_RESTAPI_ENDPOINT_SCHEMA is unset, setting it to 'https'" && export INTERNAL_RESTAPI_ENDPOINT_SCHEMA=https
 export MAILER_ENABLED="false"
 [ ! -z ${MAILER_USERNAME+x} ] && [ ! -z ${MAILER_PASSWORD+x} ] && echo "MAILER_USERNAME and MAILER_PASSWORD are set, mailer will be enabled" && export MAILER_ENABLED="true"
-[ -z "${DOMAIN}" ] && echo "DOMAIN is unset, using cicd.lab.wlan.tip.build" && DOMAIN="cicd.lab.wlan.tip.build"
+[ -z "${DOMAIN}" ] && echo "DOMAIN is unset, using cicd.lab.wlan.tip.build" && export DOMAIN="cicd.lab.wlan.tip.build"
 
 # Transform some environment variables
 export OWGW_VERSION_TAG=$(echo ${OWGW_VERSION} | tr '/' '-')
@@ -156,12 +156,10 @@ for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
 done
 
 if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
-  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.${DOMAIN}\,fms-${NAMESPACE}.${DOMAIN}\,prov-${NAMESPACE}.${DOMAIN}\,analytics-${NAMESPACE}.${DOMAIN}\,sub-${NAMESPACE}.${DOMAIN}"
-  export HAPROXY_SERVICE_DNS_RECORDSNE="sec-${NAMESPACE}.${DOMAIN},fms-${NAMESPACE}.${DOMAIN},prov-${NAMESPACE}.${DOMAIN},analytics-${NAMESPACE}.${DOMAIN},sub-${NAMESPACE}.${DOMAIN}"
+  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.${DOMAIN},fms-${NAMESPACE}.${DOMAIN},prov-${NAMESPACE}.${DOMAIN},analytics-${NAMESPACE}.${DOMAIN},sub-${NAMESPACE}.${DOMAIN}"
   export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.${DOMAIN}"
 else
-  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.${DOMAIN}\,sec-${NAMESPACE}.${DOMAIN}\,fms-${NAMESPACE}.${DOMAIN}\,prov-${NAMESPACE}.${DOMAIN}\,analytics-${NAMESPACE}.${DOMAIN}\,sub-${NAMESPACE}.${DOMAIN}"
-  export HAPROXY_SERVICE_DNS_RECORDSNE="gw-${NAMESPACE}.${DOMAIN},sec-${NAMESPACE}.${DOMAIN},fms-${NAMESPACE}.${DOMAIN},prov-${NAMESPACE}.${DOMAIN},analytics-${NAMESPACE}.${DOMAIN},sub-${NAMESPACE}.${DOMAIN}"
+  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.${DOMAIN},sec-${NAMESPACE}.${DOMAIN},fms-${NAMESPACE}.${DOMAIN},prov-${NAMESPACE}.${DOMAIN},analytics-${NAMESPACE}.${DOMAIN},sub-${NAMESPACE}.${DOMAIN}"
   export OWGW_SERVICE_DNS_RECORDS=""
 fi
 

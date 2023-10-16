@@ -125,4 +125,4 @@ owrrm:
 haproxy:
   service:
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: "$HAPROXY_SERVICE_DNS_RECORDSNE"
+      external-dns.alpha.kubernetes.io/hostname: "$HAPROXY_SERVICE_DNS_RECORDS"
