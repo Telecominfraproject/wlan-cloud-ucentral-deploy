@@ -1,0 +1,128 @@
+owgw:
+  services:
+    owgw:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: "$OWGW_SERVICE_DNS_RECORDS"
+  configProperties:
+    openwifi.fileuploader.host.0.name: gw-${NAMESPACE}.${DOMAIN}
+    rtty.server: gw-${NAMESPACE}.${DOMAIN}
+    openwifi.system.uri.public: https://gw-${NAMESPACE}.${DOMAIN}:16002
+    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owgw-owgw:17002
+    openwifi.system.uri.ui: https://webui-${NAMESPACE}.${DOMAIN}
+    iptocountry.ipinfo.token: "${IPTOCOUNTRY_IPINFO_TOKEN}"
+  public_env_variables:
+    OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
+owsec:
+  configProperties:
+    authentication.default.username: "${OWGW_AUTH_USERNAME}"
+    authentication.default.password: "${OWGW_AUTH_PASSWORD}"
+    openwifi.system.uri.public: https://sec-${NAMESPACE}.${DOMAIN}:16001
+    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsec-owsec:17001
+    openwifi.ystem.uri.ui: https://webui-${NAMESPACE}.${DOMAIN}
+    mailer.sender: "sec-${NAMESPACE}@${DOMAIN}"
+    mailer.enabled: $MAILER_ENABLED
+    mailer.username: "$MAILER_USERNAME"
+    mailer.password: "$MAILER_PASSWORD"
+  services:
+    owsec:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: sec-${NAMESPACE}.${DOMAIN}
+owfms:
+  configProperties:
+    s3.secret: "${OWFMS_S3_SECRET}"
+    s3.key: "${OWFMS_S3_KEY}"
+    openwifi.system.uri.public: https://fms-${NAMESPACE}.${DOMAIN}:16004
+    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owfms-owfms:17004
+    openwifi.system.uri.ui: https://webui-${NAMESPACE}.${DOMAIN}
+  services:
+    owfms:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: fms-${NAMESPACE}.${DOMAIN}
+  public_env_variables:
+    OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
+owgwui:
+  ingresses:
+    default:
+      hosts:
+      - webui-${NAMESPACE}.${DOMAIN}
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: webui-${NAMESPACE}.${DOMAIN}
+  public_env_variables:
+    REACT_APP_UCENTRALSEC_URL: https://sec-${NAMESPACE}.${DOMAIN}:16001
+owprov:
+  services:
+    owprov:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: prov-${NAMESPACE}.${DOMAIN}
+  configProperties:
+    openwifi.system.uri.public: https://prov-${NAMESPACE}.${DOMAIN}:16005
+    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owprov-owprov:17005
+    openwifi.system.uri.ui: https://provui-${NAMESPACE}.${DOMAIN}
+    iptocountry.ipinfo.token: "${IPTOCOUNTRY_IPINFO_TOKEN}"
+  public_env_variables:
+    OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
+owprovui:
+  ingresses:
+    default:
+      hosts:
+      - provui-${NAMESPACE}.${DOMAIN}
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: provui-${NAMESPACE}.${DOMAIN}
+  public_env_variables:
+    REACT_APP_UCENTRALSEC_URL: https://sec-${NAMESPACE}.${DOMAIN}:16001
+owanalytics:
+  services:
+    owanalytics:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: analytics-${NAMESPACE}.${DOMAIN}
+  configProperties:
+    openwifi.system.uri.public: https://analytics-${NAMESPACE}.${DOMAIN}:16009
+    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owanalytics-owanalytics:17009
+    openwifi.system.uri.ui: https://webui-${NAMESPACE}.${DOMAIN}
+  public_env_variables:
+    OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
+owsub:
+  services:
+    owsub:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: sub-${NAMESPACE}.${DOMAIN}
+  configProperties:
+    openwifi.system.uri.public: https://sub-${NAMESPACE}.${DOMAIN}:16006
+    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsub-owsub:17006
+    openwifi.system.uri.ui: https://webui-${NAMESPACE}.${DOMAIN}
+  public_env_variables:
+    OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
+clustersysteminfo:
+  public_env_variables:
+    OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
+  secret_env_variables:
+    OWSEC_NEW_PASSWORD: "${OWSEC_NEW_PASSWORD}"
+owls:
+  services:
+    owls:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: ls-${NAMESPACE}.${DOMAIN}
+  configProperties:
+    openwifi.system.uri.public: https://ls-${NAMESPACE}.${DOMAIN}:16007
+    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owls-owls:17007
+    openwifi.system.uri.ui: https://webui-${NAMESPACE}.${DOMAIN}
+owlsui:
+  ingresses:
+    default:
+      hosts:
+      - lsui-${NAMESPACE}.${DOMAIN}
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: lsui-${NAMESPACE}.${DOMAIN}
+  public_env_variables:
+    REACT_APP_UCENTRALSEC_URL: https://sec-${NAMESPACE}.${DOMAIN}:16001
+owrrm:
+  public_env_variables:
+    SERVICECONFIG_PUBLICENDPOINT: https://rrm-${NAMESPACE}.${DOMAIN}:16789
+  services:
+    owrrm:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: rrm-${NAMESPACE}.${DOMAIN}
+haproxy:
+  service:
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: "$HAPROXY_SERVICE_DNS_RECORDS"
