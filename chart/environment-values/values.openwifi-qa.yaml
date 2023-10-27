@@ -425,6 +425,7 @@ owfms:
 
   public_env_variables:
     SELFSIGNED_CERTS: "true"
+    # This has no effec as template based config is not enabledt (see configProperties)
     FIRMWAREDB_MAXAGE: "360"
 
   configProperties:
@@ -434,6 +435,7 @@ owfms:
     openwifi.restapi.host.0.rootca: $OWFMS_ROOT/certs/restapi-certs/ca.crt
     openwifi.restapi.host.0.cert: $OWFMS_ROOT/certs/restapi-certs/tls.crt
     openwifi.restapi.host.0.key: $OWFMS_ROOT/certs/restapi-certs/tls.key
+    firmwaredb.maxage: 360
 
   volumes:
     owfms:
