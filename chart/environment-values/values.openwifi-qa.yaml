@@ -360,7 +360,7 @@ owgwui:
         kubernetes.io/ingress.class: alb
         alb.ingress.kubernetes.io/scheme: internet-facing
         alb.ingress.kubernetes.io/group.name: wlan-cicd
-        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:289708231103:certificate/65314dcd-6f1c-4bde-a04a-dca7f24e3328
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
         alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_302"}}'
       paths:
@@ -425,7 +425,7 @@ owfms:
 
   public_env_variables:
     SELFSIGNED_CERTS: "true"
-    # This has no effec as template based config is not enabledt (see configProperties)
+    # This has no effect as template based config is not enabled (see configProperties)
     FIRMWAREDB_MAXAGE: "360"
 
   configProperties:
@@ -568,7 +568,7 @@ owprovui:
         kubernetes.io/ingress.class: alb
         alb.ingress.kubernetes.io/scheme: internet-facing
         alb.ingress.kubernetes.io/group.name: wlan-cicd
-        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:289708231103:certificate/65314dcd-6f1c-4bde-a04a-dca7f24e3328
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
         alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_302"}}'
       paths:
@@ -756,7 +756,7 @@ owrrm:
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16789"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-south-1:289708231103:certificate/65314dcd-6f1c-4bde-a04a-dca7f24e3328"
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16789,16790"
 
   resources:
@@ -856,7 +856,7 @@ haproxy:
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
       service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/65314dcd-6f1c-4bde-a04a-dca7f24e3328
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
       service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,5913,16001,17001,16009,16006,17006"
       service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
 
