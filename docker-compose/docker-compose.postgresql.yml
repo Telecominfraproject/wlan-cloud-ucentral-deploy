@@ -39,6 +39,12 @@ services:
     image: "postgres:${POSTGRESQL_TAG}"
     networks:
       openwifi:
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=400"
+      - "-c"
+      - "shared_buffers=20MB"    
     env_file:
       - postgresql.env
     restart: unless-stopped
