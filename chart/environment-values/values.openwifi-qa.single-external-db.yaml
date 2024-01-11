@@ -50,23 +50,26 @@ postgresql-ha:
   enabled: true
   initDbScriptSecret:
     enabled: true
-#  pgpool:
-#    adminPassword: admin
-#    resources:
-#      requests:
-#        cpu: 250m
-#        memory: 1024Mi
-#      limits:
-#        cpu: 250m
-#        memory: 1024Mi
-#    initdbScriptsSecret: tip-openwifi-initdb-scripts
+  pgpool:
+    adminPassword: admin
+    childLifeTime: 0
+    maxPool: 8
+    numInitChildren : 48
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
+    initdbScriptsSecret: tip-openwifi-initdb-scripts
   postgresql:
     replicaCount: 1 # TODO change after tests
     password: password
     postgresPassword: postgres
     repmgrPassword: repmgr
-    maxConnections: 1000
-    sharedBuffers: 128MB
+    maxConnections: 500
+    sharedBuffers: 256M
     resources:
       requests:
         cpu: 250m
