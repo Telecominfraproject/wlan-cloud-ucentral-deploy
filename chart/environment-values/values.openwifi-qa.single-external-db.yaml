@@ -69,9 +69,9 @@ postgresql-ha:
     password: password
     postgresPassword: postgres
     repmgrPassword: repmgr
-    configuration:
-      maxConnections: 475
-      sharedBuffers: 256MB
+#    configuration:
+#      maxConnections: 475
+#      sharedBuffers: 256MB
     resources:
       requests:
         cpu: 250m
