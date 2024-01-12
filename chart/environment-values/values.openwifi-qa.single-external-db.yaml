@@ -52,9 +52,10 @@ postgresql-ha:
     enabled: true
   pgpool:
     adminPassword: admin
-    childLifeTime: 0
-    maxPool: 8
-    numInitChildren : 48
+    configuration:
+      childLifeTime: 0
+      maxPool: 8
+      numInitChildren : 48
     resources:
       requests:
         cpu: 250m
@@ -68,14 +69,9 @@ postgresql-ha:
     password: password
     postgresPassword: postgres
     repmgrPassword: repmgr
-    maxConnections: 500
-    sharedBuffers: 256MB
-    command:
-      - "postgres"
-      - "-c"
-      - "max_connections=475"
-      - "-c"
-      - "shared_buffers=128MB"    
+    configuration:
+      maxConnections: 475
+      sharedBuffers: 256MB
     resources:
       requests:
         cpu: 250m
