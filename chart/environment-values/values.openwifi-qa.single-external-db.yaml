@@ -52,10 +52,10 @@ postgresql-ha:
     enabled: true
   pgpool:
     adminPassword: admin
-    configuration:
-      childLifeTime: 0
-      maxPool: 8
-      numInitChildren : 48
+#    configuration:
+#      childLifeTime: 0
+#      maxPool: 8
+#      numInitChildren : 48
     resources:
       requests:
         cpu: 250m
