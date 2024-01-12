@@ -53,10 +53,10 @@ postgresql-ha:
   pgpool:
     replicaCount: 1
     adminPassword: admin
-    configuration:
-      childLifeTime: 0
-      maxPool: 8
-      numInitChildren : 48
+#    configuration:
+#      childLifeTime: 0
+#      maxPool: 8
+#      numInitChildren : 48
     resources:
       requests:
         cpu: 250m
