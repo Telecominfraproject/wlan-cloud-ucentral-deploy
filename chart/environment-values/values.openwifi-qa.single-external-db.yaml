@@ -53,10 +53,9 @@ postgresql-ha:
   pgpool:
     replicaCount: 1
     adminPassword: admin
-#    configuration:
-#      childLifeTime: 0
-#      maxPool: 8
-#      numInitChildren : 48
+    childLifeTime: 0
+    maxPool: 8
+    numInitChildren : 48
     resources:
       requests:
         cpu: 250m
@@ -70,18 +69,8 @@ postgresql-ha:
     password: password
     postgresPassword: postgres
     repmgrPassword: repmgr
-    env:         
-      - name: PGOPTIONS
-        value: "-c max_connections=1000  -c shared_buffers=1024MB"
-      - name: "MAX_CONNECTIONS"
-        value: "1000"#    args: 
-#      - -c
-#      - max_connections=475
-#      - -c
-#      - shared_buffers=250MB
-#    configuration:
-#      maxConnections: 475
-#      sharedBuffers: 256MB
+    maxConnections: 475
+    sharedBuffers: 128MB
     resources:
       requests:
         cpu: 250m
