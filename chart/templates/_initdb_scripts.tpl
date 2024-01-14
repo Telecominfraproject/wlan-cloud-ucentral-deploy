@@ -10,6 +10,8 @@ until psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} p
   sleep 1
 done
 
+echo "Postgres is running, executing script"
+
 {{ range index .Values "postgresql-ha" "initDbScriptSecret" "services" }}
 echo "{{ . }}"
 echo "SELECT 'CREATE USER {{ index $root "Values" . "configProperties" "storage.type.postgresql.username" }}' WHERE NOT EXISTS (SELECT FROM pg_user WHERE usename = '{{ index $root "Values" . "configProperties" "storage.type.postgresql.username" }}')\gexec" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
@@ -21,6 +23,8 @@ echo "GRANT ALL PRIVILEGES ON DATABASE {{ index $root "Values" . "configProperti
 echo "CREATE USER owgw WITH ENCRYPTED PASSWORD 'owgw'" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres password
 echo "CREATE DATABASE owgw" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres password
 echo "GRANT ALL PRIVILEGES ON DATABASE owgw TO owgw" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres password
+
+echo "Postgres has been initialized..."
 
 
 {{- end -}}
