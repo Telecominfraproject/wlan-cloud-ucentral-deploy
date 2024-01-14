@@ -51,7 +51,7 @@ postgresql-ha:
   initDbScriptSecret:
     enabled: true
   pgpool:
-    replicaCount: 0
+    replicaCount: 1
     adminPassword: postgres
 #    childLifeTime: 0
 #    maxPool: 8
@@ -63,8 +63,8 @@ postgresql-ha:
       limits:
         cpu: 250m
         memory: 1024Mi
-#    initdbScriptsSecret: tip-openwifi-initdb-scripts
-    initDbScriptSecret: tip-openwifi-initdb-scripts
+    initdbScriptsSecret: tip-openwifi-initdb-scripts
+#    initDbScriptSecret: tip-openwifi-initdb-scripts
   postgresql:
     replicaCount: 1
     maxConnections: 454
@@ -81,5 +81,5 @@ postgresql-ha:
       limits:
         cpu: 250m
         memory: 1024Mi
- # initdbScriptsSecret: tip-openwifi-initdb-scripts
-    initDbScriptSecret: tip-openwifi-initdb-scripts
+    initdbScriptsSecret: tip-openwifi-initdb-scripts
+#    initDbScriptSecret: tip-openwifi-initdb-scripts
