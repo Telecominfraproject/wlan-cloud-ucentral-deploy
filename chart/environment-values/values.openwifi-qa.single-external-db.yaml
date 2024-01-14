@@ -67,10 +67,10 @@ postgresql-ha:
   postgresql:
     replicaCount: 1 # TODO change after tests
     args:
-      - -c
-      - max_connections: 454
-      - -c
-      - shared_buffers: 256MB
+      - "-c"
+      - "max_connections: 454"
+      - "-c"
+      - "shared_buffers: 256MB"
     password: password
     postgresPassword: postgres
     repmgrPassword: repmgr
