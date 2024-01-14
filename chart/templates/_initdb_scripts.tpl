@@ -16,6 +16,11 @@ echo "SELECT 'CREATE USER {{ index $root "Values" . "configProperties" "storage.
 echo "ALTER USER {{ index $root "Values" . "configProperties" "storage.type.postgresql.username" }} WITH ENCRYPTED PASSWORD '{{ index $root "Values" . "configProperties" "storage.type.postgresql.password" }}'" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
 echo "SELECT 'CREATE DATABASE {{ index $root "Values" . "configProperties" "storage.type.postgresql.database" }}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '{{ index $root "Values" . "configProperties" "storage.type.postgresql.database" }}')\gexec" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
 echo "GRANT ALL PRIVILEGES ON DATABASE {{ index $root "Values" . "configProperties" "storage.type.postgresql.database" }} TO {{ index $root "Values" . "configProperties" "storage.type.postgresql.username" }}" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
-
 {{ end }}
+
+echo "CREATE USER owgw WITH ENCRYPTED PASSWORD 'owgw'" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
+echo "CREATE DATABASE owgw" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
+echo "GRANT ALL PRIVILEGES ON DATABASE owgw TO owgw" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
+
+
 {{- end -}}
