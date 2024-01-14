@@ -454,3 +454,8 @@ postgresql-ha:
       - owprov
       - owanalytics
       - owsub
+  postgresql:
+      parameters:
+        max_connections: 30
+        shared_buffers: 256MB
+
