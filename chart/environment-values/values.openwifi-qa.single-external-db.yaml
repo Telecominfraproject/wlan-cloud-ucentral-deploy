@@ -66,11 +66,8 @@ postgresql-ha:
     initdbScriptsSecret: tip-openwifi-initdb-scripts
   postgresql:
     replicaCount: 1 # TODO change after tests
-    args:
-      - "-c"
-      - "max_connections: 454"
-      - "-c"
-      - "shared_buffers: 256MB"
+    maxConnections: 454
+    sharedBuffers: 256MB
     password: password
     postgresPassword: postgres
     repmgrPassword: repmgr
