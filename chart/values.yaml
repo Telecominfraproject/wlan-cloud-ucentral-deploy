@@ -445,7 +445,7 @@ postgresql-ha:
   enabled: false
   nameOverride: pgsql
   fullnameOverride: pgsql
-  initDbScriptsSecret:
+  initDbScriptSecret:
     enabled: true
     services:
       - owgw

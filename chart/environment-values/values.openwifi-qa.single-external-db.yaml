@@ -48,7 +48,7 @@ owsub:
 
 postgresql-ha:
   enabled: true
-  initDbScriptsSecret:
+  initDbScriptSecret:
     enabled: true
   pgpool:
     replicaCount: 0
