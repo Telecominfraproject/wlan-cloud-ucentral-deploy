@@ -70,7 +70,7 @@ postgresql-ha:
     sharedBuffers: 256MB
     password: postgres
     postgresPassword: postgres
-    repmgrPassword: repmgr
+    repmgrPassword: postgres
     resources:
       requests:
         cpu: 250m
