@@ -22,11 +22,6 @@ echo "SELECT 'CREATE DATABASE {{ index $root "Values" . "configProperties" "stor
 echo "GRANT ALL PRIVILEGES ON DATABASE {{ index $root "Values" . "configProperties" "storage.type.postgresql.database" }} TO {{ index $root "Values" . "configProperties" "storage.type.postgresql.username" }}" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
 {{ end }}
 
-echo "CREATE USER owgw WITH ENCRYPTED PASSWORD 'owgw'" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres password
-echo "CREATE DATABASE owgw" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres password
-echo "GRANT ALL PRIVILEGES ON DATABASE owgw TO owgw" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres password
-
 echo "Postgres has been initialized..."
-
 
 {{- end -}}
