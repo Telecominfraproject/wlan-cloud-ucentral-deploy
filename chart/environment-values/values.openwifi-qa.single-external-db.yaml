@@ -52,7 +52,7 @@ postgresql-ha:
     enabled: true
   pgpool:
     replicaCount: 0
-    adminPassword: admin
+    adminPassword: postgres
 #    childLifeTime: 0
 #    maxPool: 8
 #    numInitChildren : 48
@@ -68,7 +68,7 @@ postgresql-ha:
     replicaCount: 1 # TODO change after tests
     maxConnections: 454
     sharedBuffers: 256MB
-    password: password
+    password: postgres
     postgresPassword: postgres
     repmgrPassword: repmgr
     resources:
