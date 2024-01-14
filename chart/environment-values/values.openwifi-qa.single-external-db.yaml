@@ -48,7 +48,7 @@ owsub:
 
 postgresql-ha:
   enabled: true
-  initdbScriptSecret:
+  initdbScriptsSecret:
     enabled: true
   pgpool:
     replicaCount: 0
@@ -78,4 +78,4 @@ postgresql-ha:
       limits:
         cpu: 250m
         memory: 1024Mi
-    initdbScriptSecret: tip-openwifi-initdb-scripts
+    initdbScriptsSecret: tip-openwifi-initdb-scripts
