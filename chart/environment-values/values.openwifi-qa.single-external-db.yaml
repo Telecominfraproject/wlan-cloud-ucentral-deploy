@@ -65,7 +65,10 @@ postgresql-ha:
         memory: 1024Mi
     initdbScriptsSecret: tip-openwifi-initdb-scripts
   postgresql:
-    replicaCount: 1 # TODO change after tests
+    replicaCount: 3 # TODO change after tests
+    parameters:
+      max_connections: 30
+      shared_buffers: 256MB
     password: password
     postgresPassword: postgres
     repmgrPassword: repmgr
