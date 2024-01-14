@@ -5,6 +5,8 @@
 #!/bin/bash
 export PGPASSWORD=$PGPOOL_POSTGRES_PASSWORD
 
+echo "Testing if postgres is running, executing script"
+
 until psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres -c '\q'; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
