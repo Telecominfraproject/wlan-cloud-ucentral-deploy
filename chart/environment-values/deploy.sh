@@ -52,7 +52,7 @@ EXTRA_VALUES_SPLITTED=()
 
 # Helper functions
 check_if_chart_version_is_release() {
-  PARSED_CHART_VERSION=$(echo $CHART_VERSION | grep -xE "v\d+\.\d+\.\d+.*")
+  PARSED_CHART_VERSION=$(echo "$CHART_VERSION" | grep -xE "v\d+\.\d+\.\d+.*")
   if [[ -z "$PARSED_CHART_VERSION" ]]; then
     return 1
   else
@@ -150,6 +150,7 @@ for VALUE_FILE in ${VALUES_FILE_LOCATION_SPLITTED[*]}; do
   VALUES_FILES_FLAGS+=("-f" $VALUE_FILE)
 done
 EXTRA_VALUES_FLAGS=()
+# shellcheck disable=SC2153
 IFS=',' read -ra EXTRA_VALUES_SPLITTED <<< "$EXTRA_VALUES"
 for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
   EXTRA_VALUES_FLAGS+=("--set" $EXTRA_VALUE)
@@ -164,9 +165,9 @@ else
 fi
 
 echo "Deploying into openwifi-${NAMESPACE} with the following values files:"
-echo ${VALUES_FILES_FLAGS[*]}
+echo "${VALUES_FILES_FLAGS[*]}"
 echo
-envsubst < values.custom.tpl.yaml > values.custom-${NAMESPACE}.yaml
+envsubst < values.custom.tpl.yaml > values.custom-"${NAMESPACE}".yaml
 
 echo "Using configuration:"
 echo "---"
@@ -196,4 +197,4 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set-file owanalytics.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owsub.certs."restapi-cert\.pem"=$CERT_LOCATION \
   --set-file owsub.certs."restapi-key\.pem"=$KEY_LOCATION \
-  tip-openwifi $DEPLOY_SOURCE
+  tip-openwifi "$DEPLOY_SOURCE"
