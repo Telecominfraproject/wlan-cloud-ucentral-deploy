@@ -68,14 +68,14 @@ postgresql-ha:
   postgresql:
     replicaCount: 1
     maxConnections: 454
-    sharedBuffers: 256MB
+#    sharedBuffers: 256MB
     password: postgres
     postgresPassword: postgres
     repmgrPassword: postgres
-    configuration: |
-      shared_buffers=256MB
+#    configuration: |
+#      shared_buffers=256MB
     parameters:
-      shared_buffers: 256MB
+      sharedBuffers: 256MB
     resources:
       requests:
         cpu: 250m
