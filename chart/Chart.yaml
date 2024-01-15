@@ -32,8 +32,9 @@ dependencies:
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-rrm@helm?ref=main"
   version: 0.1.0
 - name: kafka
-  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
-  version: 13.0.2
+#  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.0.5
   condition: kafka.enabled
 - name: owls
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owls@helm?ref=main"
@@ -44,10 +45,12 @@ dependencies:
   version: 0.1.0
   condition: owlsui.enabled
 - name: haproxy
-  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
-  version: 0.2.21
+#  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
+  repository: https://charts.bitnami.com/bitnami
+  version: 0.11.3
   condition: haproxy.enabled
 - name: postgresql-ha
-  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
-  version: 8.6.13
+#  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.5.0
   condition: postgresql-ha.enabled
