@@ -5,14 +5,14 @@
 #!/bin/bash
 export PGPASSWORD=$PGPOOL_POSTGRES_PASSWORD
 
-echo "Testing if postgres is running, executing script"
+echo "Testing if postgres is running before executing the initialization script."
 
 until psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres -c '\q'; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
 done
 
-echo "Postgres is running, executing script"
+echo "Postgres is running, executing initialization script."
 
 {{ range index .Values "postgresql-ha" "initDbScriptSecret" "services" }}
 echo "{{ . }}"
@@ -22,6 +22,6 @@ echo "SELECT 'CREATE DATABASE {{ index $root "Values" . "configProperties" "stor
 echo "GRANT ALL PRIVILEGES ON DATABASE {{ index $root "Values" . "configProperties" "storage.type.postgresql.database" }} TO {{ index $root "Values" . "configProperties" "storage.type.postgresql.username" }}" | psql -h {{ include "postgresql-ha.postgresql" $postgresqlEmulatedRoot }} postgres postgres
 {{ end }}
 
-echo "Postgres has been initialized..."
+echo "Postgres has been initialized."
 
 {{- end -}}
