@@ -72,7 +72,9 @@ postgresql-ha:
     postgresPassword: postgres
     repmgrPassword: postgres
     configuration: |+
-      max_connections=457
+      post = 5432
+      max_connections = 457
+      stared_buffers = 128MB
 
     resources:
       requests:
