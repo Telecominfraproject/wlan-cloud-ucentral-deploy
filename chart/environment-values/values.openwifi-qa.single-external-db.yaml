@@ -73,7 +73,6 @@ postgresql-ha:
     repmgrPassword: postgres
     configuration: |
       max_connections = 457
-#      shared_buffers = '256MB'
     resources:
       requests:
         cpu: 250m
