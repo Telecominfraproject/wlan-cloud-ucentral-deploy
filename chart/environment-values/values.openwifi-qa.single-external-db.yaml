@@ -71,8 +71,8 @@ postgresql-ha:
     password: postgres
     postgresPassword: postgres
     repmgrPassword: postgres
-    configuration: |
-      shared_buffers = 256MB
+    configuration: |-
+      shared_buffers = '256MB'
     resources:
       requests:
         cpu: 250m
