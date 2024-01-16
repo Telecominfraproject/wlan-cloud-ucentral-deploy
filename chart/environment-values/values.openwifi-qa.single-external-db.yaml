@@ -71,8 +71,9 @@ postgresql-ha:
     password: postgres
     postgresPassword: postgres
     repmgrPassword: postgres
-    configuration: |
+    configuration: |+
       max_connections = '457'
+
     resources:
       requests:
         cpu: 250m
