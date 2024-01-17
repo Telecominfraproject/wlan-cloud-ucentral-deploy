@@ -5,11 +5,11 @@
 #!/bin/bash
 export PGPASSWORD=postgres
 
-echo "Testing if postgres is running before executing the initialization script."
+# echo "Testing if postgres is running before executing the initialization script."
 
-until pg_isready -h postgresql -p 5432; do echo "Postgres is unavailable - sleeping"; sleep 2; done;
+# until pg_isready -h postgresql -p 5432; do echo "Postgres is unavailable - sleeping"; sleep 2; done;
 
-echo "Postgres is running, executing initialization script."
+# echo "Postgres is running, executing initialization script."
 
 {{ range index $.Values.postgresql.initDbScriptSecret.services }}
 echo "{{ . }}"
