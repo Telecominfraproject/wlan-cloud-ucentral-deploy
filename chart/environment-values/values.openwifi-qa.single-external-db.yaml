@@ -68,21 +68,17 @@ postgresql-ha:
   postgresql:
     replicaCount: 1
     maxConnections: 453
-    sharedBuffers: '128MB'
     password: postgres
     postgresPassword: postgres
     repmgrPassword: postgres
-    args:
-      - "-c"
-      - "max_connections=453"
-      - "-c"
-      - "shared_buffers=128MB"
+    extendedConf: |+
+      max_connections = 447
+      shared_buffers = 128MB
 
 #    configuration: |+
 #      port = 5432
 #      max_connections = 457
 #      shared_buffers = 128MB
-#    args: ["-c max_connections=457"]
 
     resources:
       requests:
