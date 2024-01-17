@@ -3,7 +3,7 @@
 {{- $postgresqlBase := index .Values "postgresql" }}
 {{- $postgresqlEmulatedRoot := (dict "Values" $postgresqlBase "Chart" (dict "Name" "postgresql") "Release" $.Release) }}
 #!/bin/bash
-export PGPASSWORD=$PGPOOL_POSTGRES_PASSWORD
+export PGPASSWORD=postgres
 
 echo "Testing if postgres is running before executing the initialization script."
 
