@@ -75,7 +75,7 @@ postgresql-ha:
 #      port = 5432
 #      max_connections = 457
 #      shared_buffers = 128MB
-    args: ["-c", "shared_buffers=128MB", "-c", "max_connections=457"]
+    args: ["-c max_connections=457"]
 
     resources:
       requests:
