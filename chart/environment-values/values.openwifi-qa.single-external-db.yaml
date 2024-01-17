@@ -50,6 +50,9 @@ postgresql-ha:
   enabled: true
   initDbScriptSecret:
     enabled: true
+  postgresqlConfiguration:
+    max_connections: 457
+    shared_buffers: 128MB
   pgpool:
     replicaCount: 1
     adminPassword: postgres
@@ -75,7 +78,7 @@ postgresql-ha:
 #      port = 5432
 #      max_connections = 457
 #      shared_buffers = 128MB
-    args: ["-c max_connections=457"]
+#    args: ["-c max_connections=457"]
 
     resources:
       requests:
