@@ -72,6 +72,12 @@ postgresql-ha:
     password: postgres
     postgresPassword: postgres
     repmgrPassword: postgres
+    command:
+      - "postgresql"
+      - "-c"
+      - "max_connections=453"
+      - "-c"
+      - "shared_buffers=128MB"
 #    configuration: |+
 #      port = 5432
 #      max_connections = 457
