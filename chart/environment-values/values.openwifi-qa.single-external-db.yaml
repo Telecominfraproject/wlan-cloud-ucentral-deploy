@@ -1,7 +1,7 @@
 owgw:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql
+    storage.type.postgresql.host: postgresql
     storage.type.postgresql.database: owgw
     storage.type.postgresql.username: owgw
     storage.type.postgresql.password: owgw
@@ -9,7 +9,7 @@ owgw:
 owsec:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql
+    storage.type.postgresql.host: postgresql
     storage.type.postgresql.database: owsec
     storage.type.postgresql.username: owsec
     storage.type.postgresql.password: owsec
@@ -17,7 +17,7 @@ owsec:
 owfms:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql
+    storage.type.postgresql.host: postgresql
     storage.type.postgresql.database: owfms
     storage.type.postgresql.username: owfms
     storage.type.postgresql.password: owfms
@@ -25,7 +25,7 @@ owfms:
 owprov:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql
+    storage.type.postgresql.host: postgresql
     storage.type.postgresql.database: owprov
     storage.type.postgresql.username: owprov
     storage.type.postgresql.password: owprov
@@ -33,7 +33,7 @@ owprov:
 owanalytics:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql
+    storage.type.postgresql.host: postgresql
     storage.type.postgresql.database: owanalytics
     storage.type.postgresql.username: owanalytics
     storage.type.postgresql.password: owanalytics
@@ -41,7 +41,7 @@ owanalytics:
 owsub:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql
+    storage.type.postgresql.host: postgresql
     storage.type.postgresql.database: owsub
     storage.type.postgresql.username: owsub
     storage.type.postgresql.password: owsub
