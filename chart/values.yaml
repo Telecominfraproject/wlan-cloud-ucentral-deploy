@@ -441,7 +441,7 @@ restapiCerts:
 
   clusterDomain: cluster.local
 
-postgresql-ha:
+postgresql:
   enabled: false
   nameOverride: pgsql
   fullnameOverride: pgsql
