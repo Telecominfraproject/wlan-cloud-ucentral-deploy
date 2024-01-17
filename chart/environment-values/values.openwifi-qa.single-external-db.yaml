@@ -47,7 +47,7 @@ owsub:
     storage.type.postgresql.password: owsub
 
 postgresql:
-  initDbScriptSecret: true
+  initDbScriptSecret: enabled
   replicaCount: 1
   maxConnections: 453
   password: postgres
