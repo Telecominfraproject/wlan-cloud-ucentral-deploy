@@ -50,9 +50,6 @@ postgresql-ha:
   enabled: true
   initDbScriptSecret:
     enabled: true
-  postgresqlConfiguration:
-    max_connections: 457
-    shared_buffers: 128MB
   pgpool:
     replicaCount: 1
     adminPassword: postgres
@@ -70,7 +67,8 @@ postgresql-ha:
 #    initDbScriptSecret: tip-openwifi-initdb-scripts
   postgresql:
     replicaCount: 1
-#    maxConnections: 454
+    maxConnections: 453
+    sharedBuffers: 128MB
     password: postgres
     postgresPassword: postgres
     repmgrPassword: postgres
