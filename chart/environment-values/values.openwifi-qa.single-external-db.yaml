@@ -1,7 +1,7 @@
 owgw:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-postgresql
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owgw
     storage.type.postgresql.username: owgw
     storage.type.postgresql.password: owgw
@@ -9,7 +9,7 @@ owgw:
 owsec:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-postgresql
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owsec
     storage.type.postgresql.username: owsec
     storage.type.postgresql.password: owsec
@@ -17,7 +17,7 @@ owsec:
 owfms:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-postgresql
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owfms
     storage.type.postgresql.username: owfms
     storage.type.postgresql.password: owfms
@@ -25,7 +25,7 @@ owfms:
 owprov:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-postgresql
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owprov
     storage.type.postgresql.username: owprov
     storage.type.postgresql.password: owprov
@@ -33,7 +33,7 @@ owprov:
 owanalytics:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-postgresql
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owanalytics
     storage.type.postgresql.username: owanalytics
     storage.type.postgresql.password: owanalytics
@@ -41,36 +41,17 @@ owanalytics:
 owsub:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-postgresql
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owsub
     storage.type.postgresql.username: owsub
     storage.type.postgresql.password: owsub
 
-postgresql-ha:
-  enabled: true
-  initDbScriptSecret:
-    enabled: true
-  pgpool:
-    replicaCount: 1
-    adminPassword: postgres
-    childLifeTime: 0
-    maxPool: 8
-    numInitChildren : 48
-    resources:
-      requests:
-        cpu: 250m
-        memory: 1024Mi
-      limits:
-        cpu: 250m
-        memory: 1024Mi
-    initdbScriptsSecret: tip-openwifi-initdb-scripts
-#    initDbScriptSecret: tip-openwifi-initdb-scripts
-  postgresql:
-    replicaCount: 1
-    maxConnections: 453
-    password: postgres
-    postgresPassword: postgres
-    repmgrPassword: postgres
+postgresql:
+  replicaCount: 1
+  maxConnections: 453
+  password: postgres
+  postgresPassword: postgres
+  repmgrPassword: postgres
 #    extendedConf: |
 #      max_connections = 447
 #      shared_buffers = 128MB
@@ -80,12 +61,12 @@ postgresql-ha:
 #      max_connections = 457
 #      shared_buffers = 128MB
 
-    resources:
-      requests:
-        cpu: 250m
-        memory: 1024Mi
-      limits:
-        cpu: 250m
-        memory: 1024Mi
-    initdbScriptsSecret: tip-openwifi-initdb-scripts
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1024Mi
+    limits:
+      cpu: 250m
+      memory: 1024Mi
+  initdbScriptsSecret: tip-openwifi-initdb-scripts
 #    initDbScriptSecret: tip-openwifi-initdb-scripts
