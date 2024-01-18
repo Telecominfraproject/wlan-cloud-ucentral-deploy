@@ -1,5 +1,6 @@
 owgw:
   configProperties:
+    simulatorid: 53494D020202
     storage.type: postgresql
     storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owgw
