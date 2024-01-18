@@ -61,6 +61,13 @@ postgresql:
 #      port = 5432
 #      max_connections = 457
 #      shared_buffers = 128MB
+  postgresqlUsername: postgres
+  postgresqlPassword: postgres
+  initdbScripts:
+    init.sql: | # <-- Here
+      CREATE USER owgw WITH PASSWORD 'owgw';
+      CREATE DATABASE owgw;
+      GRANT ALL PRIVILEGES ON DATABASE owgw TO owgw;
 
   resources:
     requests:
