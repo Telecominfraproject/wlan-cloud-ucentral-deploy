@@ -441,11 +441,9 @@ restapiCerts:
   clusterDomain: cluster.local
 
 postgresql:
-  enabled: false
-  nameOverride: pgsql
-  fullnameOverride: pgsql
+  enabled: true
   initDbScriptSecret:
-    enabled: false
+    enabled: true
     services:
       - owgw
       - owsec
