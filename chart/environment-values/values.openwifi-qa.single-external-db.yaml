@@ -71,8 +71,8 @@ postgresql-ha:
     repmgrPassword: repmgr
     maxConnections: 475
     sharedBuffers: 128MB
-    postgresqlExtendedConf:
-      sharedBuffers: 500MB
+    extendedConf:
+      sharedBuffers: 128MB
     resources:
       requests:
         cpu: 250m
