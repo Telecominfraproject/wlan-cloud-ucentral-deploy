@@ -1,7 +1,7 @@
 owgw:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owgw
     storage.type.postgresql.username: owgw
     storage.type.postgresql.password: owgw
@@ -9,7 +9,7 @@ owgw:
 owsec:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owsec
     storage.type.postgresql.username: owsec
     storage.type.postgresql.password: owsec
@@ -17,7 +17,7 @@ owsec:
 owfms:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owfms
     storage.type.postgresql.username: owfms
     storage.type.postgresql.password: owfms
@@ -25,7 +25,7 @@ owfms:
 owprov:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owprov
     storage.type.postgresql.username: owprov
     storage.type.postgresql.password: owprov
@@ -33,7 +33,7 @@ owprov:
 owanalytics:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owanalytics
     storage.type.postgresql.username: owanalytics
     storage.type.postgresql.password: owanalytics
@@ -41,36 +41,40 @@ owanalytics:
 owsub:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: postgresql
+    storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owsub
     storage.type.postgresql.username: owsub
     storage.type.postgresql.password: owsub
 
-postgresql:
-  replicaCount: 1
-  maxConnections: 453
-  sharedBuffers: 128MB
-  password: postgres
-  postgresPassword: postgres
-  postgresqlUsername: postgres
-  postgresqlPassword: postgres
-  primary:
-    name: postgres
-    host: postgresql
-    port: 5432
-    user: postgres
-    password: postgres
-    initdb:
-      scripts:
-        init.sql: | 
-          CREATE USER owgw WITH PASSWORD 'owgw';
-          CREATE DATABASE owgw;
-          GRANT ALL PRIVILEGES ON DATABASE owgw TO owgw;
-
-  resources:
-    requests:
-      cpu: 250m
-      memory: 1024Mi
-    limits:
-      cpu: 250m
-      memory: 1024Mi
+postgresql-ha:
+  enabled: true
+  initDbScriptSecret:
+    enabled: true
+  pgpool:
+    replicaCount: 1
+    adminPassword: admin
+    childLifeTime: 0
+    maxPool: 8
+    numInitChildren : 48
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
+    initdbScriptsSecret: tip-openwifi-initdb-scripts
+  postgresql:
+    replicaCount: 1
+    password: password
+    postgresPassword: postgres
+    repmgrPassword: repmgr
+    maxConnections: 475
+    sharedBuffers: 128MB
+    resources:
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+      limits:
+        cpu: 250m
+        memory: 1024Mi
