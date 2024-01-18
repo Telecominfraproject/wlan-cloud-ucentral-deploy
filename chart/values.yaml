@@ -428,6 +428,7 @@ haproxy:
 # Cert-manager RESTAPI certs
 restapiCerts:
   enabled: false
+
   services:
     - owgw-owgw
     - owsec-owsec
@@ -440,12 +441,12 @@ restapiCerts:
 
   clusterDomain: cluster.local
 
-postgresql:
-  enabled: true
+postgresql-ha:
+  enabled: false
   nameOverride: pgsql
   fullnameOverride: pgsql
   initDbScriptSecret:
-    enabled: true
+    enabled: false
     services:
       - owgw
       - owsec
@@ -453,4 +454,3 @@ postgresql:
       - owprov
       - owanalytics
       - owsub
-
