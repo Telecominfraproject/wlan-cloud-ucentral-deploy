@@ -50,17 +50,10 @@ postgresql:
   initDbScriptSecret: enabled
   replicaCount: 1
   maxConnections: 453
+  sharedBuffers: 128MB
   password: postgres
   postgresPassword: postgres
   repmgrPassword: postgres
-#    extendedConf: |
-#      max_connections = 447
-#      shared_buffers = 128MB
-
-#    configuration: |+
-#      port = 5432
-#      max_connections = 457
-#      shared_buffers = 128MB
   postgresqlUsername: postgres
   postgresqlPassword: postgres
   initdbScripts:
@@ -76,5 +69,3 @@ postgresql:
     limits:
       cpu: 250m
       memory: 1024Mi
-  initdbScriptsSecret: tip-openwifi-initdb-scripts
-#    initDbScriptSecret: tip-openwifi-initdb-scripts
