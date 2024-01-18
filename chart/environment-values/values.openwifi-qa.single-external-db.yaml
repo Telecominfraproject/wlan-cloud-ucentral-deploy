@@ -72,9 +72,6 @@ postgresql-ha:
     repmgrPassword: repmgr
     maxConnections: 475
     sharedBuffers: 128MB
-    env:
-      - name: POSTGRESQL_EXTRA_FLAGS
-        value: "shared_buffers=128MB"
     resources:
       requests:
         cpu: 250m
