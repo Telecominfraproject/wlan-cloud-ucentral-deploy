@@ -1,5 +1,6 @@
 owgw:
   configProperties:
+    simulatorid: 53494D020202
     storage.type: postgresql
     storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owgw
@@ -73,7 +74,7 @@ postgresql-ha:
     sharedBuffers: 128MB
     env:
       - name: POSTGRESQL_EXTRA_FLAGS
-        value: "-c shared_buffers=128MB"
+        value: "shared_buffers=128MB"
     resources:
       requests:
         cpu: 250m
