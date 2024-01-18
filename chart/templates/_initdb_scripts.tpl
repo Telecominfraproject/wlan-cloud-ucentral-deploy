@@ -11,7 +11,7 @@ until pg_isready -h postgresql -p 5432; do echo "Postgres is unavailable - sleep
 
 echo "Postgres is running, executing initialization script."
 
-echo "CREATE USER owgw WHERE NOT EXISTS (SELECT FROM pg_user WHERE usename = 'owgw')\gexec" | psql -h {{ include "postgresql" $postgresqlEmulatedRoot }} postgres postgres
+echo "CREATE USER owgw " | psql -h postgresql postgres postgres
 
 echo "Postgres has been initialized."
 
