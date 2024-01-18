@@ -47,20 +47,25 @@ owsub:
     storage.type.postgresql.password: owsub
 
 postgresql:
-  initDbScriptSecret: enabled
   replicaCount: 1
   maxConnections: 453
   sharedBuffers: 128MB
   password: postgres
   postgresPassword: postgres
-  repmgrPassword: postgres
   postgresqlUsername: postgres
   postgresqlPassword: postgres
-  initdbScripts:
-    init.sql: | # <-- Here
-      CREATE USER owgw WITH PASSWORD 'owgw';
-      CREATE DATABASE owgw;
-      GRANT ALL PRIVILEGES ON DATABASE owgw TO owgw;
+  primary:
+    name: postgres
+    host: postgresql
+    port: 5432
+    user: postgres
+    password: postgres
+    initdb:
+      scripts:
+        init.sql: | 
+          CREATE USER owgw WITH PASSWORD 'owgw';
+          CREATE DATABASE owgw;
+          GRANT ALL PRIVILEGES ON DATABASE owgw TO owgw;
 
   resources:
     requests:

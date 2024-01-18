@@ -442,6 +442,8 @@ restapiCerts:
 
 postgresql:
   enabled: true
+  nameOverride: pgsql
+  fullnameOverride: pgsql
   initDbScriptSecret:
     enabled: true
     services:
