@@ -11,7 +11,9 @@ until pg_isready -h postgresql -p 5432; do echo "Postgres is unavailable - sleep
 
 echo "Postgres is running, executing initialization script."
 
-echo "SELECT 'CREATE USER {{ $.Values.owgw.configProperties.storage.type.postgresql.username }}' WHERE NOT EXISTS (SELECT FROM pg_user WHERE usename = '{{ $.Values.owgw.configProperties.storage.type.postgresql.username }}')\gexec" | psql -h {{ include "postgresql" $postgresqlEmulatedRoot }} postgres postgres
+{{- range .Values "postgresql" "initDbScriptSecret" "services" }}
+echo "SELECT 'CREATE USER {{ $root "Values" . "configProperties" "storage.type.postgresql.username" }}' WHERE NOT EXISTS (SELECT FROM pg_user WHERE usename = '{{ $root "Values" . "configProperties" "storage.type.postgresql.username" }}')\gexec" | psql -h {{ include "postgresql" $postgresqlEmulatedRoot }} postgres postgres
+{{- end }}
 
 echo "Postgres has been initialized."
 
