@@ -1,5 +1,6 @@
 owgw:
   configProperties:
+    simulatorid: 53494D020202
     storage.type: postgresql
     storage.type.postgresql.host: pgsql-pgpool
     storage.type.postgresql.database: owgw
@@ -62,12 +63,13 @@ postgresql-ha:
         memory: 1024Mi
     initdbScriptsSecret: tip-openwifi-initdb-scripts
   postgresql:
-    replicaCount: 1 # TODO change after tests
-    password: password
+    replicaCount: 1
+    password: postgres
     postgresPassword: postgres
     repmgrPassword: repmgr
     maxConnections: 1000
     shared_buffers: 256MB
+
     resources:
       requests:
         cpu: 250m
