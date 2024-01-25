@@ -52,11 +52,8 @@ postgresql-ha:
   initDbScriptSecret:
     enabled: true
   pgpool:
-    replicaCount: 1
-    adminPassword: postgres
-    childLifeTime: 0
-    maxPool: 8
-    numInitChildren : 48
+    adminPassword: admin
+    maxConnections: 400
     resources:
       requests:
         cpu: 250m
@@ -70,8 +67,9 @@ postgresql-ha:
     password: postgres
     postgresPassword: postgres
     repmgrPassword: repmgr
-    maxConnections: 475
-    sharedBuffers: 128MB
+    maxConnections: 1000
+    shared_buffers: 256MB
+
     resources:
       requests:
         cpu: 250m
