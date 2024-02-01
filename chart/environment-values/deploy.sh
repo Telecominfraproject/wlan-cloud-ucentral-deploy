@@ -52,7 +52,7 @@ EXTRA_VALUES_SPLITTED=()
 
 # Helper functions
 check_if_chart_version_is_release() {
-  PARSED_CHART_VERSION=$(echo $CHART_VERSION | grep -xP "v\d+\.\d+\.\d+.*")
+  PARSED_CHART_VERSION=$(echo $CHART_VERSION | grep -xP "v[0-9]+\.[0-9]+\.[0-9]+.*")
   if [[ -z "$PARSED_CHART_VERSION" ]]; then
     return 1
   else
