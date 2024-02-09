@@ -2,7 +2,7 @@ owgw:
   configProperties:
     simulatorid: 53494D020202
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owgw
     storage.type.postgresql.username: owgw
     storage.type.postgresql.password: owgw
@@ -10,7 +10,7 @@ owgw:
 owsec:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owsec
     storage.type.postgresql.username: owsec
     storage.type.postgresql.password: owsec
@@ -18,7 +18,7 @@ owsec:
 owfms:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owfms
     storage.type.postgresql.username: owfms
     storage.type.postgresql.password: owfms
@@ -26,7 +26,7 @@ owfms:
 owprov:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owprov
     storage.type.postgresql.username: owprov
     storage.type.postgresql.password: owprov
@@ -34,7 +34,7 @@ owprov:
 owanalytics:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owanalytics
     storage.type.postgresql.username: owanalytics
     storage.type.postgresql.password: owanalytics
@@ -42,15 +42,37 @@ owanalytics:
 owsub:
   configProperties:
     storage.type: postgresql
-    storage.type.postgresql.host: pgsql-pgpool
+    storage.type.postgresql.host: pgsql
     storage.type.postgresql.database: owsub
     storage.type.postgresql.username: owsub
     storage.type.postgresql.password: owsub
 
-postgresql-ha:
+postgresql:
   enabled: true
   initDbScriptSecret:
     enabled: true
+    initdbScriptsSecret: tip-openwifi-initdb-scripts
+  volumePermissions:
+    enabled: true
+  global:
+    postgresql:
+      auth:
+        postgresPassword: postgres
+  auth:
+    postgresPassword: postgres
+  primary:
+    extendedConfiguration: |-
+      max_connections = 550
+      shared_buffers = 128MB
+    #  log_error_verbosity = verbose
+    initdb:
+      scriptsSecret: tip-openwifi-initdb-scripts
+
+postgresql-ha:
+  enabled: false
+  initDbScriptSecret:
+    enabled: false
+    initdbScriptsSecret: tip-openwifi-initdb-scripts
   pgpool:
     adminPassword: admin
     resources:
