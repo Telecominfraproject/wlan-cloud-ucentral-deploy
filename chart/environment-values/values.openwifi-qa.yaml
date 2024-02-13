@@ -357,7 +357,6 @@ owgwui:
     default:
       enabled: true
       annotations:
-        kubernetes.io/ingress.class: alb
         alb.ingress.kubernetes.io/scheme: internet-facing
         alb.ingress.kubernetes.io/group.name: wlan-cicd
         alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
@@ -565,7 +564,6 @@ owprovui:
     default:
       enabled: true
       annotations:
-        kubernetes.io/ingress.class: alb
         alb.ingress.kubernetes.io/scheme: internet-facing
         alb.ingress.kubernetes.io/group.name: wlan-cicd
         alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
