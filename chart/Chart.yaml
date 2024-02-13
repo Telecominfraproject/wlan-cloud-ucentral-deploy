@@ -44,10 +44,14 @@ dependencies:
   version: 0.1.0
   condition: owlsui.enabled
 - name: haproxy
-  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
-  version: 0.2.21
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 0.13.3
   condition: haproxy.enabled
-- name: postgresql-ha
-  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
-  version: 8.6.13
-  condition: postgresql-ha.enabled
+#- name: postgresql-ha
+#  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
+#  version: 8.6.13
+#  condition: postgresql-ha.enabled
+- name: postgresql
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 13.4.3
+  condition: postgresql.enabled

@@ -2,48 +2,47 @@
 set -e
 
 # Usage function
-usage () {
-  echo >&2;
-  echo "This script is indended for OpenWIFI Cloud SDK deployment to TIP QA/Dev environments using assembly Helm chart (https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy/tree/main/chart) with configuration through environment variables" >&2;
-  echo >&2;
-  echo "Required environment variables:" >&2;
-  echo >&2;
-  echo "- NAMESPACE - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'ucentral-test')" >&2;
-  echo "- DEPLOY_METHOD - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0" >&2;
-  echo "- CHART_VERSION - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)" >&2;
-  echo >&2;
-  echo "- VALUES_FILE_LOCATION - path to file with override values that may be used for deployment" >&2;
-  echo "- DOMAIN - Domain name. default: cicd.lab.wlan.tip.build" >&2;
-  echo "- OWGW_AUTH_USERNAME - username to be used for requests to OpenWIFI Security" >&2;
-  echo "- OWGW_AUTH_PASSWORD - hashed password for OpenWIFI Security (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)" >&2;
-  echo "- OWFMS_S3_SECRET - secret key that is used for OpenWIFI Firmware access to firmwares S3 bucket" >&2;
-  echo "- OWFMS_S3_KEY - access key that is used for OpenWIFI Firmware access to firmwares S3 bucket" >&2;
-  echo "- OWSEC_NEW_PASSWORD - password that should be set to default user instead of default password from properties" >&2;
-  echo "- CERT_LOCATION - path to certificate in PEM format that will be used for securing all endpoint in all services" >&2;
-  echo "- KEY_LOCATION - path to private key in PEM format that will be used for securing all endpoint in all services" >&2;
-  echo >&2;
-  echo "Following environmnet variables may be passed, but will be ignored if CHART_VERSION is set to release (i.e. v2.4.0):" >&2;
-  echo >&2;
-  echo "- OWGW_VERSION - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo "- OWGWUI_VERSION - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo "- OWSEC_VERSION - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo "- OWFMS_VERSION - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo "- OWPROV_VERSION - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo "- OWPROVUI_VERSION - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo "- OWANALYTICS_VERSION - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo "- OWSUB_VERSION - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo "- OWRRM_VERSION - OpenWIFI radio resource management service (RRM) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
-  echo >&2;
-  echo "Optional environment variables:" >&2;
-  echo >&2;
-  echo "- EXTRA_VALUES - extra values that should be passed to Helm deployment separated by comma (,)" >&2;
-  echo "- DEVICE_CERT_LOCATION - path to certificate in PEM format that will be used for load simulator" >&2;
-  echo "- DEVICE_KEY_LOCATION - path to private key in PEM format that will be used for load simulator" >&2;
-  echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services" >&2;
-  echo "- INTERNAL_RESTAPI_ENDPOINT_SCHEMA - what schema to use for internal RESTAPI endpoints (https by default)" >&2;
-  echo "- IPTOCOUNTRY_IPINFO_TOKEN - token that should be set for IPInfo support (owgw/owprov iptocountry.ipinfo.token properties), ommited if not passed" >&2;
-  echo "- MAILER_USERNAME - SMTP username used for OWSEC mailer" >&2;
-  echo "- MAILER_PASSWORD - SMTP password used for OWSEC mailer (only if both MAILER_PASSWORD and MAILER_USERNAME are set, mailer will be enabled)" >&2;
+function usage()
+{
+    cat <<-EOF >&2
+
+This script is indended for OpenWIFI Cloud SDK deployment to TIP QA/Dev environments using assembly Helm chart (https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy/tree/main/chart) with configuration through environment variables
+
+Required environment variables:
+- NAMESPACE - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'ucentral-test')
+- DEPLOY_METHOD - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart), 'bundle' (will use chart stored in the Artifactory) or local
+- CHART_VERSION - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)
+- VALUES_FILE_LOCATION - path to file with override values that may be used for deployment
+- DOMAIN - Domain name. default: cicd.lab.wlan.tip.build
+- OWGW_AUTH_USERNAME - username to be used for requests to OpenWIFI Security
+- OWGW_AUTH_PASSWORD - hashed password for OpenWIFI Security (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)
+- OWFMS_S3_SECRET - secret key that is used for OpenWIFI Firmware access to firmwares S3 bucket
+- OWFMS_S3_KEY - access key that is used for OpenWIFI Firmware access to firmwares S3 bucket
+- OWSEC_NEW_PASSWORD - password that should be set to default user instead of default password from properties
+- CERT_LOCATION - path to certificate in PEM format that will be used for securing all endpoint in all services
+- KEY_LOCATION - path to private key in PEM format that will be used for securing all endpoint in all services
+
+The following environmnet variables may be passed, but will be ignored if CHART_VERSION is set to release (i.e. v2.4.0):
+- OWGW_VERSION - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+- OWGWUI_VERSION - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+- OWSEC_VERSION - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+- OWFMS_VERSION - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+- OWPROV_VERSION - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+- OWPROVUI_VERSION - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+- OWANALYTICS_VERSION - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+- OWSUB_VERSION - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+- OWRRM_VERSION - OpenWIFI radio resource management service (RRM) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+
+Optional environment variables:
+- EXTRA_VALUES - extra values that should be passed to Helm deployment separated by comma (,)
+- DEVICE_CERT_LOCATION - path to certificate in PEM format that will be used for load simulator
+- DEVICE_KEY_LOCATION - path to private key in PEM format that will be used for load simulator
+- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services
+- INTERNAL_RESTAPI_ENDPOINT_SCHEMA - what schema to use for internal RESTAPI endpoints (https by default)
+- IPTOCOUNTRY_IPINFO_TOKEN - token that should be set for IPInfo support (owgw/owprov iptocountry.ipinfo.token properties), ommited if not passed
+- MAILER_USERNAME - SMTP username used for OWSEC mailer
+- MAILER_PASSWORD - SMTP password used for OWSEC mailer (only if both MAILER_PASSWORD and MAILER_USERNAME are set, mailer will be enabled)
+EOF
 }
 
 # Global variables
@@ -51,32 +50,30 @@ VALUES_FILE_LOCATION_SPLITTED=()
 EXTRA_VALUES_SPLITTED=()
 
 # Helper functions
-check_if_chart_version_is_release() {
-  PARSED_CHART_VERSION=$(echo $CHART_VERSION | grep -xP "v[0-9]+\.[0-9]+\.[0-9]+.*")
-  if [[ -z "$PARSED_CHART_VERSION" ]]; then
-    return 1
-  else
-    return 0
-  fi
+function check_if_chart_version_is_release()
+{
+    [[ "$CHART_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]
 }
 
 # Check if required environment variables were passed
 ## Deployment specifics
 [ -z ${DEPLOY_METHOD+x} ] && echo "DEPLOY_METHOD is unset" >&2 && usage && exit 1
 [ -z ${CHART_VERSION+x} ] && echo "CHART_VERSION is unset" >&2 && usage && exit 1
-if check_if_chart_version_is_release; then
-  echo "Chart version ($CHART_VERSION) is release version, ignoring services versions"
-else
-  echo "Chart version ($CHART_VERSION) is not release version, checking if services versions are set"
-  [ -z ${OWGW_VERSION+x} ] && echo "OWGW_VERSION is unset" >&2 && usage && exit 1
-  [ -z ${OWGWUI_VERSION+x} ] && echo "OWGWUI_VERSION is unset" >&2 && usage && exit 1
-  [ -z ${OWSEC_VERSION+x} ] && echo "OWSEC_VERSION is unset" >&2 && usage && exit 1
-  [ -z ${OWFMS_VERSION+x} ] && echo "OWFMS_VERSION is unset" >&2 && usage && exit 1
-  [ -z ${OWPROV_VERSION+x} ] && echo "OWPROV_VERSION is unset" >&2 && usage && exit 1
-  [ -z ${OWPROVUI_VERSION+x} ] && echo "OWPROVUI_VERSION is unset" >&2 && usage && exit 1
-  [ -z ${OWANALYTICS_VERSION+x} ] && echo "OWANALYTICS_VERSION is unset" >&2 && usage && exit 1
-  [ -z ${OWSUB_VERSION+x} ] && echo "OWSUB_VERSION is unset" >&2 && usage && exit 1
-  [ -z ${OWRRM_VERSION+x} ] && echo "OWRRM_VERSION is unset" >&2 && usage && exit 1
+if [[ "$DEPLOY_METHOD" != "local" ]] ; then
+    if check_if_chart_version_is_release ; then
+        echo "Chart version ($CHART_VERSION) is a release version, ignoring services versions"
+    else
+        echo "Chart version ($CHART_VERSION) is not a release version, checking if services versions are set"
+        [ -z ${OWGW_VERSION+x} ] && echo "OWGW_VERSION is unset" >&2 && usage && exit 1
+        [ -z ${OWGWUI_VERSION+x} ] && echo "OWGWUI_VERSION is unset" >&2 && usage && exit 1
+        [ -z ${OWSEC_VERSION+x} ] && echo "OWSEC_VERSION is unset" >&2 && usage && exit 1
+        [ -z ${OWFMS_VERSION+x} ] && echo "OWFMS_VERSION is unset" >&2 && usage && exit 1
+        [ -z ${OWPROV_VERSION+x} ] && echo "OWPROV_VERSION is unset" >&2 && usage && exit 1
+        [ -z ${OWPROVUI_VERSION+x} ] && echo "OWPROVUI_VERSION is unset" >&2 && usage && exit 1
+        [ -z ${OWANALYTICS_VERSION+x} ] && echo "OWANALYTICS_VERSION is unset" >&2 && usage && exit 1
+        [ -z ${OWSUB_VERSION+x} ] && echo "OWSUB_VERSION is unset" >&2 && usage && exit 1
+        [ -z ${OWRRM_VERSION+x} ] && echo "OWRRM_VERSION is unset" >&2 && usage && exit 1
+    fi
 fi
 ## Environment specifics
 [ -z ${NAMESPACE+x} ] && echo "NAMESPACE is unset" >&2 && usage && exit 1
@@ -108,54 +105,56 @@ export OWANALYTICS_VERSION_TAG=$(echo ${OWANALYTICS_VERSION} | tr '/' '-')
 export OWSUB_VERSION_TAG=$(echo ${OWSUB_VERSION} | tr '/' '-')
 export OWRRM_VERSION_TAG=$(echo ${OWRRM_VERSION} | tr '/' '-')
 
-# Debug get bash version
-bash --version >&2
-
 # Check deployment method that's required for this environment
 helm plugin install https://github.com/databus23/helm-diff || true
-if [[ "$DEPLOY_METHOD" == "git" ]]; then
-  helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0 || true
-  rm -rf wlan-cloud-ucentral-deploy || true
-  git clone https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy.git
-  cd wlan-cloud-ucentral-deploy
-  git checkout $CHART_VERSION
-  cd chart
-  if ! check_if_chart_version_is_release; then
-    sed -i '/wlan-cloud-ucentralgw@/s/ref=.*/ref='${OWGW_VERSION}'\"/g' Chart.yaml
-    sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${OWGWUI_VERSION}'\"/g' Chart.yaml
-    sed -i '/wlan-cloud-ucentralsec@/s/ref=.*/ref='${OWSEC_VERSION}'\"/g' Chart.yaml
-    sed -i '/wlan-cloud-ucentralfms@/s/ref=.*/ref='${OWFMS_VERSION}'\"/g' Chart.yaml
-    sed -i '/wlan-cloud-owprov@/s/ref=.*/ref='${OWPROV_VERSION}'\"/g' Chart.yaml
-    sed -i '/wlan-cloud-owprov-ui@/s/ref=.*/ref='${OWPROVUI_VERSION}'\"/g' Chart.yaml
-    sed -i '/wlan-cloud-analytics@/s/ref=.*/ref='${OWANALYTICS_VERSION}'\"/g' Chart.yaml
-    sed -i '/wlan-cloud-userportal@/s/ref=.*/ref='${OWSUB_VERSION}'\"/g' Chart.yaml
-    sed -i '/wlan-cloud-rrm@/s/ref=.*/ref='${OWRRM_VERSION}'\"/g' Chart.yaml
-  fi
-  helm repo add bitnami https://charts.bitnami.com/bitnami
-  helm repo update
-  helm dependency update
-  cd ../..
-  export DEPLOY_SOURCE="wlan-cloud-ucentral-deploy/chart"
-elif [[ "$DEPLOY_METHOD" == "bundle" ]]; then
-  helm repo add tip-wlan-cloud-ucentral-helm https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/ || true
-  export DEPLOY_SOURCE="tip-wlan-cloud-ucentral-helm/openwifi --version $CHART_VERSION"
+if [[ "$DEPLOY_METHOD" == "git" ]] ; then
+    helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0 || true
+    rm -rf wlan-cloud-ucentral-deploy || true
+    git clone https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy.git
+    cd wlan-cloud-ucentral-deploy
+    git checkout $CHART_VERSION
+    cd chart
+    if ! check_if_chart_version_is_release ; then
+        sed -i '/wlan-cloud-ucentralgw@/s/ref=.*/ref='${OWGW_VERSION}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${OWGWUI_VERSION}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-ucentralsec@/s/ref=.*/ref='${OWSEC_VERSION}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-ucentralfms@/s/ref=.*/ref='${OWFMS_VERSION}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-owprov@/s/ref=.*/ref='${OWPROV_VERSION}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-owprov-ui@/s/ref=.*/ref='${OWPROVUI_VERSION}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-analytics@/s/ref=.*/ref='${OWANALYTICS_VERSION}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-userportal@/s/ref=.*/ref='${OWSUB_VERSION}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-rrm@/s/ref=.*/ref='${OWRRM_VERSION}'\"/g' Chart.yaml
+    fi
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    helm repo update
+    [ -z "$SKIP_DEPS" ] && helm dependency update
+    cd ../..
+    export DEPLOY_SOURCE="wlan-cloud-ucentral-deploy/chart"
+elif [[ "$DEPLOY_METHOD" == "bundle" ]] ; then
+    helm repo add tip-wlan-cloud-ucentral-helm https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/ || true
+    export DEPLOY_SOURCE="tip-wlan-cloud-ucentral-helm/openwifi --version $CHART_VERSION"
+elif [[ "$DEPLOY_METHOD" == "local" ]] ; then
+    export DEPLOY_SOURCE=".."
+    pushd ..
+    [ -z "$SKIP_DEPS" ] && helm dependency update
+    popd
 else
-  echo "Deploy method is not correct: $DEPLOY_METHOD. Valid values: git or bundle" >&2
-  exit 1
+    echo "Deploy method is not correct: $DEPLOY_METHOD. Valid values: git, bundle or local" >&2
+    exit 1
 fi
 
 VALUES_FILES_FLAGS=()
 IFS=',' read -ra VALUES_FILE_LOCATION_SPLITTED <<< "$VALUES_FILE_LOCATION"
 for VALUE_FILE in ${VALUES_FILE_LOCATION_SPLITTED[*]}; do
-  VALUES_FILES_FLAGS+=("-f" $VALUE_FILE)
+    VALUES_FILES_FLAGS+=("-f" $VALUE_FILE)
 done
 EXTRA_VALUES_FLAGS=()
 IFS=',' read -ra EXTRA_VALUES_SPLITTED <<< "$EXTRA_VALUES"
 for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
-  EXTRA_VALUES_FLAGS+=("--set" $EXTRA_VALUE)
+    EXTRA_VALUES_FLAGS+=("--set" $EXTRA_VALUE)
 done
 
-if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
+if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]] ; then
   export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.${DOMAIN},fms-${NAMESPACE}.${DOMAIN},prov-${NAMESPACE}.${DOMAIN},analytics-${NAMESPACE}.${DOMAIN},sub-${NAMESPACE}.${DOMAIN}"
   export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.${DOMAIN}"
 else
@@ -163,15 +162,8 @@ else
   export OWGW_SERVICE_DNS_RECORDS=""
 fi
 
-echo "Deploying into openwifi-${NAMESPACE} with the following values files:"
-echo ${VALUES_FILES_FLAGS[*]}
-echo
 envsubst < values.custom.tpl.yaml > values.custom-${NAMESPACE}.yaml
 
-echo "Using configuration:"
-echo "---"
-cat values.custom-${NAMESPACE}.yaml
-echo "---"
 set -x
 helm upgrade --install --create-namespace --wait --timeout 60m \
   --namespace openwifi-${NAMESPACE} \
