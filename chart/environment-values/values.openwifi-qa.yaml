@@ -844,11 +844,11 @@ clustersysteminfo:
 haproxy:
   resources:
     requests:
-      cpu: 10m
-      memory: 20Mi
+      cpu: 50m
+      memory: 50Mi
     limits:
-      cpu: 10m
-      memory: 20Mi
+      cpu: 50m
+      memory: 50Mi
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
