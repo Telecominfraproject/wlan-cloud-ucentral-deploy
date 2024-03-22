@@ -1,7 +1,6 @@
 # OpenWIFI Gateway (https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/)
 owgw:
   fullnameOverride: owgw
-
   configProperties:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
@@ -9,7 +8,6 @@ owgw:
 # OpenWIFI Security (https://github.com/Telecominfraproject/wlan-cloud-ucentralsec)
 owsec:
   fullnameOverride: owsec
-
   configProperties:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
@@ -17,7 +15,6 @@ owsec:
 # OpenWIFI Firmware (https://github.com/Telecominfraproject/wlan-cloud-ucentralfms)
 owfms:
   fullnameOverride: owfms
-
   configProperties:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
@@ -25,7 +22,6 @@ owfms:
 # OpenWIFI Provisioning (https://github.com/Telecominfraproject/wlan-cloud-owprov/)
 owprov:
   fullnameOverride: owprov
-
   configProperties:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
@@ -33,7 +29,6 @@ owprov:
 # OpenWIFI Analytics (https://github.com/Telecominfraproject/wlan-cloud-analytics)
 owanalytics:
   fullnameOverride: owanalytics
-
   configProperties:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
@@ -49,7 +44,6 @@ owprovui:
 # OpenWIFI Subscription (https://github.com/Telecominfraproject/wlan-cloud-userportal/)
 owsub:
   fullnameOverride: owsub
-
   configProperties:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
@@ -57,23 +51,18 @@ owsub:
 # OpenWIFI radio resource management (https://github.com/Telecominfraproject/wlan-cloud-rrm/)
 owrrm:
   fullnameOverride: owrrm
-
   mysql:
     enabled: true
 
 # kafka (https://github.com/bitnami/charts/blob/master/bitnami/kafka/)
 kafka:
   enabled: true
-
   fullnameOverride: kafka
-
   image:
     registry: docker.io
     repository: bitnami/kafka
     tag: 2.8.0-debian-10-r43
-
   minBrokerId: 100
-
   zookeeper:
     fullnameOverride: zookeeper
 
@@ -81,7 +70,6 @@ kafka:
 clustersysteminfo:
   enabled: false
   delay: 0 # number of seconds to delay clustersysteminfo execution
-
   images:
     clustersysteminfo:
       repository: tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo
@@ -103,23 +91,17 @@ clustersysteminfo:
     # limits:
     #  cpu: 100m
     #  memory: 128Mi
-
   nodeSelector: {}
-
   tolerations: []
-
   affinity: {}
-
   public_env_variables:
     FLAGS: "-s --connect-timeout 3"
     OWSEC: owsec-owsec:16001
     CHECK_RETRIES: 30
-
   secret_env_variables:
     OWSEC_DEFAULT_USERNAME: tip@ucentral.com
     OWSEC_DEFAULT_PASSWORD: openwifi
     #OWSEC_NEW_PASSWORD: "" # Set this value in order for the check to work. Password must comply https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationvalidationexpression
-
   activeDeadlineSeconds: 2400
   backoffLimit: 5
   restartPolicy: OnFailure
@@ -127,9 +109,7 @@ clustersysteminfo:
 # OpenWIFI Load Simulator (https://github.com/Telecominfraproject/wlan-cloud-owls)
 owls:
   enabled: false
-
   fullnameOverride: owls
-
   configProperties:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
@@ -137,17 +117,13 @@ owls:
 # OpenWIFI Load Simulator UI (https://github.com/Telecominfraproject/wlan-cloud-owls-ui)
 owlsui:
   enabled: false
-
   fullnameOverride: owlsui
 
 # HAproxy (https://github.com/bitnami/charts/tree/master/bitnami/haproxy)
 haproxy:
   enabled: true
-
   fullnameOverride: proxy
-
-  replicaCount: 3
-
+  replicaCount: 1
   service:
     type: LoadBalancer
     ports:
@@ -428,7 +404,6 @@ haproxy:
 # Cert-manager RESTAPI certs
 restapiCerts:
   enabled: false
-
   services:
     - owgw-owgw
     - owsec-owsec
@@ -438,8 +413,21 @@ restapiCerts:
     - owanalytics-owanalytics
     - owsub-owsub
     - owrrm-owrrm
-
   clusterDomain: cluster.local
+
+postgresql:
+  enabled: false
+  nameOverride: pgsql
+  fullnameOverride: pgsql
+  initDbScriptSecret:
+    enabled: false
+    services:
+      - owgw
+      - owsec
+      - owfms
+      - owprov
+      - owanalytics
+      - owsub
 
 postgresql-ha:
   enabled: false

@@ -1,10 +1,10 @@
 # openwifi
 
-This Helm chart helps to deploy OpenWIFI Cloud SDK with all required dependencies to the Kubernetes clusters. Purpose of this chart is to setup correct connections between other microservices and other dependencies with correct Values and other charts as dependencies in [chart definition](Chart.yaml)
+This Helm chart helps to deploy OpenWIFI Cloud SDK with all required dependencies to the Kubernetes clusters. The purpose of this chart is to set up the correct connections between other microservices and other dependencies with correct Values and other charts as dependencies in [chart definition](Chart.yaml)
 
 ## TL;DR;
 
-[helm-git](https://github.com/aslafy-z/helm-git) is required for remote the installation as it pull charts from other repositories for the deployment, so intall it if you don't have it already.
+[helm-git](https://github.com/aslafy-z/helm-git) is required for remote the installation as it pull charts from other repositories for the deployment, so install it if you don't have it already.
 
 Using that you can deploy Cloud SDK with 2 setups - without TLS certificates for RESTAPI endpoints and with them.
 
@@ -20,7 +20,7 @@ $ kubectl create secret generic openwifi-certs --from-file=../docker-compose/cer
 $ helm upgrade --install -f environment-values/values.base.secure.yaml openwifi .
 ```
 
-In order to acces the UI and other RESTAPI endpoints you should run the following commands after the deployment:
+In order to access the UI and other RESTAPI endpoints you should run the following commands after the deployment:
 
 ```
 $ kubectl port-forward deployment/proxy 5912 5913 16001 16002 16003 16004 16005 16006 16009 &
@@ -43,7 +43,7 @@ $ kubectl create secret generic openwifi-certs --from-file=../docker-compose/cer
 $ helm upgrade --install -f environment-values/values.base.insecure.yaml openwifi .
 ```
 
-In order to acces the UI and other RESTAPI endpoints you should run the following commands after the deployment:
+In order to access the UI and other RESTAPI endpoints you should run the following commands after the deployment:
 
 ```
 $ kubectl port-forward deployment/proxy 5912 5913 16001 16002 16003 16004 16005 16006 16009 &
@@ -167,7 +167,7 @@ The following table lists the configurable parameters that overrides microservic
 | `restapiCerts.services` | array | List of services that require certificates generation |  |
 | `restapiCerts.clusterDomain` | string | Kubernetes cluster domain | `cluster.local` |
 
-If required, further overrides may be passed. They will be merged with default values from this chart and other subcharts with priority to values you'll pass.
+If required, further overrides may be passed. They will be merged with default values from this chart and other sub-charts with priority to values you'll pass.
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
@@ -200,7 +200,7 @@ By setting `clusterinfo.enabled` to `true` you may enable job on post-install/po
 1. Change default security credentials from credentials set in OWSEC configuration file (see 'Required password changing on the first startup' block above)
 2. Check if all services started responding correctly after the deployment using systeminfo REST API method
 
-In order to do that, you need to additionaly set multiple parameters:
+In order to do that, you need to additionally set multiple parameters:
 
 1. clusterinfo.public_env_variables.OWSEC - OWSEC endpoint to use for CLI tools
 2. clusterinfo.secret_env_variables.OWSEC_DEFAULT_USERNAME - username used for CLI requests (see OWSEC configuration file for details)
@@ -221,17 +221,17 @@ You may see example values to enable this feature in [values.enable-owls.yaml](.
 
 In order to use single point of entry for all services (may be used for one cloud Load Balancer per installation) HAproxy is installed by default with other services. HAproxy is working in TCP proxy mode, so every TLS certificate is managed by services themself, while it is possible to pass requests from cloud load balancer to services using same ports (configuration of cloud load balancer may vary from cloud provider to provider).
 
-By default this option is enabled, but you may disable it and make per-service LoadBalancer using values in [values.disable-haproxy.yaml](./feature-values/values.disable-haproxy.yaml).
+By default, this option is enabled, but you may disable it and make per-service LoadBalancer using values in [values.disable-haproxy.yaml](./feature-values/values.disable-haproxy.yaml).
 
 ### OWGW unsafe sysctls
 
-By default Linux is using quite adeqate sysctl values for TCP keepalive, but OWGW may keep disconnected APs in stuck state preventing it from connecting back. This may be changed by setting some sysctls to lower values:
+By default, Linux is using quite adequate sysctl values for TCP keepalive, but OWGW may keep disconnected APs in stuck state preventing it from connecting back. This may be changed by setting some sysctls to lower values:
 
 - net.ipv4.tcp_keepalive_intvl
 - net.ipv4.tcp_keepalive_probes - 2
 - net.ipv4.tcp_keepalive_time - 45
 
-However this change is [not considered safe by Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/#enabling-unsafe-sysctls) and it requires to pass additional argument to your Kubelets services in your Kubernetes cluster:
+However, this change is [not considered safe by Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/#enabling-unsafe-sysctls), and it requires to pass additional argument to your Kubelets services in your Kubernetes cluster:
 
 ```
 --allowed-unsafe-sysctls net.ipv4.tcp_keepalive_intvl,net.ipv4.tcp_keepalive_probes,net.ipv4.tcp_keepalive_time
@@ -258,16 +258,16 @@ You may see example values to enable this feature in [values.restapi-disable-tls
 
 ### PostgreSQL storage option for services
 
-By default all microservices except RRM service use SQLite as default storage driver, but it is possible to use PostgreSQL for that purpose. Both [cluster-per-microservice](environment-values/values.openwifi-qa.external-db.yaml) and [cluster per installation](environment-values/values.openwifi-qa.single-external-db.yaml) deployments method may be used.
+By default, all microservices except RRM service use SQLite as default storage driver, but it is possible to use PostgreSQL for that purpose. Both [cluster-per-microservice](environment-values/values.openwifi-qa.external-db.yaml) and [cluster per installation](environment-values/values.openwifi-qa.single-external-db.yaml) deployments method may be used.
 
 ## Environment specific values
 
-This repository contains values files that may be used in the same manner as feature values above to deploy to specific runtime envionemnts (including different cloud deployments).
+This repository contains values files that may be used in the same manner as feature values above to deploy to specific runtime environments (including different cloud deployments).
 
 Some environments are using [external-dns](https://github.com/kubernetes-sigs/external-dns) service to dynamically set DNS records, but you may manage your records manually
 
 ### AWS EKS
 
-EKS based installation assumes that you are using [AWS Load Balancer controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller) so that all required ALBs and NLBs are created automatically. Also it is assumed that you have Route53 managed DNS zone and you've issued wildcard certificate for one of your zones that may be used by Load Balancers.
+EKS based installation assumes that you are using [AWS Load Balancer controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller) so that all required ALBs and NLBs are created automatically. Also, it is assumed that you have Route53 managed DNS zone, and you've issued wildcard certificate for one of your zones that may be used by Load Balancers.
 
 You may see example values for this environment in [values.aws.yaml](./environment-values/values.aws.yaml).
