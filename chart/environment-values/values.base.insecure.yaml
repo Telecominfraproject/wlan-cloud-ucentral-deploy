@@ -77,10 +77,40 @@ owprovui:
     REACT_APP_UCENTRALSEC_URL: http://localhost:16001
 
 kafka:
-  heapOpts: -Xmx512m -Xms512m
+  volumePermissions:
+    enabled: true
+  commonAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+  #resources:
+  #  requests:
+  #    cpu: 100m
+  #    memory: 512Mi
+  #  limits:
+  #    cpu: 500m
+  #    memory: 1Gi
   readinessProbe:
     initialDelaySeconds: 45
   livenessProbe:
     initialDelaySeconds: 60
+  kraft:
+    enabled: true
+  heapOpts: -Xmx1024m -Xms1024m
   zookeeper:
-    heapSize: 256
+    enabled: false
+  controller:
+    replicaCount: 1
+    extraConfig: |-
+      maxMessageBytes = 1048588
+    extraEnvVars:
+      - name: ALLOW_PLAINTEXT_LISTENER
+        value: "yes"
+  listeners:
+    client:
+      protocol: PLAINTEXT
+      containerPort: 9092
+    controller:
+      protocol: "PLAINTEXT"
+  broker:
+    persistence:
+      size: 20Gi
+    replicaCount: 1
