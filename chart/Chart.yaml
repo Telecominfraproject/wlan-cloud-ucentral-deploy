@@ -41,16 +41,12 @@ dependencies:
   condition: owlsui.enabled
 - name: kafka
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 26.8.3
+  version: 28.2.3
   condition: kafka.enabled
 - name: haproxy
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 0.13.3
   condition: haproxy.enabled
-#- name: postgresql-ha
-#  repository: https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
-#  version: 8.6.13
-#  condition: postgresql-ha.enabled
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 13.4.3

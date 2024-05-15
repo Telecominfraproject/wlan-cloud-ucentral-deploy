@@ -359,7 +359,7 @@ kafka:
   broker:
     persistence:
       size: 20Gi
-    replicaCount: 1
+    replicaCount: 2
 
 restapiCerts:
   enabled: true

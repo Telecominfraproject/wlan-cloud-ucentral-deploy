@@ -81,13 +81,6 @@ kafka:
     enabled: true
   commonAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-  #resources:
-  #  requests:
-  #    cpu: 100m
-  #    memory: 512Mi
-  #  limits:
-  #    cpu: 500m
-  #    memory: 1Gi
   readinessProbe:
     initialDelaySeconds: 45
   livenessProbe:
@@ -113,4 +106,4 @@ kafka:
   broker:
     persistence:
       size: 20Gi
-    replicaCount: 1
+    replicaCount: 2
