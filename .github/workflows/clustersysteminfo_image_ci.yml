@@ -22,7 +22,7 @@ jobs:
       DOCKER_REGISTRY_URL: tip-tip-wlan-cloud-ucentral.jfrog.io
       DOCKER_REGISTRY_USERNAME: ucentral
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Build Docker image
       working-directory: chart/docker

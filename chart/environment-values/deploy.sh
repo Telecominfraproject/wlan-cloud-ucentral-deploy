@@ -125,8 +125,7 @@ if [[ "$DEPLOY_METHOD" == "git" ]] ; then
         sed -i '/wlan-cloud-userportal@/s/ref=.*/ref='${OWSUB_VERSION}'\"/g' Chart.yaml
         sed -i '/wlan-cloud-rrm@/s/ref=.*/ref='${OWRRM_VERSION}'\"/g' Chart.yaml
     fi
-    #helm repo add bitnami https://charts.bitnami.com/bitnami
-    helm repo update
+    #helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update
     [ -z "$SKIP_DEPS" ] && helm dependency update
     cd ../..
     export DEPLOY_SOURCE="wlan-cloud-ucentral-deploy/chart"
