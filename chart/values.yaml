@@ -58,13 +58,6 @@ owrrm:
 kafka:
   enabled: true
   fullnameOverride: kafka
-  image:
-    registry: docker.io
-    repository: bitnami/kafka
-    tag: 2.8.0-debian-10-r43
-  minBrokerId: 100
-  zookeeper:
-    fullnameOverride: zookeeper
 
 # clustersysteminfo check
 clustersysteminfo:
