@@ -815,13 +815,6 @@ kafka:
     enabled: true
   commonAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-  #resources:
-  #  requests:
-  #    cpu: 100m
-  #    memory: 512Mi
-  #  limits:
-  #    cpu: 500m
-  #    memory: 1Gi
   readinessProbe:
     initialDelaySeconds: 45
   livenessProbe:
@@ -838,6 +831,13 @@ kafka:
     extraEnvVars:
       - name: ALLOW_PLAINTEXT_LISTENER
         value: "yes"
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 750m
+        memory: 2Gi
   listeners:
     client:
       protocol: PLAINTEXT
@@ -848,6 +848,13 @@ kafka:
     persistence:
       size: 20Gi
     replicaCount: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 750m
+        memory: 2Gi
 
 clustersysteminfo:
   enabled: true
