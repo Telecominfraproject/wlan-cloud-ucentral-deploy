@@ -11,14 +11,13 @@ owgw:
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,17002"
 
-  #configProperties:
+  configProperties:
+    # done by default for owgw now:
     #simulatorid: 53494D020202
-    #storage.type: postgresql
-    #storage.type.postgresql.host: owgw-pgsql
-    #storage.type.postgresql.database: owgw
-    #storage.type.postgresql.username: owgw
-    #storage.type.postgresql.password: owgw
-    #openwifi.certificates.allowmismatch: "true"
+    # on a host with more CPUs you may need to bump this up from default of 64
+    storage.type.postgresql.maxsessions: 120
+    # this actually disables websocket logging
+    logging.websocket = true
 
   resources:
     requests:
@@ -26,11 +25,4 @@ owgw:
       memory: 3Gi
     limits:
       cpu: 2000m
-      memory: 8Gi
-
-  #postgresql:
-  #  enabled: true
-  #  fullnameOverride: owgw-pgsql
-  #  postgresqlDatabase: owgw
-  #  postgresqlUsername: owgw
-  #  postgresqlPassword: owgw
+      memory: 5Gi
