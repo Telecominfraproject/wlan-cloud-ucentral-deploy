@@ -61,12 +61,16 @@ postgresql:
   auth:
     postgresPassword: postgres
   primary:
+    # Consider using this resource model for small installations
+    #resourcesPreset: medium
     extendedConfiguration: |-
       max_connections = 550
       shared_buffers = 128MB
-    #  log_error_verbosity = verbose
     initdb:
       scriptsSecret: tip-openwifi-initdb-scripts
+    # Consider using this disk size for small installations
+    #persistence:
+    #  size: 30Gi
 
 postgresql-ha:
   enabled: false
