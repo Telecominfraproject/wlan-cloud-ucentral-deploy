@@ -36,7 +36,7 @@ jobs:
       run: |
         pip3 install yq
         helm plugin install https://github.com/databus23/helm-diff
-        helm plugin install https://github.com/aslafy-z/helm-git
+        helm plugin install https://github.com/aslafy-z/helm-git --version 0.16.0
         ls ~/.local/share/helm/plugins/helm-git/helm-git-plugin.sh || true
         sed 's/--skip-refresh //' -i ~/.local/share/helm/plugins/helm-git/helm-git-plugin.sh
 
@@ -54,6 +54,6 @@ jobs:
         git config --global credential.helper store
         git config --global user.email "tip-automation@telecominfraproject.com"
         git config --global user.name "TIP Automation User"
-        helm repo add bitnami https://charts.bitnami.com/bitnami
+        #helm repo add bitnami https://charts.bitnami.com/bitnami
         helm repo update
         ./git-release-tool.sh

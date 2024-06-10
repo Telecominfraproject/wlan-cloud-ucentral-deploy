@@ -16,8 +16,17 @@ owgw:
     #simulatorid: 53494D020202
     # on a host with more CPUs you may need to bump this up from default of 64
     storage.type.postgresql.maxsessions: 120
-    # this actually disables websocket logging
-    logging.websocket = true
+    # this actually disables websocket logging:
+    logging.websocket: true
+    # consider lowering the # of days to keep archives in the database
+    #archiver.db.0.name = healthchecks
+    #archiver.db.0.keep = 1
+    #archiver.db.1.name = statistics
+    #archiver.db.1.keep = 1
+    #archiver.db.2.name = devicelogs
+    #archiver.db.2.keep = 1
+    #archiver.db.3.name = commandlist
+    #archiver.db.3.keep = 1
 
   resources:
     requests:
@@ -26,3 +35,20 @@ owgw:
     limits:
       cpu: 2000m
       memory: 5Gi
+
+# Postgres tuning for larger # of APs
+#postgresql:
+#  primary:
+#    resourcesPreset: large
+#    persistence:
+#      size: 120Gi
+
+owprov:
+  # consider providing more memory to owprov
+  resources:
+    requests:
+      cpu: 10m
+      memory: 20Mi
+    limits:
+      cpu: 100m
+      memory: 4Gi
