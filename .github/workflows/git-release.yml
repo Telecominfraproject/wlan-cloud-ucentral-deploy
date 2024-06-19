@@ -55,5 +55,5 @@ jobs:
         git config --global user.email "tip-automation@telecominfraproject.com"
         git config --global user.name "TIP Automation User"
         #helm repo add bitnami https://charts.bitnami.com/bitnami
-        helm repo update
+        #helm repo update
         ./git-release-tool.sh
