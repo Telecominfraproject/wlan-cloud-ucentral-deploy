@@ -7,8 +7,8 @@ owgw:
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16102"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,17002,5912,5913"
+        service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
 
 owsec:
   services:
@@ -19,8 +19,8 @@ owsec:
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16101"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16001,17001"
+        service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
 
 owfms:
   services:
@@ -31,8 +31,8 @@ owfms:
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16104"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004"
+        service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
 
 owprov:
   services:
@@ -43,8 +43,8 @@ owprov:
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16105"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16005,17005"
+        service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
 
 owanalytics:
   services:
@@ -55,8 +55,8 @@ owanalytics:
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16109"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16009,17009"
+        service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
 
 owsub:
   services:
@@ -67,8 +67,8 @@ owsub:
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16106"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16006,17006"
+        service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
 
 haproxy:
   enabled: false

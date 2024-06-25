@@ -24,7 +24,6 @@ In order to access the UI and other RESTAPI endpoints you should run the followi
 
 ```
 $ kubectl port-forward deployment/proxy 5912 5913 16001 16002 16003 16004 16005 16006 16009 &
-$ kubectl port-forward deployment/owrrm 16789 &
 $ kubectl port-forward deployment/owgwui 8080:80 &
 $ kubectl port-forward deployment/owprovui 8088:80 &
 ```
@@ -47,7 +46,6 @@ In order to access the UI and other RESTAPI endpoints you should run the followi
 
 ```
 $ kubectl port-forward deployment/proxy 5912 5913 16001 16002 16003 16004 16005 16006 16009 &
-$ kubectl port-forward deployment/owrrm 16789 &
 $ kubectl port-forward deployment/owgwui 8080:80 &
 $ kubectl port-forward deployment/owprovui 8088:80 &
 ```
@@ -143,8 +141,6 @@ The following table lists the configurable parameters that overrides microservic
 | `owsub.configProperties."openwifi\.kafka\.enable"` | string | Configures OpenWIFI Subscription to use Kafka for communication | `'true'` |
 | `owsub.configProperties."openwifi\.kafka\.brokerlist"` | string | Sets up Kafka broker list for OpenWIFI Subscription to the predictable Kubernetes service name (see `kafka.fullnameOverride` option description for details) | `'kafka:9092'` |
 | `owsub.certs` | map | Map with multiline string containing TLS certificates and private keys required for REST API |  |
-| `owrrm.public_env_variables` | map | Map of public environment variables passed to OpenWIFI RRM service |  |
-| `owrrm.mysql.enabled` | boolean | Flag to enable MySQL database deployment of OpenWIFI RRM service using subchart | `true` |
 | `kafka.enabled` | boolean | Enables [kafka](https://github.com/bitnami/charts/blob/master/bitnami/kafka/) deployment | `true` |
 | `kafka.fullnameOverride` | string | Overrides Kafka Kubernetes service name so it could be predictable and set in microservices configs | `'kafka'` |
 | `kafka.image.registry` | string | Kafka Docker image registry | `'docker.io'` |
@@ -258,7 +254,7 @@ You may see example values to enable this feature in [values.restapi-disable-tls
 
 ### PostgreSQL storage option for services
 
-By default, all microservices except RRM service use SQLite as default storage driver, but it is possible to use PostgreSQL for that purpose. Both [cluster-per-microservice](environment-values/values.openwifi-qa.external-db.yaml) and [cluster per installation](environment-values/values.openwifi-qa.single-external-db.yaml) deployments method may be used.
+By default, all microservices use SQLite as default storage driver, but it is possible to use PostgreSQL for that purpose. Both [cluster-per-microservice](environment-values/values.openwifi-qa.external-db.yaml) and [cluster per installation](environment-values/values.openwifi-qa.single-external-db.yaml) deployments method may be used.
 
 ## Environment specific values
 

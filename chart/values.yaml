@@ -48,12 +48,6 @@ owsub:
     openwifi.kafka.enable: "true"
     openwifi.kafka.brokerlist: kafka:9092
 
-# OpenWIFI radio resource management (https://github.com/Telecominfraproject/wlan-cloud-rrm/)
-owrrm:
-  fullnameOverride: owrrm
-  mysql:
-    enabled: true
-
 # kafka (https://github.com/bitnami/charts/blob/master/bitnami/kafka/)
 kafka:
   enabled: true
@@ -405,7 +399,6 @@ restapiCerts:
     - owls-owls
     - owanalytics-owanalytics
     - owsub-owsub
-    - owrrm-owrrm
   clusterDomain: cluster.local
 
 postgresql:

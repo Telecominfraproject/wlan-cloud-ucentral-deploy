@@ -188,21 +188,6 @@ owsub:
         operator: "Exists"
         effect: "NoSchedule"
 
-owrrm:
-  nodeSelector:
-    env: tests
-  tolerations:
-  - key: "tests"
-    operator: "Exists"
-    effect: "NoSchedule"
-  mysql:
-    nodeSelector:
-      env: tests
-    tolerations:
-    - key: "tests"
-      operator: "Exists"
-      effect: "NoSchedule"
-
 kafka:
   nodeSelector:
     env: tests

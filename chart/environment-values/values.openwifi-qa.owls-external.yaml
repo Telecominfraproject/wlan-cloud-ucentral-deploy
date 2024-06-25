@@ -1,16 +1,5 @@
 # This helm values file is to be used when OWLS is run externally.
 owgw:
-  services:
-    owgw:
-      type: LoadBalancer
-      annotations:
-        service.beta.kubernetes.io/aws-load-balancer-type: "nlb-ip"
-        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-        service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16102"
-        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
-        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,17002"
-
   configProperties:
     # done by default for owgw now:
     #simulatorid: 53494D020202
@@ -36,13 +25,6 @@ owgw:
       cpu: 2000m
       memory: 5Gi
 
-# Postgres tuning for larger # of APs
-#postgresql:
-#  primary:
-#    resourcesPreset: large
-#    persistence:
-#      size: 120Gi
-
 owprov:
   # consider providing more memory to owprov
   resources:
@@ -52,3 +34,11 @@ owprov:
     limits:
       cpu: 100m
       memory: 4Gi
+
+# Postgres tuning for larger # of APs
+#postgresql:
+#  primary:
+#    resourcesPreset: large
+#    persistence:
+#      size: 120Gi
+

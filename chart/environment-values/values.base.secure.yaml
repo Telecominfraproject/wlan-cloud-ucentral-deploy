@@ -298,22 +298,6 @@ owsub:
           secret:
             secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
 
-owrrm:
-  public_env_variables:
-    SELFSIGNED_CERTS: "true"
-    KAFKACONFIG_BOOTSTRAPSERVER: kafka:9092
-    DATABASECONFIG_SERVER: owrrm-mysql:3306
-    DATABASECONFIG_DBNAME: owrrm
-    DATABASECONFIG_DATARETENTIONINTERVALDAYS: "1"
-
-  secret_env_variables:
-    DATABASECONFIG_USER: root
-    DATABASECONFIG_PASSWORD: openwifi
-
-  mysql:
-    enabled: true
-    fullnameOverride: "owrrm-mysql"
-
 owgwui:
   public_env_variables:
     REACT_APP_UCENTRALSEC_URL: https://localhost:16001

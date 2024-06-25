@@ -521,7 +521,6 @@ owprov:
     openwifi.restapi.host.0.rootca: $OWPROV_ROOT/certs/restapi-certs/ca.crt
     openwifi.restapi.host.0.cert: $OWPROV_ROOT/certs/restapi-certs/tls.crt
     openwifi.restapi.host.0.key: $OWPROV_ROOT/certs/restapi-certs/tls.key
-    rrm.providers: owrrm
 
   volumes:
     owprov:
@@ -743,73 +742,6 @@ owsub:
           secret:
             secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
 
-owrrm:
-  fullnameOverride: owrrm
-
-  services:
-    owrrm:
-      type: LoadBalancer
-      annotations:
-        service.beta.kubernetes.io/aws-load-balancer-type: "nlb-ip"
-        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-        service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16789"
-        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c"
-        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16789,16790"
-
-  resources:
-    requests:
-      cpu: 1000m
-      memory: 2048Mi
-    limits:
-      cpu: 1000m
-      memory: 2048Mi
-
-  podAnnotations:
-    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-
-  public_env_variables:
-    SELFSIGNED_CERTS: "true"
-    SERVICECONFIG_PRIVATEENDPOINT: http://owrrm-owrrm:16789
-    KAFKACONFIG_BOOTSTRAPSERVER: kafka:9092
-    DATABASECONFIG_DBNAME: owrrm
-    DATABASECONFIG_DATARETENTIONINTERVALDAYS: "1"
-    # Empty string will disable DB usage
-    DATABASECONFIG_SERVER: ""
-    # Uncomment these parameters to enable DB usage + enable mysql below
-    #DATABASECONFIG_SERVER: owrrm-mysql:3306
-
-  secret_env_variables:
-    DATABASECONFIG_USER: root
-    DATABASECONFIG_PASSWORD: openwifi
-
-  volumes:
-    owrrm:
-      - name: persist
-        mountPath: /owrrm-data/
-        volumeDefinition: |
-          persistentVolumeClaim:
-            claimName: {{ template "owrrm.fullname" . }}-pvc
-
-      - name: restapi-ca
-        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
-        subPath: ca.crt
-        volumeDefinition: |
-          secret:
-            secretName: {{ include "owrrm.fullname" . }}-owrrm-restapi-tls
-
-  mysql:
-    enabled: false
-    fullnameOverride: "owrrm-mysql"
-
-    resources:
-      requests:
-        cpu: 100m
-        memory: 512Mi
-      limits:
-        cpu: 100m
-        memory: 512Mi
-
 kafka:
   volumePermissions:
     enabled: true
@@ -873,7 +805,6 @@ haproxy:
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
       service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
       service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,5913,16001,17001,16009,16006,17006"
       service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
 
