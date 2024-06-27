@@ -167,8 +167,8 @@ releases:
 
 - name: cgw
   namespace: {{ .Environment.Values.global.namespace }}
-  chart: ../../openlan-cgw/helm
-  #chart: "git+https://github.com/Telecominfraproject/openlan-cgw@helm?ref=next"
+  #chart: ../../openlan-cgw/helm
+  chart: "git+https://github.com/Telecominfraproject/openlan-cgw@helm?ref=next"
   version: 0.1.0
   condition: cgw.enabled
   labels:
@@ -189,9 +189,10 @@ releases:
         CGW_REDIS_HOST: redis-master
         CGW_REDIS_PORT: "6379"
         CGW_ALLOW_CERT_MISMATCH: "yes"
+        # use (#cpus * 2) - 2
         DEFAULT_WSS_THREAD_NUM: "4"
         # Useful for debugging:
-        #CFG_LOG_LEVEL: "Debug"
+        #CGW_LOG_LEVEL: "debug"
         #RUST_BACKTRACE: "full"
     - secret_env_variables:
         CGW_DB_PASSWORD: "{{ .Environment.Values.postgres.cgwUser.password }}"
