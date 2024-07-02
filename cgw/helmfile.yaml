@@ -1,0 +1,211 @@
+environments:
+  default:
+    secrets:
+      - secrets/values.postgres.yaml
+      - secrets/certs.tip.yaml
+    values:
+    - global:
+        name: devcgw
+        namespace: openwifi-devcgw
+        domain: cicd.lab.wlan.tip.build
+        certificateARN: arn:aws:acm:us-east-2:289708231103:certificate/299d7444-acc4-46c2-ae83-40d2cd5f49be
+    - kafka:
+        enabled: true
+    - redis:
+        enabled: true
+    - postgres:
+        enabled: true
+    - cgw:
+        enabled: true
+        tag: next
+  cgw01:
+    secrets:
+      - secrets/values.postgres.yaml
+      - secrets/certs.tip.yaml
+    values:
+    - global:
+        name: cgw01
+        namespace: openlan-cgw01
+        domain: cicd.lab.wlan.tip.build
+        certificateARN: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
+    - kafka:
+        enabled: true
+    - redis:
+        enabled: true
+    - postgres:
+        enabled: true
+    - cgw:
+        enabled: true
+        tag: next
+
+---
+
+helmDefaults:
+  force: false
+  timeout: 300
+  createNamespace: true
+
+releases:
+- name: kafka
+  version: 28.3.0
+  namespace: {{ .Environment.Values.global.namespace }}
+  condition: kafka.enabled
+  chart: oci://registry-1.docker.io/bitnamicharts/kafka
+  labels:
+    group: base
+    app: kafka
+  values:
+    - fullnameOverride: kafka
+    - volumePermissions:
+        enabled: true
+    - commonAnnotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+    - readinessProbe:
+        initialDelaySeconds: 45
+    - livenessProbe:
+        initialDelaySeconds: 60
+    - heapOpts: -Xmx1024m -Xms1024m
+    - kraft:
+        enabled: true
+    - zookeeper:
+        enabled: false
+    - provisioning:
+        enabled: true
+        topics:
+          - name: CnC
+            partitions: 1
+            replicationFactor: 1
+          - name: CnC_Res
+            partitions: 1
+            replicationFactor: 1
+    - controller:
+        replicaCount: 1
+        extraConfig: |-
+          maxMessageBytes = 1048588
+        extraEnvVars:
+          - name: ALLOW_PLAINTEXT_LISTENER
+            value: "yes"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 750m
+            memory: 2Gi
+    - listeners:
+        client:
+          protocol: PLAINTEXT
+          containerPort: 9092
+        controller:
+          protocol: "PLAINTEXT"
+    - broker:
+        replicaCount: 2
+        persistence:
+          size: 20Gi
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 750m
+            memory: 2Gi
+
+- name: postgres
+  namespace: {{ .Environment.Values.global.namespace }}
+  chart: oci://registry-1.docker.io/bitnamicharts/postgresql
+  version: 13.4.3
+  condition: postgres.enabled
+  labels:
+    group: base
+    app: postgres
+  values:
+    - fullnameOverride: pgsql
+    # workaround for: postgresql.conf file not detected. Generating it...
+    # cp: cannot create regular file '/bitnami/postgresql/conf/postgresql.conf': Permission denied
+    - volumePermissions:
+        enabled: true
+    - global:
+        postgresql:
+          auth:
+            postgresPassword: {{ .Environment.Values.postgres.pgUser.password }}
+    - auth:
+        postgresPassword: {{ .Environment.Values.postgres.pgUser.password }}
+    - primary:
+        extendedConfiguration: |-
+          max_connections = 550
+          shared_buffers = 128MB
+          log_error_verbosity = verbose
+          tcp_keepalives_idle = 300
+          tcp_keepalives_interval = 30
+          tcp_user_timeout = 300
+        initdb:
+          scripts:
+            initusers.sql: |-
+              CREATE USER {{ .Environment.Values.postgres.cgwUser.name }};
+              ALTER USER cgw WITH ENCRYPTED PASSWORD '{{ .Environment.Values.postgres.cgwUser.password }}';
+              CREATE DATABASE cgw OWNER {{ .Environment.Values.postgres.cgwUser.name }};
+              \c cgw
+              CREATE TABLE infrastructure_groups (id INT PRIMARY KEY, reserved_size INT, actual_size INT);
+              CREATE TABLE infras (mac MACADDR PRIMARY KEY, infra_group_id INT, FOREIGN KEY(infra_group_id) REFERENCES infrastructure_groups(id) ON DELETE CASCADE);
+
+- name: redis
+  namespace: {{ .Environment.Values.global.namespace }}
+  chart: oci://registry-1.docker.io/bitnamicharts/redis
+  version: 19.5.2
+  condition: redis.enabled
+  labels:
+    group: base
+    app: redis
+  values:
+    - architecture: standalone
+    - auth:
+        enabled: false
+    - master:
+        extraEnvVars:
+          - name: ALLOW_EMPTY_PASSWORD
+            value: "yes"
+
+- name: cgw
+  namespace: {{ .Environment.Values.global.namespace }}
+  #chart: ../../openlan-cgw/helm
+  chart: "git+https://github.com/Telecominfraproject/openlan-cgw@helm?ref=next"
+  version: 0.1.0
+  condition: cgw.enabled
+  labels:
+    group: apps
+    app: cgw
+  secrets:
+    - secrets/certs.tip.yaml
+  values:
+    - images:
+        cgw:
+          tag: {{ .Environment.Values.cgw.tag }}
+    - public_env_variables:
+        CGW_DB_HOST: pgsql
+        CGW_DB_PORT: "5432"
+        CGW_DB_USERNAME: "{{ .Environment.Values.postgres.cgwUser.name }}"
+        CGW_KAFKA_HOST: kafka
+        CGW_KAFKA_PORT: "9092"
+        CGW_REDIS_HOST: redis-master
+        CGW_REDIS_PORT: "6379"
+        CGW_ALLOW_CERT_MISMATCH: "yes"
+        # use (#cpus * 2) - 2
+        DEFAULT_WSS_THREAD_NUM: "4"
+        # Useful for debugging:
+        #CGW_LOG_LEVEL: "debug"
+        #RUST_BACKTRACE: "full"
+    - secret_env_variables:
+        CGW_DB_PASSWORD: "{{ .Environment.Values.postgres.cgwUser.password }}"
+    - services:
+        cgw:
+          type: LoadBalancer
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: cgw-{{ .Environment.Values.global.name }}.{{ .Environment.Values.global.domain }}
+            #service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+            service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+            service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+            service.beta.kubernetes.io/aws-load-balancer-ssl-cert: {{ .Environment.Values.global.certificateARN }}
+            service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15003"
+            service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
+            service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002"
+            alb.ingress.kubernetes.io/healthcheck-path: /health
