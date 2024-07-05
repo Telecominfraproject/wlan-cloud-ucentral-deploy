@@ -2,7 +2,8 @@ owgw:
   services:
     owgw:
       annotations:
-        external-dns.alpha.kubernetes.io/hostname: "$OWGW_SERVICE_DNS_RECORDS"
+        external-dns.alpha.kubernetes.io/hostname: gw-${NAMESPACE}.${DOMAIN}
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}
   configProperties:
     openwifi.fileuploader.host.0.name: gw-${NAMESPACE}.${DOMAIN}
     rtty.server: gw-${NAMESPACE}.${DOMAIN}
@@ -27,6 +28,7 @@ owsec:
     owsec:
       annotations:
         external-dns.alpha.kubernetes.io/hostname: sec-${NAMESPACE}.${DOMAIN}
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}
 owfms:
   configProperties:
     s3.secret: "${OWFMS_S3_SECRET}"
@@ -38,6 +40,20 @@ owfms:
     owfms:
       annotations:
         external-dns.alpha.kubernetes.io/hostname: fms-${NAMESPACE}.${DOMAIN}
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}
+  public_env_variables:
+    OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
+owprov:
+  services:
+    owprov:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: prov-${NAMESPACE}.${DOMAIN}
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}
+  configProperties:
+    openwifi.system.uri.public: https://prov-${NAMESPACE}.${DOMAIN}:16005
+    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owprov-owprov:17005
+    openwifi.system.uri.ui: https://provui-${NAMESPACE}.${DOMAIN}
+    iptocountry.ipinfo.token: "${IPTOCOUNTRY_IPINFO_TOKEN}"
   public_env_variables:
     OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
 owgwui:
@@ -47,20 +63,9 @@ owgwui:
       - webui-${NAMESPACE}.${DOMAIN}
       annotations:
         external-dns.alpha.kubernetes.io/hostname: webui-${NAMESPACE}.${DOMAIN}
+        alb.ingress.kubernetes.io/certificate-arn: ${CERTIFICATE_ARN}
   public_env_variables:
     REACT_APP_UCENTRALSEC_URL: https://sec-${NAMESPACE}.${DOMAIN}:16001
-owprov:
-  services:
-    owprov:
-      annotations:
-        external-dns.alpha.kubernetes.io/hostname: prov-${NAMESPACE}.${DOMAIN}
-  configProperties:
-    openwifi.system.uri.public: https://prov-${NAMESPACE}.${DOMAIN}:16005
-    openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owprov-owprov:17005
-    openwifi.system.uri.ui: https://provui-${NAMESPACE}.${DOMAIN}
-    iptocountry.ipinfo.token: "${IPTOCOUNTRY_IPINFO_TOKEN}"
-  public_env_variables:
-    OWSEC: sec-${NAMESPACE}.${DOMAIN}:16001
 owprovui:
   ingresses:
     default:
@@ -68,6 +73,7 @@ owprovui:
       - provui-${NAMESPACE}.${DOMAIN}
       annotations:
         external-dns.alpha.kubernetes.io/hostname: provui-${NAMESPACE}.${DOMAIN}
+        alb.ingress.kubernetes.io/certificate-arn: ${CERTIFICATE_ARN}
   public_env_variables:
     REACT_APP_UCENTRALSEC_URL: https://sec-${NAMESPACE}.${DOMAIN}:16001
 owanalytics:
@@ -75,6 +81,7 @@ owanalytics:
     owanalytics:
       annotations:
         external-dns.alpha.kubernetes.io/hostname: analytics-${NAMESPACE}.${DOMAIN}
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}
   configProperties:
     openwifi.system.uri.public: https://analytics-${NAMESPACE}.${DOMAIN}:16009
     openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owanalytics-owanalytics:17009
@@ -86,6 +93,7 @@ owsub:
     owsub:
       annotations:
         external-dns.alpha.kubernetes.io/hostname: sub-${NAMESPACE}.${DOMAIN}
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}
   configProperties:
     openwifi.system.uri.public: https://sub-${NAMESPACE}.${DOMAIN}:16006
     openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsub-owsub:17006
@@ -102,6 +110,7 @@ owls:
     owls:
       annotations:
         external-dns.alpha.kubernetes.io/hostname: ls-${NAMESPACE}.${DOMAIN}
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}
   configProperties:
     openwifi.system.uri.public: https://ls-${NAMESPACE}.${DOMAIN}:16007
     openwifi.system.uri.private: $INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owls-owls:17007
@@ -113,16 +122,11 @@ owlsui:
       - lsui-${NAMESPACE}.${DOMAIN}
       annotations:
         external-dns.alpha.kubernetes.io/hostname: lsui-${NAMESPACE}.${DOMAIN}
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}
   public_env_variables:
     REACT_APP_UCENTRALSEC_URL: https://sec-${NAMESPACE}.${DOMAIN}:16001
-owrrm:
-  public_env_variables:
-    SERVICECONFIG_PUBLICENDPOINT: https://rrm-${NAMESPACE}.${DOMAIN}:16789
-  services:
-    owrrm:
-      annotations:
-        external-dns.alpha.kubernetes.io/hostname: rrm-${NAMESPACE}.${DOMAIN}
 haproxy:
   service:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: "$HAPROXY_SERVICE_DNS_RECORDS"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${CERTIFICATE_ARN}

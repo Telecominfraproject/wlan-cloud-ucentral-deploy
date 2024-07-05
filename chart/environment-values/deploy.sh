@@ -5,8 +5,7 @@ set -e
 function usage()
 {
     cat <<-EOF >&2
-
-This script is indended for OpenWIFI Cloud SDK deployment to TIP QA/Dev environments using assembly Helm chart (https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy/tree/main/chart) with configuration through environment variables
+This script is intended for OpenWIFI Cloud SDK deployment to TIP QA/Dev environments using assembly Helm chart (https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy/tree/main/chart) with configuration through environment variables
 
 Required environment variables:
 - NAMESPACE - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'ucentral-test')
@@ -31,7 +30,6 @@ The following environmnet variables may be passed, but will be ignored if CHART_
 - OWPROVUI_VERSION - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
 - OWANALYTICS_VERSION - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
 - OWSUB_VERSION - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-- OWRRM_VERSION - OpenWIFI radio resource management service (RRM) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
 
 Optional environment variables:
 - EXTRA_VALUES - extra values that should be passed to Helm deployment separated by comma (,)
@@ -42,12 +40,14 @@ Optional environment variables:
 - IPTOCOUNTRY_IPINFO_TOKEN - token that should be set for IPInfo support (owgw/owprov iptocountry.ipinfo.token properties), ommited if not passed
 - MAILER_USERNAME - SMTP username used for OWSEC mailer
 - MAILER_PASSWORD - SMTP password used for OWSEC mailer (only if both MAILER_PASSWORD and MAILER_USERNAME are set, mailer will be enabled)
+- CERTIFICATE_ARN - Certificate ARN (will default to ap-south-1 certificate ARN)
 EOF
 }
 
 # Global variables
 VALUES_FILE_LOCATION_SPLITTED=()
 EXTRA_VALUES_SPLITTED=()
+DEF_CERT_ARN="arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c"
 
 # Helper functions
 function check_if_chart_version_is_release()
@@ -72,7 +72,6 @@ if [[ "$DEPLOY_METHOD" != "local" ]] ; then
         [ -z ${OWPROVUI_VERSION+x} ] && echo "OWPROVUI_VERSION is unset" >&2 && usage && exit 1
         [ -z ${OWANALYTICS_VERSION+x} ] && echo "OWANALYTICS_VERSION is unset" >&2 && usage && exit 1
         [ -z ${OWSUB_VERSION+x} ] && echo "OWSUB_VERSION is unset" >&2 && usage && exit 1
-        [ -z ${OWRRM_VERSION+x} ] && echo "OWRRM_VERSION is unset" >&2 && usage && exit 1
     fi
 fi
 ## Environment specifics
@@ -90,9 +89,11 @@ fi
 [ -z ${DEVICE_CERT_LOCATION+x} ] && echo "DEVICE_CERT_LOCATION is unset, setting it to CERT_LOCATION" && export DEVICE_CERT_LOCATION=$CERT_LOCATION
 [ -z ${DEVICE_KEY_LOCATION+x} ] && echo "DEVICE_KEY_LOCATION is unset, setting it to KEY_LOCATION" && export DEVICE_KEY_LOCATION=$KEY_LOCATION
 [ -z ${INTERNAL_RESTAPI_ENDPOINT_SCHEMA+x} ] && echo "INTERNAL_RESTAPI_ENDPOINT_SCHEMA is unset, setting it to 'https'" && export INTERNAL_RESTAPI_ENDPOINT_SCHEMA=https
+[ -z ${USE_SEPARATE_OWGW_LB+x} ] && echo "USE_SEPARATE_OWGW_LB is unset, setting it to true" && export USE_SEPARATE_OWGW_LB=true
 export MAILER_ENABLED="false"
 [ ! -z ${MAILER_USERNAME+x} ] && [ ! -z ${MAILER_PASSWORD+x} ] && echo "MAILER_USERNAME and MAILER_PASSWORD are set, mailer will be enabled" && export MAILER_ENABLED="true"
 [ -z "${DOMAIN}" ] && echo "DOMAIN is unset, using cicd.lab.wlan.tip.build" && export DOMAIN="cicd.lab.wlan.tip.build"
+[ -z ${CERTIFICATE_ARN+x} ] && CERTIFICATE_ARN=$DEF_CERT_ARN
 
 # Transform some environment variables
 export OWGW_VERSION_TAG=$(echo ${OWGW_VERSION} | tr '/' '-')
@@ -103,7 +104,6 @@ export OWPROV_VERSION_TAG=$(echo ${OWPROV_VERSION} | tr '/' '-')
 export OWPROVUI_VERSION_TAG=$(echo ${OWPROVUI_VERSION} | tr '/' '-')
 export OWANALYTICS_VERSION_TAG=$(echo ${OWANALYTICS_VERSION} | tr '/' '-')
 export OWSUB_VERSION_TAG=$(echo ${OWSUB_VERSION} | tr '/' '-')
-export OWRRM_VERSION_TAG=$(echo ${OWRRM_VERSION} | tr '/' '-')
 
 # Check deployment method that's required for this environment
 helm plugin install https://github.com/databus23/helm-diff || true
@@ -123,7 +123,6 @@ if [[ "$DEPLOY_METHOD" == "git" ]] ; then
         sed -i '/wlan-cloud-owprov-ui@/s/ref=.*/ref='${OWPROVUI_VERSION}'\"/g' Chart.yaml
         sed -i '/wlan-cloud-analytics@/s/ref=.*/ref='${OWANALYTICS_VERSION}'\"/g' Chart.yaml
         sed -i '/wlan-cloud-userportal@/s/ref=.*/ref='${OWSUB_VERSION}'\"/g' Chart.yaml
-        sed -i '/wlan-cloud-rrm@/s/ref=.*/ref='${OWRRM_VERSION}'\"/g' Chart.yaml
     fi
     #helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update
     [ -z "$SKIP_DEPS" ] && helm dependency update
