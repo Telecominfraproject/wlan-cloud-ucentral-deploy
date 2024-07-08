@@ -61,6 +61,9 @@ postgresql:
   auth:
     postgresPassword: postgres
   primary:
+    # TODO: tweak this next major release - 8Gi default is a bit too low
+    #persistence:
+    #  size: 30Gi
     # Consider using this resource model for small installations
     #resourcesPreset: medium
     extendedConfiguration: |-

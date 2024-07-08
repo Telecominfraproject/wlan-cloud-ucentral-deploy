@@ -26,11 +26,10 @@ owgw:
       memory: 5Gi
 
 owprov:
-  # consider providing more memory to owprov
   resources:
     requests:
       cpu: 10m
-      memory: 20Mi
+      memory: 200Mi
     limits:
       cpu: 100m
       memory: 4Gi
@@ -42,3 +41,7 @@ owprov:
 #    persistence:
 #      size: 120Gi
 
+#kafka:
+#  controller:
+#    persistence:
+#      size: 80Gi
