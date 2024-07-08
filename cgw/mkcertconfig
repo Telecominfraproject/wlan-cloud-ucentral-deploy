@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "certs:"
+for f in $* ; do
+    echo "  $f: |"
+    sed -e 's/^/    /' < "$f"
+done

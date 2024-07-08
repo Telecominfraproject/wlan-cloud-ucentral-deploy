@@ -1,8 +1,5 @@
 environments:
   default:
-    secrets:
-      - secrets/values.postgres.yaml
-      - secrets/certs.tip.yaml
     values:
     - global:
         name: devcgw
@@ -15,13 +12,15 @@ environments:
         enabled: true
     - postgres:
         enabled: true
+        pgUser:
+          password: postgres
+        cgwUser:
+          name: cgw
+          password: 123
     - cgw:
         enabled: true
-        tag: next
+        tag: main
   cgw01:
-    secrets:
-      - secrets/values.postgres.yaml
-      - secrets/certs.tip.yaml
     values:
     - global:
         name: cgw01
@@ -34,9 +33,14 @@ environments:
         enabled: true
     - postgres:
         enabled: true
+        pgUser:
+          password: openlancgw
+        cgwUser:
+          name: cgw
+          password: openlancgw
     - cgw:
         enabled: true
-        tag: next
+        tag: main
 
 ---
 
@@ -79,9 +83,13 @@ releases:
             partitions: 1
             replicationFactor: 1
     - controller:
+        persistence:
+          size: 80Gi
         replicaCount: 1
         extraConfig: |-
           maxMessageBytes = 1048588
+          offsets.topic.replication.factor = 1
+          transaction.state.log.replication.factor = 1
         extraEnvVars:
           - name: ALLOW_PLAINTEXT_LISTENER
             value: "yes"
@@ -99,9 +107,9 @@ releases:
         controller:
           protocol: "PLAINTEXT"
     - broker:
-        replicaCount: 2
+        replicaCount: 0
         persistence:
-          size: 20Gi
+          size: 80Gi
         resources:
           requests:
             cpu: 500m
@@ -131,6 +139,8 @@ releases:
     - auth:
         postgresPassword: {{ .Environment.Values.postgres.pgUser.password }}
     - primary:
+        persistence:
+          size: 40Gi
         extendedConfiguration: |-
           max_connections = 550
           shared_buffers = 128MB
@@ -146,7 +156,9 @@ releases:
               CREATE DATABASE cgw OWNER {{ .Environment.Values.postgres.cgwUser.name }};
               \c cgw
               CREATE TABLE infrastructure_groups (id INT PRIMARY KEY, reserved_size INT, actual_size INT);
+              ALTER TABLE infrastructure_groups OWNER TO {{ .Environment.Values.postgres.cgwUser.name }};
               CREATE TABLE infras (mac MACADDR PRIMARY KEY, infra_group_id INT, FOREIGN KEY(infra_group_id) REFERENCES infrastructure_groups(id) ON DELETE CASCADE);
+              ALTER TABLE infras OWNER TO {{ .Environment.Values.postgres.cgwUser.name }};
 
 - name: redis
   namespace: {{ .Environment.Values.global.namespace }}
@@ -161,22 +173,25 @@ releases:
     - auth:
         enabled: false
     - master:
+        persistence:
+          size: 20Gi
         extraEnvVars:
           - name: ALLOW_EMPTY_PASSWORD
             value: "yes"
 
 - name: cgw
   namespace: {{ .Environment.Values.global.namespace }}
-  #chart: ../../openlan-cgw/helm
-  chart: "git+https://github.com/Telecominfraproject/openlan-cgw@helm?ref=next"
+  chart: ../../openlan-cgw/helm
+  #chart: "git+https://github.com/Telecominfraproject/openlan-cgw@helm?ref=main"
   version: 0.1.0
   condition: cgw.enabled
   labels:
     group: apps
     app: cgw
-  secrets:
-    - secrets/certs.tip.yaml
   values:
+    - values/certs.tip.yaml
+    # this one is generated from GH secrets:
+    - values/certs.device.yaml
     - images:
         cgw:
           tag: {{ .Environment.Values.cgw.tag }}
