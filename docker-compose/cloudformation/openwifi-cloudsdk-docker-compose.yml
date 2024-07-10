@@ -57,7 +57,7 @@ Parameters:
   ExistingHostedZoneId:
     Description: |
       If you want to create the Route53 record in an existing hosted zone,
-      please specify the according hosted zone ID. 
+      please specify the according hosted zone ID.
     Type: String
 #    MinLength: 21
 #    MaxLength: 21
@@ -235,8 +235,6 @@ Resources:
                 OWPROV_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16005"
                 OWANALYTICS_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16009"
                 OWSUB_SYSTEM_URI_PUBLIC: !Sub "https://${SDKHostname}:16006"
-                OWRRM_SERVICECONFIG_PRIVATEENDPOINT: !Sub "http://owrrm.wlan.local:17007"
-                OWRRM_SERVICECONFIG_PUBLICENDPOINT: !Sub "https://${SDKHostname}:16789"
                 TRAEFIK_ACME_EMAIL: !Sub "${TraefikAcmeEmail}"
               cwd: "~/wlan-cloud-ucentral-deploy/docker-compose"
     Properties:
@@ -294,10 +292,6 @@ Resources:
           ToPort: "16009"
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-          FromPort: "16789"
-          ToPort: "16789"
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
           FromPort: "5912"
           ToPort: "5913"
           CidrIp: 0.0.0.0/0
@@ -308,7 +302,7 @@ Resources:
   CloudSDKHostedZone:
     Condition: HasHostedZoneName
     Type: AWS::Route53::HostedZone
-    Properties: 
+    Properties:
       Name: !Ref HostedZoneName
   CloudSDKRoute53RecordExistingHostedZone:
     Condition: CreateRecordInExistingZone

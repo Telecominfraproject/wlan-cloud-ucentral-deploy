@@ -1,5 +1,3 @@
-version: '3'
-
 volumes:
   zookeeper_data:
     driver: local
