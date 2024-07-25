@@ -17,6 +17,8 @@ volumes:
     driver: local
   kafka_data:
     driver: local
+  postgresql_data:
+    driver: local
 
 networks:
   openwifi:
@@ -34,6 +36,9 @@ services:
     depends_on:
       init-kafka:
         condition: service_completed_successfully
+      postgresql:
+        condition: service_healthy
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owgw"]
     restart: unless-stopped
     volumes:
       - owgw_data:${OWGW_ROOT}/persist
@@ -72,6 +77,9 @@ services:
     depends_on:
       init-kafka:
         condition: service_completed_successfully
+      postgresql:
+        condition: service_healthy
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owsec"]
     restart: unless-stopped
     volumes:
       - owsec_data:${OWSEC_ROOT}/persist
@@ -89,6 +97,9 @@ services:
     depends_on:
       init-kafka:
         condition: service_completed_successfully
+      postgresql:
+        condition: service_healthy
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owfms"]
     restart: unless-stopped
     volumes:
       - owfms_data:${OWFMS_ROOT}/persist
@@ -106,6 +117,9 @@ services:
     depends_on:
       init-kafka:
         condition: service_completed_successfully
+      postgresql:
+        condition: service_healthy
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owprov"]
     restart: unless-stopped
     volumes:
       - owprov_data:${OWPROV_ROOT}
@@ -138,6 +152,9 @@ services:
     depends_on:
       init-kafka:
         condition: service_completed_successfully
+      postgresql:
+        condition: service_healthy
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owanalytics"]
     restart: unless-stopped
     volumes:
       - owanalytics_data:${OWANALYTICS_ROOT}
@@ -155,6 +172,9 @@ services:
     depends_on:
       init-kafka:
         condition: service_completed_successfully
+      postgresql:
+        condition: service_healthy
+    command: ["./wait-for-postgres.sh", "postgresql", "/openwifi/owsub"]
     restart: unless-stopped
     volumes:
       - owsub_data:${OWSUB_ROOT}
@@ -241,3 +261,26 @@ services:
       - "1812:1812/udp"
       - "1813:1813/udp"
       - "3799:3799/udp"
+
+  postgresql:
+    image: "postgres:${POSTGRESQL_TAG}"
+    networks:
+      openwifi:
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=400"
+      - "-c"
+      - "shared_buffers=20MB"
+    env_file:
+      - postgresql.env
+    restart: unless-stopped
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+      - ./postgresql/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d owgw"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s

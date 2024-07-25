@@ -205,8 +205,6 @@ Resources:
                 docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt"
                 alias docker-compose-lb-selfsigned="docker-compose -f \
                 docker-compose.lb.selfsigned.yml --env-file .env.selfsigned"
-                alias docker-compose-postgresql="docker-compose -f \
-                docker-compose.yml -f docker-compose.postgresql.yml"
               mode: "000644"
               owner: "root"
               group: "root"
