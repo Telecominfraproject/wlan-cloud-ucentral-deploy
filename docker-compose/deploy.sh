@@ -39,9 +39,6 @@ usage () {
 #  echo "- OWSUB_SYSTEM_URI_PRIVATE - private URL to be used for OWSub";
   echo "- OWSUB_SYSTEM_URI_PUBLIC - public URL to be used for OWSub";
   echo;
-  echo "- OWRRM_SERVICECONFIG_PRIVATEENDPOINT - private URL to be used for OWRRM";
-  echo "- OWRRM_SERVICECONFIG_PUBLICENDPOINT - public URL to be used for OWRRM";
-  echo;
   echo "Optional environment variables:"
   echo "- WEBSOCKET_CERT - Your Digicert-signed websocket certificate"
   echo "- WEBSOCKET_KEY - The key to your Digicert-signed websocket certificate"
@@ -91,9 +88,6 @@ usage () {
 ## OWSub configuration variables
 #[ -z ${OWSUB_SYSTEM_URI_PRIVATE+x} ] && echo "OWSUB_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWSUB_SYSTEM_URI_PUBLIC+x} ] && echo "OWSUB_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
-## OWRRM configuration variables
-[ -z ${OWRRM_SERVICECONFIG_PRIVATEENDPOINT+x} ] && echo "OWRRM_SERVICECONFIG_PRIVATEENDPOINT is unset" && usage && exit 1
-[ -z ${OWRRM_SERVICECONFIG_PUBLICENDPOINT+x} ] && echo "OWRRM_SERVICECONFIG_PUBLICENDPOINT is unset" && usage && exit 1
 
 # Search and replace image version tags if set
 if [[ ! -z "$OWGW_VERSION" ]]; then
@@ -180,9 +174,6 @@ sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owanalytics.env
 #sed -i "s~.*SYSTEM_URI_PRIVATE=.*~SYSTEM_URI_PRIVATE=$OWSUB_SYSTEM_URI_PRIVATE~" owsub.env
 sed -i "s~.*SYSTEM_URI_PUBLIC=.*~SYSTEM_URI_PUBLIC=$OWSUB_SYSTEM_URI_PUBLIC~" owsub.env
 sed -i "s~.*SYSTEM_URI_UI=.*~SYSTEM_URI_UI=$SYSTEM_URI_UI~" owsub.env
-
-sed -i "s~.*SERVICECONFIG_PRIVATEENDPOINT=.*~SERVICECONFIG_PRIVATEENDPOINT=$OWRRM_SERVICECONFIG_PRIVATEENDPOINT~" owrrm.env
-sed -i "s~.*SERVICECONFIG_PUBLICENDPOINT=.*~SERVICECONFIG_PUBLICENDPOINT=$OWRRM_SERVICECONFIG_PUBLICENDPOINT~" owrrm.env
 
 if [[ ! -z "$TRAEFIK_ACME_EMAIL" ]]; then
   sed -i "s~.*TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL=.*~TRAEFIK_CERTIFICATESRESOLVERS_OPENWIFI_ACME_EMAIL=$TRAEFIK_ACME_EMAIL~" traefik.env

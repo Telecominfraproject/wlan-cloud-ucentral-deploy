@@ -1,5 +1,3 @@
-version: '3'
-
 volumes:
   owgw_data:
     driver: local
@@ -13,15 +11,11 @@ volumes:
     driver: local
   owsub_data:
     driver: local
-  owrrm_data:
-    driver: local
   zookeeper_data:
     driver: local
   zookeeper_datalog:
     driver: local
   kafka_data:
-    driver: local
-  mysql_data:
     driver: local
 
 networks:
@@ -38,7 +32,8 @@ services:
       - .env.selfsigned
       - owgw.env
     depends_on:
-      - kafka
+      init-kafka:
+        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
       - owgw_data:${OWGW_ROOT}/persist
@@ -50,7 +45,7 @@ services:
 
   owgw-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owgw-ui:${OWGWUI_TAG}"
-    env_file: 
+    env_file:
       - owgw-ui.env
     networks:
       openwifi:
@@ -75,7 +70,8 @@ services:
       - .env.selfsigned
       - owsec.env
     depends_on:
-      - kafka
+      init-kafka:
+        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
       - owsec_data:${OWSEC_ROOT}/persist
@@ -91,7 +87,8 @@ services:
       - .env.selfsigned
       - owfms.env
     depends_on:
-      - kafka
+      init-kafka:
+        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
       - owfms_data:${OWFMS_ROOT}/persist
@@ -107,7 +104,8 @@ services:
       - .env.selfsigned
       - owprov.env
     depends_on:
-      - kafka
+      init-kafka:
+        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
       - owprov_data:${OWPROV_ROOT}
@@ -138,7 +136,8 @@ services:
       - .env.selfsigned
       - owanalytics.env
     depends_on:
-      - kafka
+      init-kafka:
+        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
       - owanalytics_data:${OWANALYTICS_ROOT}
@@ -154,26 +153,12 @@ services:
       - .env.selfsigned
       - owsub.env
     depends_on:
-      - kafka
+      init-kafka:
+        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
       - owsub_data:${OWSUB_ROOT}
       - ./certs:/${OWSUB_ROOT}/certs
-
-  owrrm:
-    image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owrrm:${OWRRM_TAG}"
-    networks:
-      openwifi:
-        aliases:
-          - ${INTERNAL_OWRRM_HOSTNAME}
-    env_file:
-      - owrrm.env
-    depends_on:
-      - mysql
-      - kafka
-    restart: unless-stopped
-    volumes:
-      - owrrm_data:/owrrm-data
 
   zookeeper:
     image: "zookeeper:${ZOOKEEPER_TAG}"
@@ -208,22 +193,14 @@ services:
       - /bin/sh
       - -c
       - |
+        echo "Sleeping to allow kafka to start up..."
+        sleep 20
         echo "Creating all required Kafka topics..."
         for topic in $$TOPICS; do
           /opt/bitnami/kafka/bin/kafka-topics.sh \
           --create --if-not-exists --topic $$topic --replication-factor 1 \
           --partitions 1 --bootstrap-server kafka:9092
         done && echo "Successfully created Kafka topics, exiting." && exit 0
-
-  mysql:
-    image: "mysql:${MYSQL_TAG}"
-    networks:
-      openwifi:
-    env_file:
-      - mysql.env
-    restart: unless-stopped
-    volumes:
-      - mysql_data:/var/lib/mysql
 
   traefik:
     image: "traefik:${TRAEFIK_TAG}"
@@ -240,7 +217,6 @@ services:
       - owprov-ui
       - owanalytics
       - owsub
-      - owrrm
     restart: unless-stopped
     volumes:
       - "./traefik/openwifi_selfsigned.yaml:/etc/traefik/openwifi.yaml"
@@ -262,7 +238,6 @@ services:
       - "16006:16006"
       - "5912:5912"
       - "5913:5913"
-      - "16789:16789"
       - "1812:1812/udp"
       - "1813:1813/udp"
       - "3799:3799/udp"

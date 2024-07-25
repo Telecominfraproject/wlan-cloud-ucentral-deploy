@@ -46,7 +46,6 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | `INTERNAL_OWPROV_HOSTNAME`      | Set this to your OWProv hostname, for example `owprov.example.com`.                |
 | `INTERNAL_OWANALYTICS_HOSTNAME` | Set this to your OWAnalytics hostname, for example `owanalytics.example.com`.      |
 | `INTERNAL_OWSUB_HOSTNAME`       | Set this to your OWSub hostname, for example `owsub.example.com`.                  |
-| `INTERNAL_OWRRM_HOSTNAME`       | Set this to your OWRRM hostname, for example `owrrm.example.com`.                  |
 ### owgw.env
 | Variable                                 | Description                                                                         |
 | ---------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -83,15 +82,6 @@ export FLAGS="-s --cacert <your-wlan-cloud-ucentral-deploy-location>/docker-comp
 | ---------------------------------------- | -------------------------------------------------------------------------------------- |
 | `SYSTEM_URI_PRIVATE`,`SYSTEM_URI_PUBLIC` | Set this to your OWAnalytics URL, for example `https://owanalytics.example.com:16009`. |
 | `SYSTEM_URI_UI`                          | Set this to your OWProv-UI URL, for example `https://owprov-ui.example.com`.           |
-### owrrm.env
-| Variable                                 | Description                                                                                     |
-| ---------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `SERVICECONFIG_PRIVATEENDPOINT`, `SERVICECONFIG_PUBLICENDPOINT` | Set this to your OWRRM URL, for example https://owrrm.example.com:16789. |
-| `DATABASECONFIG_PASSWORD`                                       | Set this to a random and safe password.                                  |
-### mysql.env
-| Variable                                 | Description                                      |
-| ---------------- | ------------------------------------------------------------------------ |
-| `MYSQL_PASSWORD` | Set this to the same value as `$DATABASECONFIG_PASSWORD` in `owrrm.env`. |
 
 3. Spin up the deployment with `docker-compose up -d`.
 4. Check if the containers are up and running with `docker-compose ps`.
@@ -218,15 +208,6 @@ For the Let's Encrypt challenge to work you need a public IP address. The hostna
 | -------------------- | ----------------------------------------------------------------------------- |
 | `SYSTEM_URI_PUBLIC`  | Set this to your OWSub URL, for example `https://openwifi.example.com:16006`. |
 | `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.     |
-### owrrm.env
-| Variable                                 | Description                     |
-| ---------------------------------------- | ------------------------------- |
-| `SERVICECONFIG_PUBLICENDPOINT`   | Set this to your OWRRM URL, for example https://openwifi.example.com:16789. |
-| `DATABASECONFIG_PASSWORD`        | Set this to a random and safe password.                                     |
-### mysql.env
-| Variable         | Description                                                              |
-| ---------------- | ------------------------------------------------------------------------ |
-| `MYSQL_PASSWORD` | Set this to the same value as `$DATABASECONFIG_PASSWORD` in `owrrm.env`. |
 ### traefik.env
 | Variable                                            | Description                               |
 | --------------------------------------------------- | ----------------------------------------- |
