@@ -1,8 +1,4 @@
 volumes:
-  zookeeper_data:
-    driver: local
-  zookeeper_datalog:
-    driver: local
   kafka_data:
     driver: local
 
@@ -65,15 +61,6 @@ services:
       - "80:80"
       - "443:443"
 
-  zookeeper:
-    image: "zookeeper:${ZOOKEEPER_TAG}"
-    networks:
-      owls:
-    restart: unless-stopped
-    volumes:
-      - zookeeper_data:/data
-      - zookeeper_datalog:/datalog
-
   kafka:
     image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
     networks:
@@ -81,7 +68,5 @@ services:
     env_file:
       - kafka.env
     restart: unless-stopped
-    depends_on:
-      - zookeeper
     volumes:
       - kafka_data:/bitnami/kafka

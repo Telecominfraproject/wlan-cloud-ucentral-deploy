@@ -1,0 +1,31 @@
+#!/bin/bash
+# Wrapper around docker-compose that will use the correct command line options
+# depending on what type of setup you have.
+# It captures $1 == clean and does some cleanup of the volumes and data directories,
+# but passes everything else straight to the docker-compose command.
+cmd="docker-compose"
+deploy_type=$(grep "^DEPLOY_TYPE=" .env | awk -F= '{ print $2 }')
+[ -z "$deploy_type" ] && deploy_type="default"
+if [[ "$deploy_type" == "letsencrypt" ]] ; then
+    cmd="$cmd -f docker-compose.lb.letsencrypt.yml --env-file .env.letsencrypt"
+elif [[ "$deploy_type" == "selfsigned" ]] ; then
+    cmd="$cmd -f docker-compose.lb.selfsigned.yml --env-file .env.selfsigned"
+elif [[ "$deploy_type" == "default" ]] ; then
+    # ok
+    true
+else
+    echo "Invalid DEPLOY_TYPE: $deploy_type"
+    echo "Should be one of: default, letsencrypt or selfsigned"
+    exit 1
+fi
+if [[ "$1" == "clean" ]] ; then
+    set -x
+    $cmd down -v
+    rm -rf *_data
+elif [[ "$1" == "launch" || "$1" == "l" ]] ; then
+    set -x
+    $cmd up -d
+else
+    set -x
+    $cmd "$@"
+fi
