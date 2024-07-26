@@ -277,7 +277,7 @@ services:
       - postgresql_data:/var/lib/postgresql/data
       - ./postgresql/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d owgw"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d owsub"]
       interval: 10s
       retries: 5
       start_period: 30s
