@@ -17,6 +17,8 @@ volumes:
     driver: local
   kafka_data:
     driver: local
+  postgresql_data:
+    driver: local
   letsencrypt_certs:
     driver: local
 

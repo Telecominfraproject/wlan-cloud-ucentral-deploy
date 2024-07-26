@@ -50,8 +50,6 @@ services:
 
   owgw-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owgw-ui:${OWGWUI_TAG}"
-    env_file:
-      - owgw-ui.env
     networks:
       openwifi:
         aliases:
