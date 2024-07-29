@@ -89,11 +89,11 @@ fi
 [ -z ${DEVICE_CERT_LOCATION+x} ] && echo "DEVICE_CERT_LOCATION is unset, setting it to CERT_LOCATION" && export DEVICE_CERT_LOCATION=$CERT_LOCATION
 [ -z ${DEVICE_KEY_LOCATION+x} ] && echo "DEVICE_KEY_LOCATION is unset, setting it to KEY_LOCATION" && export DEVICE_KEY_LOCATION=$KEY_LOCATION
 [ -z ${INTERNAL_RESTAPI_ENDPOINT_SCHEMA+x} ] && echo "INTERNAL_RESTAPI_ENDPOINT_SCHEMA is unset, setting it to 'https'" && export INTERNAL_RESTAPI_ENDPOINT_SCHEMA=https
-[ -z ${USE_SEPARATE_OWGW_LB+x} ] && echo "USE_SEPARATE_OWGW_LB is unset, setting it to true" && export USE_SEPARATE_OWGW_LB=true
+[ -z ${USE_SEPARATE_OWGW_LB+x} ] && echo "USE_SEPARATE_OWGW_LB is unset, setting it to false" && export USE_SEPARATE_OWGW_LB=false
 export MAILER_ENABLED="false"
 [ ! -z ${MAILER_USERNAME+x} ] && [ ! -z ${MAILER_PASSWORD+x} ] && echo "MAILER_USERNAME and MAILER_PASSWORD are set, mailer will be enabled" && export MAILER_ENABLED="true"
 [ -z "${DOMAIN}" ] && echo "DOMAIN is unset, using cicd.lab.wlan.tip.build" && export DOMAIN="cicd.lab.wlan.tip.build"
-[ -z ${CERTIFICATE_ARN+x} ] && CERTIFICATE_ARN=$DEF_CERT_ARN
+[ -z ${CERTIFICATE_ARN+x} ] && export CERTIFICATE_ARN=$DEF_CERT_ARN
 
 # Transform some environment variables
 export OWGW_VERSION_TAG=$(echo ${OWGW_VERSION} | tr '/' '-')
