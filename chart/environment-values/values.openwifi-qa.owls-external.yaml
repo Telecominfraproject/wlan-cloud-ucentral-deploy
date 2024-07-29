@@ -45,3 +45,7 @@ owprov:
 #  controller:
 #    persistence:
 #      size: 80Gi
+#    extraConfig: |-
+#      # consider tuning this as otherwise kafka storage may be exceeeded quickly
+#      # the default is 1 week!
+#      logRetentionHours = 24
