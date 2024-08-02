@@ -7,7 +7,7 @@ owgw:
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16102"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,17002,5912,5913"
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,17002,5913"
         service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
 
 owsec:
