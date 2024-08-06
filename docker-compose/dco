@@ -1,7 +1,8 @@
 #!/bin/bash
 # Wrapper around docker-compose that will use the correct command line options
 # depending on what type of setup you have.
-# It captures $1 == clean and does some cleanup of the volumes and data directories,
+# It captures $1 == clean and performs cleanup of the volumes and data directories,
+# It captures $1 == launch or l and runs: ... up -d,
 # but passes everything else straight to the docker-compose command.
 cmd="docker-compose"
 deploy_type=$(grep "^DEPLOY_TYPE=" .env | awk -F= '{ print $2 }')
