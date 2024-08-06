@@ -235,6 +235,7 @@ For the Let's Encrypt challenge to work you need a public IP address. The hostna
 | `SYSTEM_URI_PUBLIC`  | Set this to your OWSub URL, for example `https://openwifi.example.com:16006`. |
 
 | `SYSTEM_URI_UI`      | Set this to your OWGW-UI URL, for example `https://openwifi.example.com`.     |
+
 ### traefik.env
 | Variable                                            | Description                               |
 | --------------------------------------------------- | ----------------------------------------- |

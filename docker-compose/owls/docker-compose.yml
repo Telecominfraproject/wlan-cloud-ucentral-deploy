@@ -1,8 +1,4 @@
 volumes:
-  zookeeper_data:
-    driver: local
-  zookeeper_datalog:
-    driver: local
   kafka_data:
     driver: local
 
@@ -19,7 +15,8 @@ services:
     env_file:
       - owsec.env
     depends_on:
-      - kafka
+      init-kafka:
+        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
       - "./owsec_data:${OWSEC_ROOT}"
@@ -37,8 +34,10 @@ services:
     env_file:
       - owls.env
     depends_on:
-      - owsec
-      - kafka
+      owsec:
+        condition: service_started
+      init-kafka:
+        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
       - "./owls_data:${OWLS_ROOT}"
@@ -65,15 +64,6 @@ services:
       - "80:80"
       - "443:443"
 
-  zookeeper:
-    image: "zookeeper:${ZOOKEEPER_TAG}"
-    networks:
-      owls:
-    restart: unless-stopped
-    volumes:
-      - zookeeper_data:/data
-      - zookeeper_datalog:/datalog
-
   kafka:
     image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
     networks:
@@ -81,7 +71,26 @@ services:
     env_file:
       - kafka.env
     restart: unless-stopped
-    depends_on:
-      - zookeeper
     volumes:
       - kafka_data:/bitnami/kafka
+
+  init-kafka:
+    image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
+    networks:
+      owls:
+    depends_on:
+      - kafka
+    env_file:
+      - kafka.env
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping to allow kafka to start up..."
+        sleep 10
+        echo "Creating all required Kafka topics..."
+        for topic in $$TOPICS; do
+          /opt/bitnami/kafka/bin/kafka-topics.sh \
+          --create --if-not-exists --topic $$topic --replication-factor 1 \
+          --partitions 1 --bootstrap-server kafka:9092
+        done && echo "Successfully created Kafka topics, exiting." && exit 0
