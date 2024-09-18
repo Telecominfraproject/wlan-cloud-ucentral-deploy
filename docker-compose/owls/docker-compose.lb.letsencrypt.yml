@@ -21,9 +21,6 @@ services:
     volumes:
       - "./owsec_data:${OWSEC_ROOT}"
       - "../certs:/${OWSEC_ROOT}/certs"
-    ports:
-      - "16001:16001"
-      - "16101:16101"
 
   owfms:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owfms:${OWFMS_TAG}"
@@ -40,9 +37,6 @@ services:
     volumes:
       - "./owfms_data:${OWFMS_ROOT}"
       - "../certs:/${OWFMS_ROOT}/certs"
-    ports:
-      - "16004:16004"
-      - "16104:16104"
 
   owls:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owls:${OWLS_TAG}"
@@ -61,28 +55,54 @@ services:
     volumes:
       - "./owls_data:${OWLS_ROOT}"
       - "../certs:/${OWLS_ROOT}/certs"
-    ports:
-      - "16007:16007"
-      - "16107:16107"
 
   owls-ui:
     image: "tip-tip-wlan-cloud-ucentral.jfrog.io/owls-ui:${OWLSUI_TAG}"
     networks:
       owls:
+        aliases:
+          - ${INTERNAL_OWLSUI_HOSTNAME}
     env_file:
       - owls-ui.env
     depends_on:
       - owsec
-      - owls
       - owfms
+      - owls
     restart: unless-stopped
     volumes:
       - "./owls-ui/default.conf:/etc/nginx/conf.d/default.conf"
       - "../certs/restapi-cert.pem:/etc/nginx/restapi-cert.pem"
       - "../certs/restapi-key.pem:/etc/nginx/restapi-key.pem"
+
+  traefik:
+    image: "traefik:${TRAEFIK_TAG}"
+    networks:
+      owls:
+    env_file:
+      - traefik.env
+    depends_on:
+      - owsec
+      - owfms
+      - owls
+      - owls-ui
+    restart: unless-stopped
+    volumes:
+      - "./traefik/openwifi_letsencrypt.yaml:/etc/traefik/openwifi.yaml"
+      - "../certs/restapi-ca.pem:/certs/restapi-ca.pem"
+      - "./letsencrypt_certs:/letsencrypt"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        timeout 10m sh -c 'until [[ "$$(getent hosts $SDKHOSTNAME)" ]]; do echo "Waiting until DNS record for $SDKHOSTNAME is resolvable"; sleep 5; done' \
+        && ./entrypoint.sh traefik
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
+      - "16001:16001"
+      - "16004:16004"
+      - "16007:16007"
 
   kafka:
     image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
