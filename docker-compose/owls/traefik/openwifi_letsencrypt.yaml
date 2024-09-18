@@ -1,0 +1,50 @@
+log:
+  level: DEBUG
+http:
+  services:
+    owls-ui:
+      loadBalancer:
+        servers:
+          - url: "http://owls-ui.wlan.local:80/"
+    owsec-restapi:
+      loadBalancer:
+        servers:
+          - url: "https://owsec.wlan.local:16001/"
+    owfms-restapi:
+      loadBalancer:
+        servers:
+          - url: "https://owfms.wlan.local:16004/"
+    owls-restapi:
+      loadBalancer:
+        servers:
+          - url: "https://owls.wlan.local:16007/"
+
+  routers:
+    owls-ui-http:
+      entryPoints: "owlsuihttp"
+      service: "owls-ui"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
+    owls-ui-https:
+      entryPoints: "owlsuihttps"
+      service: "owls-ui"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
+      tls:
+        certResolver: "openwifi"
+    owls-restapi:
+      entryPoints: "owlsrestapi"
+      service: "owls-restapi"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
+      tls:
+        certResolver: "openwifi"
+    owsec-restapi:
+      entryPoints: "owsecrestapi"
+      service: "owsec-restapi"
+      rule: "Host(`{{ env "SDKHOSTNAME" }}`)"
+      tls:
+        certResolver: "openwifi"
+    owfms-restapi:
+      entryPoints: "owfmsrestapi"
+      service: "owfms-restapi"
+      rule: "Host(`{{env "SDKHOSTNAME"}}`)"
+      tls:
+        certResolver: "openwifi"
