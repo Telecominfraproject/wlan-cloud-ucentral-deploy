@@ -1,0 +1,15 @@
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: alpha.eksctl.io/nodegroup-name
+          operator: In
+          values:
+          - gwmed
+
+tolerations:
+- effect: NoSchedule
+  key: type
+  operator: Equal
+  value: onlygwmed
