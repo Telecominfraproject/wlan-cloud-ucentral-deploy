@@ -1,0 +1,24 @@
+public_env_variables:
+  CGW_DB_HOST: pgsql
+  CGW_DB_PORT: "5432"
+  CGW_KAFKA_HOST: kafka
+  CGW_KAFKA_PORT: "9092"
+  CGW_REDIS_HOST: redis-master
+  CGW_REDIS_PORT: "6379"
+  CGW_ALLOW_CERT_MISMATCH: "yes"
+  # use (#cpus * 2) - 2
+  DEFAULT_WSS_THREAD_NUM: "4"
+  # Useful for debugging:
+  #CGW_LOG_LEVEL: "debug"
+  #RUST_BACKTRACE: "full"
+services:
+  cgw:
+    type: LoadBalancer
+    annotations:
+      #service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+      service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15003"
+      service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002"
+      alb.ingress.kubernetes.io/healthcheck-path: /health

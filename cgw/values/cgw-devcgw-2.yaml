@@ -1,0 +1,16 @@
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: alpha.eksctl.io/nodegroup-name
+          operator: In
+          values:
+          - gwm5lrg
+
+tolerations:
+- effect: NoSchedule
+  key: type
+  operator: Equal
+  value: onlygwm5lrg
+
