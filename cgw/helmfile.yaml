@@ -19,7 +19,9 @@ environments:
           password: 123
     - cgw:
         enabled: true
-        tag: main
+        tag: next
+    - cgw2:
+        enabled: true
   cgw01:
     values:
     - global:
@@ -40,7 +42,9 @@ environments:
           password: openlancgw
     - cgw:
         enabled: true
-        tag: main
+        tag: next
+    - cgw2:
+        enabled: true
 
 ---
 
@@ -196,6 +200,7 @@ releases:
         cgw:
           tag: {{ .Environment.Values.cgw.tag }}
     - public_env_variables:
+        CGW_ID: 0
         CGW_DB_HOST: pgsql
         CGW_DB_PORT: "5432"
         CGW_DB_USERNAME: "{{ .Environment.Values.postgres.cgwUser.name }}"
@@ -216,6 +221,53 @@ releases:
           type: LoadBalancer
           annotations:
             external-dns.alpha.kubernetes.io/hostname: cgw-{{ .Environment.Values.global.name }}.{{ .Environment.Values.global.domain }}
+            #service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+            service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+            service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+            service.beta.kubernetes.io/aws-load-balancer-ssl-cert: {{ .Environment.Values.global.certificateARN }}
+            service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15003"
+            service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
+            service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002"
+            alb.ingress.kubernetes.io/healthcheck-path: /health
+
+- name: cgw2
+  namespace: {{ .Environment.Values.global.namespace }}
+  chart: ../../openlan-cgw/helm
+  #chart: "git+https://github.com/Telecominfraproject/openlan-cgw@helm?ref=main"
+  version: 0.1.0
+  condition: cgw2.enabled
+  labels:
+    group: apps
+    app: cgw2
+  values:
+    - values/certs.tip.yaml
+    # this one is generated from GH secrets:
+    - values/certs.device.yaml
+    - images:
+        cgw:
+          tag: {{ .Environment.Values.cgw.tag }}
+    - public_env_variables:
+        CGW_ID: 1
+        CGW_DB_HOST: pgsql
+        CGW_DB_PORT: "5432"
+        CGW_DB_USERNAME: "{{ .Environment.Values.postgres.cgwUser.name }}"
+        CGW_KAFKA_HOST: kafka
+        CGW_KAFKA_PORT: "9092"
+        CGW_REDIS_HOST: redis-master
+        CGW_REDIS_PORT: "6379"
+        CGW_ALLOW_CERT_MISMATCH: "yes"
+        # use (#cpus * 2) - 2
+        DEFAULT_WSS_THREAD_NUM: "4"
+        # Useful for debugging:
+        #CGW_LOG_LEVEL: "debug"
+        #RUST_BACKTRACE: "full"
+    - secret_env_variables:
+        CGW_DB_PASSWORD: "{{ .Environment.Values.postgres.cgwUser.password }}"
+    - services:
+        cgw:
+          type: LoadBalancer
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: cgw2-{{ .Environment.Values.global.name }}.{{ .Environment.Values.global.domain }}
             #service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
             service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
             service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
