@@ -204,6 +204,8 @@ releases:
     - public_env_variables:
         CGW_ID: 0
         CGW_DB_USERNAME: "{{ .Environment.Values.postgres.cgwUser.name }}"
+        CGW_GRPC_PUBLIC_HOST: cgw-cgw
+        CGW_GRPC_PUBLIC_PORT: 50051
     - secret_env_variables:
         CGW_DB_PASSWORD: "{{ .Environment.Values.postgres.cgwUser.password }}"
     - services:
@@ -233,6 +235,8 @@ releases:
     - public_env_variables:
         CGW_ID: 1
         CGW_DB_USERNAME: "{{ .Environment.Values.postgres.cgwUser.name }}"
+        CGW_GRPC_PUBLIC_HOST: cgw2-cgw2
+        CGW_GRPC_PUBLIC_PORT: 50051
     - secret_env_variables:
         CGW_DB_PASSWORD: "{{ .Environment.Values.postgres.cgwUser.password }}"
     - services:
