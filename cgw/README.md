@@ -22,12 +22,9 @@ certs:
   websocket-cert.pem: 5c0lvd0RRWUpLb1pJa...
   websocket-key.pem: V6WEFqWEhNVFk3RGda...
 ```
-To generate (with the two websocket pem files available):
+To generate this file manually (with the two websocket pem files available):
 ```
-echo "certs:" > values/certs.device.yaml
-kubectl create secret generic certs --dry-run=client -o yaml \
-    --from-file=websocket-key.pem --from-file=websocket-cert.pem \
-    | grep websocket- >> values/certs.device.yaml
+./mkcertconfig websocket-cert.pem websocket-key.pem > values/certs.device.yaml
 ```
 
 ## Installation

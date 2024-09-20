@@ -1,3 +1,4 @@
+# set the node affinity and tolerations here
 affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
@@ -6,10 +7,10 @@ affinity:
         - key: alpha.eksctl.io/nodegroup-name
           operator: In
           values:
-          - gwmed
+          - gwm5lrg
 
 tolerations:
 - effect: NoSchedule
   key: type
   operator: Equal
-  value: onlygwmed
+  value: onlygwm5lrg
