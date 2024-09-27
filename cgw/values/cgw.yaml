@@ -15,10 +15,10 @@ services:
   cgw:
     type: LoadBalancer
     annotations:
-      #service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-      service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15003"
+      service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: metrics
+      service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: /health
+      service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: http
       service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
       service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002"
-      alb.ingress.kubernetes.io/healthcheck-path: /health
