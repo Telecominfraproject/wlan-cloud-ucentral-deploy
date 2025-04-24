@@ -2,31 +2,31 @@ apiVersion: v2
 name: openwifi
 appVersion: "1.0"
 description: A Helm chart for Kubernetes
-version: 0.1.0
+version: 4.0.0-RC1
 dependencies:
 - name: owgw
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=master"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw@helm?ref=v4.0.0-RC1"
   version: 0.1.0
 - name: owsec
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralsec@helm?ref=v3.2.0"
   version: 0.1.0
 - name: owfms
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralfms@helm?ref=v3.2.0"
   version: 0.1.0
 - name: owprov
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov@helm?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov@helm?ref=v3.2.1"
   version: 0.1.0
 - name: owanalytics
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-analytics@helm?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-analytics@helm?ref=v3.2.0"
   version: 0.1.0
 - name: owgwui
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui@helm?ref=v4.0.0-RC1"
   version: 0.1.0
 - name: owprovui
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov-ui@helm?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owprov-ui@helm?ref=v4.0.0-RC1"
   version: 0.1.0
 - name: owsub
-  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-userportal@helm?ref=main"
+  repository: "git+https://github.com/Telecominfraproject/wlan-cloud-userportal@helm?ref=v3.2.0"
   version: 0.1.0
 - name: owls
   repository: "git+https://github.com/Telecominfraproject/wlan-cloud-owls@helm?ref=main"
