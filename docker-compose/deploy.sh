@@ -40,8 +40,8 @@ usage () {
   echo "- OWSUB_SYSTEM_URI_PUBLIC - public URL to be used for OWSub";
   echo;
   echo "Optional environment variables:"
-  echo "- WEBSOCKET_CERT - Your Digicert-signed websocket certificate"
-  echo "- WEBSOCKET_KEY - The key to your Digicert-signed websocket certificate"
+  echo "- WEBSOCKET_CERT - Your Digicert or Insta signed websocket certificate"
+  echo "- WEBSOCKET_KEY - The key to your Digicert or Insta signed websocket certificate"
   echo;
   echo "- OWSEC_AUTHENTICATION_DEFAULT_USERNAME - username to be used for requests to OWSec";
   echo "- OWSEC_AUTHENTICATION_DEFAULT_PASSWORD - hashed password for OWSec (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
