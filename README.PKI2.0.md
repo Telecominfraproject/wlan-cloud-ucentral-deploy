@@ -11,11 +11,11 @@ The latest version of the OpenWiFi Cloud SDK is available at https://github.com/
 ### Docker Compose
 The file `docker-compose/certs/clientcas.pem` already contains the Insta Chain certificates (along with the previous Digicert ones.)
 
-**Do this only once all APs have been upgraded to support PKI 2.0**:
+**Do this only once all APs have been upgraded to support PKI2.0**:
 Once you receive your server certificate package from Insta, please update the `websocket-cert.pem` and `websocket-key.pem` files in the same directory.
 Restart the SDK by running the appropriate `docker-compose` command: `./dco stop && ./dco start`.
 
-Once the switchover to Insta is complete, TIP will update the `docker-compose/certs/cert.pem` and `key.pem` files to contain the Insta versions of the `*.wlan.local` certificate. This is only a concern if you are using *wlan.local* has your host name. The Digicert chain certificates will also be removed at this time.
+Once the switch-over to Insta is complete, TIP will update the `docker-compose/certs/cert.pem` and `key.pem` files to contain the Insta versions of the `*.wlan.local` certificate. This is only a concern if you are using *wlan.local* has your host name. The Digicert chain certificates will also be removed at this time.
 
 ## Advanced
 
