@@ -1,0 +1,1076 @@
+owgw:
+  # https://telecominfraproject.atlassian.net/browse/WIFI-5840
+  checks:
+    owgw:
+      readiness:
+        exec:
+          command: ["true"]
+        failureThreshold: 5
+      readiness:
+        failureThreshold: 5
+
+  resources:
+    requests:
+      cpu: 2000m
+      memory: 100Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+#  securityContext:
+#    sysctls:
+#    - name: net.ipv4.tcp_keepalive_intvl
+#      value: "5"
+#    - name: net.ipv4.tcp_keepalive_probes
+#      value: "2"
+#    - name: net.ipv4.tcp_keepalive_time
+#      value: "45"
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+#  podSecurityPolicy:
+#    enabled: true
+
+  certs:
+    restapi-ca.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+    clientcas.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIEnDCCA4SgAwIBAgIUVpyCUx1MUeUwxg+7I1BvGFTz7HkwDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjUxMjZaFw0yNjA0MTMyMjM4NDZaMGwx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEpMCcGA1UEAxMgVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IElzc3VpbmcgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDtKBrq
+      qd2aKVSk25KfL5xHu8X7/8rJrz3IvyPuVKWhk/N1zabot3suBcGaYNKjnRHxg78R
+      yKwKzajKYWtiQFqztu24g16LQeAnoUxZnF6a0z3JkkRPsz14A2y8TUhdEe1tx+UU
+      4VGsk3n+FMmOQHL+79FO57zQC1LwylgfLSltrI6mF3jowVUQvnwzKhUzT87AJ6EO
+      ndK/q0T/Bgi+aI39zfVOjJjsTJwghvrmYW3iarP1THSKxeib2s02bZKrvvHa5HL4
+      UI8+LvREpVZl4mzt1z6Nl344Y6f+UeJlYa/Ci0jJqaXJmyVnUbAz+c0i5JfwAVn3
+      YQzfC4eLnZCmdF8zAgMBAAGjggE3MIIBMzAPBgNVHRMBAf8EBTADAQH/MB0GA1Ud
+      DgQWBBSzG1S44EerPfM4gOQ85f0AYW3R6DAfBgNVHSMEGDAWgBQCRpZgebFT9qny
+      98WfIUDk6ZEB+jAOBgNVHQ8BAf8EBAMCAYYwgYMGCCsGAQUFBwEBBHcwdTAoBggr
+      BgEFBQcwAYYcaHR0cDovL29jc3Aub25lLmRpZ2ljZXJ0LmNvbTBJBggrBgEFBQcw
+      AoY9aHR0cDovL2NhY2VydHMub25lLmRpZ2ljZXJ0LmNvbS9UZWxlY29tSW5mcmFQ
+      cm9qZWN0Um9vdENBLmNydDBKBgNVHR8EQzBBMD+gPaA7hjlodHRwOi8vY3JsLm9u
+      ZS5kaWdpY2VydC5jb20vVGVsZWNvbUluZnJhUHJvamVjdFJvb3RDQS5jcmwwDQYJ
+      KoZIhvcNAQELBQADggEBAFbz+K94bHIkBMJqps0dApniUmOn0pO6Q6cGh47UP/kX
+      IiPIsnYgG+hqYD/qtsiqJhaWi0hixRWn38UmvZxMRk27aSTGE/TWx0JTC3qDGsSe
+      XkUagumbSfmS0ZyiTwMPeGAjXwyzGorqZWeA95eKfImntMiOf3E7//GK0K7HpCx8
+      IPCnLZsZD2q/mLyBsduImFIRQJbLAhwIxpcd1qYJk+BlGFL+HtBpEbq6JxW2Xy+v
+      DpNWc2WIsUTle0rTc9JNJrLX4ChUJmKqf8obKHap3Xh3//qw/jDB9pOAinA33FLJ
+      EmCnwBvQr9mfNmPBGMYZVU8cPruDQJ57GjmmvdisbJY=
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIFbzCCA1egAwIBAgICIjUwDQYJKoZIhvcNAQELBQAwHzEdMBsGA1UEAwwUT3Bl
+      bkxBTiBEZW1vIFJvb3QgQ0EwHhcNMjUwMjIxMTUwMDAwWhcNMjYwMjIxMTUwMDAw
+      WjAlMSMwIQYDVQQDExpPcGVuTEFOIERlbW8gQ29udHJvbGxlciBDQTCCAiIwDQYJ
+      KoZIhvcNAQEBBQADggIPADCCAgoCggIBAJauwpN+LAd/VubBpX3O3u/E5CXkmxLZ
+      di/F9zOTimAOPqfWP7K046TfbNj4twPYSzVzjawkenRkEK0yZQ1DOXmzkGWVnsih
+      gR/CA+IUUY1yCnmg6t9Dx9l5K0ZnAox90HO/ybIymcoSfRXhotuhle//eDNmGccd
+      XFsndvGdmxshaV1zN1h2POw7biCBZuypCzwvRitFfcpv3pdIk5xTt2G/yMbHPCNo
+      dUJHYHLWotridJIJ7DdhYoir5q+iSqWIqjKfDBlqCsvO7e+KidcW9ctljWspAHvl
+      B3/yHdJwJz816YTZ7r37I/DsXk9gmjj317gWRkGLMTx9fk6SiMfGW4kfUvClfg1v
+      0aRrDGPEcCagHM6ViqbW2+Tc5K38fySgNZKSTBPPI+59iAHd5RADEJDGankEYvzN
+      Le0sgB90RDjhTMleOpp5agtd2Yk/ZVjHtKfCnq13OLJfcgX76iY1Ko6AmKqiaxiE
+      V2zi9/UFVTIURT8S7JgiwF4ZNIZzHmcr4R4n5O7aSgYUlVjwFp/IEMC3ylTAX8cP
+      d4VW0p1f4D3HK7TRcaaqsERuxNh2KVtR48Au2MPGC/8YRKsz/qzH2GfsfFgjKxfF
+      z/mZYOA7913DvgVbDQoR9/6odGXZH0XDwH1e1w59dqbXBnIv2VVzElgZsPimIr+M
+      UxlZXZHMYtL3AgMBAAGjga4wgaswHwYDVR0jBBgwFoAUPMiDx7JMjfFzgDZHrR/w
+      dqeEFkMwHQYDVR0OBBYEFKqr/2rLqvEtxLDRsPCJ1L8WMr7VMA4GA1UdDwEB/wQE
+      AwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMEUGA1UdHwQ+MDwwOqA4oDaGNGh0dHA6
+      Ly9kZW1vLmNlcnRpZmljYXRlLmZpL2NybC9PcGVuTEFORGVtb1Jvb3RDQS5jcmww
+      DQYJKoZIhvcNAQELBQADggIBAEyp07YjNm3WsMQo85OUcKp8kA5TJPKPxw0WgXBR
+      5RqfEV8u4b5FPJ1GjvHQqEXNxi0hlNit6oQpMafHrDSsnXR0rSquYeRBZWGig0PU
+      n8XHN8IlwsE8orGs7HkJTkQ/5Os7eGYhKCnMUyehoDHQPCPgsCawp6HnKAkntG6F
+      0AiOrhmh+ng0+9nKl6Vj11OSh9nw54G3HtQqnhWrDw8JRYp6kkzRIPcrlq/AavjW
+      g5aWBcyUSH7PscyIMGW5ICRM/5J1DXMcl/jXQhvSjv1Z6fUCrbpGyUiJ4mjmAOo+
+      M11ln5dedBRyRXEBg+0dKxe6758wWkJF2el44pgNx+xO00eKUY60lWRxkDExa6nh
+      rVRfEyvcCMfoFKBWreTyAcPyEJ0XR8wu+lfkerhYupE+m+YxUxhYywClfPdv/+m9
+      70/gKFR3IyBW+9aYl7xUapyuEYfMFA2iGD73HGqA3QcxCwxB8RFuHuVh7WUyMvJK
+      xd8qUNxVXGFzyY5qUUjt+D/OeDIHKn4uQWKpaSNdkumrTvj6/QhsstF2H0XoQv+v
+      fuI4IdnzoVVkPbf+Cyg7ZkW0Wu+sutyhsuN4eDOsiy8NxPkbRjnDQxUiNAK96Bkx
+      tDpSJgwSP4sPHfNgq6zv/Wu9IaBGIYmNsJBoKpOOITUl7n6DcsEvkcsRMJpuK60b
+      rHa2
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIFIDCCAwigAwIBAgICDnkwDQYJKoZIhvcNAQELBQAwHzEdMBsGA1UEAwwUT3Bl
+      bkxBTiBEZW1vIFJvb3QgQ0EwHhcNMjUwMjIxMTUwMDAwWhcNMjYwMjIxMTUwMDAw
+      WjAfMR0wGwYDVQQDDBRPcGVuTEFOIERlbW8gUm9vdCBDQTCCAiIwDQYJKoZIhvcN
+      AQEBBQADggIPADCCAgoCggIBAMjExylKdJWoJu9mOHPJ6yZFXKe1lE467G65acpS
+      2FKIWnPVFjNCmATMpkMOIFzEFwyFdbQjzOidtiL+73zlE52lOJpXCfOcxDFqDYDJ
+      J8//J1/gQWsBaKpSvgLiHU/0awkQg+yJYZpj8YZa4NkFe+zTjQScSfOsqPPb3rZ7
+      DOQ2BKAhjVShKmVbtNil0iO0zm8vE8DNkktTNMREp2pzb8MbCAgfOkwlrby6T+rV
+      3TvmjThGdFUb5lWDFxWtlF8W0SUII9qj7p5TdGpryeLsO0nZTBtS4HxZNdvmKOHf
+      gcRHmSZIJigB2NzKLNrXF9JBW0WnUSwZJZAG2C1RTx6lADILPueuusyfR/hZ3koK
+      i4PHnSiTwQghzia9K9QjNHq5z9R9ZoCnhBg1VyU4LKmp862L0sIp2vgnOYunEIi9
+      aCYBaDwo+0FuVjZuXyDIatwVuA7TN5IWPHA6XLdOt1mmkeYy1Ldr4XHjdondhtOy
+      eei1UFXmyyLm2+kmRYfTm91TqYmNzRgbRV2NHO50AmsnBknX4Rv3gishGe0+dV5y
+      FcUwZud0z2rSCkuoai5tKrPT+6Y6NqkT9u9HFifIBXnLwEzVUqHRtW6SuWj2DClV
+      QIXIUZtFnhY4GuTuf6DlzgnXO58oDVCZmCW4ULIpbqGeRsvBHR8Sw5JXP/1+TMUY
+      hE8TAgMBAAGjZjBkMB8GA1UdIwQYMBaAFDzIg8eyTI3xc4A2R60f8HanhBZDMB0G
+      A1UdDgQWBBQ8yIPHskyN8XOANketH/B2p4QWQzAOBgNVHQ8BAf8EBAMCAQYwEgYD
+      VR0TAQH/BAgwBgEB/wIBATANBgkqhkiG9w0BAQsFAAOCAgEAkHZ5KR8IOrdfMFy+
+      iOvauvZxfQ84LL6TpB2FQKDjneJUdd7c29UJJFNW/0mp4Gc6jKZab6J8Dx/pNnbH
+      0RqFjGjeRGtJ4Sk0G7gf9zw1S7qut5WJDcisM9l/wXC+zy/KSKKPQmbt0grWOtU7
+      +NNPh1YU76hIrInq/u2sVZyKH8SXQ957fbJk6BX6JTKyNEn05AB6rNSrbOWo8sy2
+      MlcJ7bBsrWYI1t6GcWFh4b36bLu7/dKJWpyFNXXIkKJsgMEDpEQae56+fSSDo0KR
+      NtYB82fNZDIQlGK81rGJWNzAahM+3GD1tgk/3ZVugfaJhcBpoHHKNOGqZAvtirLA
+      IDocno7AzqoeIz974Rh2Olsl2/arApYPyyfi8PMYuFe/d4h+Wie8n+jh5n48lZ2V
+      e4PK+j+QHD6tTZS4f0bGnPL1puMxzQloltuQWgLDeVfEgrc3snLvjOg8aDzWm/es
+      85lP8XcyW54U4t3JmrNUC2C7v+Uafx7cL7eDeunhs+BRhtGV+IUmjub2IrpqZp3z
+      Zqn+LVRdYJIy/qHhjS5+ImckXkFojOmeWhfmEmYSuNP8Oa6cGuXp829qnbxLh9Qz
+      i3TfXV883KLse4kL5Zl7gBA/4hz2hVMyGJ8fY+VvzbaTuOXyvKJ+rGZCTcRSeotB
+      LnIevVMiL7SqOEwN0j4Mfbznfq8=
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIFbjCCA1agAwIBAgICMJ0wDQYJKoZIhvcNAQELBQAwHzEdMBsGA1UEAwwUT3Bl
+      bkxBTiBEZW1vIFJvb3QgQ0EwHhcNMjUwMjIxMTUwMDAwWhcNMjYwMjIxMTUwMDAw
+      WjAkMSIwIAYDVQQDExlPcGVuTEFOIERlbW8gT3BlcmF0aW5nIENBMIICIjANBgkq
+      hkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA4Q5dx+CWyaPxOlAGUC462FgnO4umYEqF
+      LQCuK31kgg0tBbbfaq0XApUnjH5IOMI1IGtYgZmm48q1noHaRwk4WFxxvr/dyS51
+      hAEa2GFb2S3pkG7VXAF/XYv33yyfM+1K0tyZPRm9tbBShUIfflGFjnrSwxkNhoOH
+      IIOVXxCHLBD/Aor74JAkEGtkIo30FPx2vQ+fg4rnQsm9aSffgWwWua7T590tnSMG
+      ljDMm++nCQIgONFQC7RQXeL0Ruu14FxB639oJxPmwDQhD/R5zQz/wFBhinjHuzYl
+      i0bmxHevdDQluNUxf2lHwJRy6eC/TzdRFOgDUre9kzu929skgNouM0q0y/Rpz7QU
+      bd5s1i8JnKebAqADqMT8Yz1Hph0oCvOT0Dc2joxmjGh3loolWRKufKTVe431pvdv
+      iV/rAooOSnm5Htmd8ClOADudhrheX886cSd9Z5JKucHhW34Lf1ze7uj1LjxoTh3O
+      eo7XedhjmJYcQavpQlVRLTbbY/LJHegPtqJAIvQkrwtOpe05rShl06MxO9wj0BPJ
+      0PFp/MxJd0ESDV0EM9dxWIWgXwZftowPzfj3ai5OQEazpTr1IMRehsbCn3JEJ77N
+      hCqKPaZmRtKRD9e5cu0YiGfRddr7xaXiwtPGId/ZHsNUASbv7NMDdemRv3TiFwv4
+      z8OKCm8QeisCAwEAAaOBrjCBqzAfBgNVHSMEGDAWgBQ8yIPHskyN8XOANketH/B2
+      p4QWQzAdBgNVHQ4EFgQUe/uhewyjB6GNj5Dbq9s+I5mWexMwDgYDVR0PAQH/BAQD
+      AgEGMBIGA1UdEwEB/wQIMAYBAf8CAQAwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDov
+      L2RlbW8uY2VydGlmaWNhdGUuZmkvY3JsL09wZW5MQU5EZW1vUm9vdENBLmNybDAN
+      BgkqhkiG9w0BAQsFAAOCAgEAoj6D9yZIbWEP3MobeV5c3KpNyH4k2Ho2keIE0nT1
+      kc2sb1pfHzcZC7qDX1QWdcuKYUctmVEw5xhIWZhOLOy4QONUSx1E5WOHvGKMPfAt
+      l5pS8C2XjiC+SP/8KvbcpYM+iopsoJx2qDLX927OaqP0J+XSMikqaOhP4LW9Fb+Z
+      aRci9Kfd5WeA76mE3b1/9RSE1xxDNv88R6I2gFiLQeDqvdwaYUdYeCWYjg6mx3GD
+      Fc3vf2j/jj606vnbUDrI8uLfL4SDvCdtlmP6IvJGRAS3e48Eao4/C72uCW4LJBxA
+      G9sP7yvFCZhBo6+xIAbU2rhZeqiJQi7uK4LjPCck4QK6N32qEVyGpksuA3GXlJGC
+      fNDQ7PNA+r4AhCKs1b5xMUJH9O40Oq3vVfH1HhcGt5Pyl0LHFg0ml5PmCpTSPLBP
+      x26EizoF7vQmCdZ7HvPPY/L4DkiY//jhp4yBLWFP5MQm9TLjZ6uEj07S/oFCa3vW
+      dScZDtJ/AuojDMoDPvrSGuDHPBg1NBvs4mICx90DKjEZNHo5l7nMT7/KF8D6v2Rt
+      dRU8vfmPo6R0wbGV6suItRPUG5qpnHL4wc/iK0hRBl4nIgH1SwE4YHlx42FJTJej
+      EGAlrLr3LG0BxQaB3JEx82lGDlxz7Y3pCk2uiaVUnqWY5HglOdxdtAaox3HBgMa9
+      tHk=
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIGBjCCA+6gAwIBAgICAxMwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPT3Bl
+      bkxBTiBSb290IENBMB4XDTI1MDUxNDA4NDcyNVoXDTQ1MDUxNDA5MTcyNVowIzEh
+      MB8GA1UEAwwYT3BlbkxBTiBCaXJ0aCBJc3N1aW5nIENBMIICIjANBgkqhkiG9w0B
+      AQEFAAOCAg8AMIICCgKCAgEAqkekr6rYqlnicopx8WgKhEUctfrMD3J8jC2YshEI
+      hlVFI6lRbA9EFjv1hq0BhXhOY52lwOTOQtIgdn7HNcViSoiKqrVBYRskbhVqIA+7
+      nPhwB/4BYYZnbzCELjROHnMn/drFScNUaUvf+EDh9WmO4vZHD5xstK729RDZE51n
+      vLlFwe5O4ckekPH17r4WojoVSczkXXRhKJXV3GXdrA/epoIUn0poUM6bCjddiEbJ
+      NPknqqkS8Z9a8GYt2IX33kZD3NdHjTQRnMd7g+xroJiQ/faZ9zc0ul6l85sl1G43
+      AqriEI2aOWYhSxY7sDleuy5ggz8UA5lR6/z6ZIR8IfMSJag8aVkvxt51Gx2aDaVu
+      PixyMFoXyhKQPSP+cL3rzSF/767iXqINw4oOb83Jy77Ocwgp2cfW06KI4l4CTymy
+      83wCBEZ6pvLmjCmbz0DIg7V7yGPGjEePNyxYG0sM+aHQEpJnaib2yza9adiXlJ4s
+      M+UEMnLjEu0i8Xy15hvItgo7FYTZgWh89LIhE63HDk6qteV836K2oL9PWtVUEg9v
+      pElapnq+v+8BUsvmY6Nr8eYeAnCPyW2e49a91/vCP8B1Ydbe5ms3mYcGO3Kdx/k5
+      QWLquKnt5ZAeJ2werO/8mUabq8eyt4EH9tZzDKJvV/xbmhluKmamfSg4GHCpOUl1
+      +IcCAwEAAaOCAUswggFHMB8GA1UdIwQYMBaAFJRoW6g4+ThAsHJk/juSPinUhsIm
+      MB0GA1UdDgQWBBRO5RI5Dr0FesZ3+QQ9ugAapLBaeDAOBgNVHQ8BAf8EBAMCAYYw
+      EgYDVR0TAQH/BAgwBgEB/wIBADBHBgNVHR8EQDA+MDygOqA4hjZodHRwOi8vY3Js
+      LmNlcnRpZmljYXRlcy5vcGVuLWxhbi5vcmcvb3BlbmxhbnJvb3RjYS5jcmwwgZcG
+      CCsGAQUFBwEBBIGKMIGHMEQGCCsGAQUFBzAChjhodHRwOi8vY2VydHMuY2VydGlm
+      aWNhdGVzLm9wZW4tbGFuLm9yZy9vcGVubGFucm9vdGNhLmNlcjA/BggrBgEFBQcw
+      AYYzaHR0cDovL29jc3AuY2VydGlmaWNhdGVzLm9wZW4tbGFuLm9yZy9vcGVubGFu
+      cm9vdGNhMA0GCSqGSIb3DQEBCwUAA4ICAQBQq28kQUcK88zs5YzZ3b6Y3t77yrSF
+      lZLWsbNE/KVlvEuTIrtkRMX9PAC4tRjOpV0oxp6NdrqUKJ35gt4EKjw1vbtyXZD0
+      VQwimBv1qapZEuNe5lwNssyySAnXxUIyhCV6QVD4G9vmRPzNVtIwssjffVPjjpZ9
+      LBQdliOG3FBbcCWGuRiUMysVxHxdO2rokoFuO1ye+oURrqe9zeDtE0k9QNzAi36F
+      FhuWYQnn+2QHfTX58cpMb1Aql3yTO/pz5fQRUF/hmfTuuk+dLlkWoem55oRGfMVL
+      coAnW3We251iEawqrR9ZDgcIWlmloZFSNylpZ/iIZOIQdYFqreRo0DiSZG4kPxcW
+      RKQTSJ9F3v2j0BZan2xxaSE1tJ54IJUPUND/O6ITVQLfexVLIggRfeIAsURdhPn9
+      1KUrZu3HoIYX6kcpuhl++BQgOx3qr6RomAVDhXSGRVRQ2B76N0N1ZC+mEEhJUYbb
+      0DlZntDp7q2ZDzn6gFYOnrGhoXe55Yrx8c45wMOBZmz0Q6xzc0jydgZoAG9/20l8
+      6S9G2j+UuMYRBCSzouILsGwTloU7XR3qIuO2WbYcG+UV0o/3lVOkAk5992HPG7DT
+      hZ1qNe72WFHmtKVwfYJTcQG/TucWFvplUE3hMDMqS80tmx9TrXiRdI4R5IrTxfsS
+      znGN0LCQ5YzAAw==
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIGBzCCA++gAwIBAgICBAYwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPT3Bl
+      bkxBTiBSb290IENBMB4XDTI1MDUxNDA4NTQwNVoXDTQ1MDUxNDA5MjQwNVowJDEi
+      MCAGA1UEAwwZT3BlbkxBTiBEZXZpY2UgSXNzdWluZyBDQTCCAiIwDQYJKoZIhvcN
+      AQEBBQADggIPADCCAgoCggIBALrPh3nxxKWaPQbcQeZdihRrGwJNYgdrzz/YAsss
+      EbKXYKAOwb/EJKSv52eUysI59lcvfJrsqn4wyUaXQvgYxJUatCSpmCCKEzftgudS
+      UAlPY8L/4qeqUvxz6CN3qiKivxQ31Z7SJTLgR7OTXxk5ckXHkc8QPB2GPWkU3BzV
+      RbBNKcVxwMK6JaZbB0ZlR6r1ImnLnsDUI0qkgSV8NBO7bJd1yvqfn04yc0/pIo+1
+      9uX/gh7AA0RsZeXw1SO3wCfUO5Cr65X+MW2T3LsbnBPbKOqHnF0YWJGx5RPOWVIS
+      wudAy4zlqdwPInrb4BCMkJUoZlRhhx7vvNmP9HwNwCp8+COjE77caAEAi+0VHamY
+      spu9IgDZCr5FmgHBMu9WiaWpB3RxxbFa6UdVl3sMzRFS6SEHhs6RCAXwQj7KiZLf
+      tb3UCRps5XMlhmjAApyDKsJEXKnd5cSpSYxCQQlOB9BCG6QVc6vQLdu/uq8X6Z+2
+      0EcP7NVyzMDgHdozp4jP+M4Sow6pv7KE4SZaBfpbgM+Ht22sYoBwMouRYbzSAhJS
+      8qBH+IiDqwMRWyox8TuhCsn9WJr9t6l8p3O1pUB0IccraUTVo7XydZWaprtrvMTf
+      RtudowCxea9Iz6md9zlqNZAQu2QNUpH9YQT408N02qukp2uaAGvQjbSfAtnWduTD
+      F6AbAgMBAAGjggFLMIIBRzAfBgNVHSMEGDAWgBSUaFuoOPk4QLByZP47kj4p1IbC
+      JjAdBgNVHQ4EFgQUVRP31JMaQoUd6psw0tjQpKbhmvUwDgYDVR0PAQH/BAQDAgGG
+      MBIGA1UdEwEB/wQIMAYBAf8CAQAwRwYDVR0fBEAwPjA8oDqgOIY2aHR0cDovL2Ny
+      bC5jZXJ0aWZpY2F0ZXMub3Blbi1sYW4ub3JnL29wZW5sYW5yb290Y2EuY3JsMIGX
+      BggrBgEFBQcBAQSBijCBhzBEBggrBgEFBQcwAoY4aHR0cDovL2NlcnRzLmNlcnRp
+      ZmljYXRlcy5vcGVuLWxhbi5vcmcvb3BlbmxhbnJvb3RjYS5jZXIwPwYIKwYBBQUH
+      MAGGM2h0dHA6Ly9vY3NwLmNlcnRpZmljYXRlcy5vcGVuLWxhbi5vcmcvb3Blbmxh
+      bnJvb3RjYTANBgkqhkiG9w0BAQsFAAOCAgEALMFsYRqB8NDMMWZV8NqbjNT5QA3Y
+      O3ODxYOuFC4NjSzUSh3Lh73f5+Ec4slQNFuOQeqhqFJaDAPIxUI5ekKtVjzmt7St
+      crbW1dE47+ZHkPXrWVRwRmlV1qP5TqS5oTH6dvpEpEcSxT/IKGQB1cwQ1C+Qp3dd
+      3rZnylXfL5dimIpKDGHYqiHyltktlv3uMWnQhUwrKjt2GW0TnF7bVJ0OJko7aDL7
+      wdY0TGUH9eLQOoz/a0e9sKSsqOxrq9grN7npbUHOr23CdQBnSjF1Q5dXKvza8kRj
+      +agDJW5h/fyBvZ5I4U6m4jFyUnAKso6Xd0+feejPCH7f6kYY+pT7NKO4dVqaRLrj
+      yDmtXGsMza6C0h8wBgYwg4d7jxTqOx6iJfJLyLGWKT94HeChiWOL2X0HpF+Gn9Uf
+      C7rtLO4QwQzGHdEGyFlw/pBTs6g3wTYVv7ZZfh8DJ9PIedqJmUdwMVE89ThEpu4Z
+      q1bFfqENwDmrj2erS3fweEY3G+w2m8f24tJiLWOW/hBRcR3fm+73C8svmtwVGo5Q
+      2i6yJxQ12Q42oa1sfsohr22J2NxotqbQz0gq1J9QparEJ5qUjMKkO9Rj3s24KW2t
+      E6WIb5d1WpIxownlqOgFE7FftxXmQdJNJ2t4XyUMWhwXbOxfc2RlLek0LtnHPA8N
+      hCFqyfjUtMPqafk=
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIFFTCCAv2gAwIBAgICAxIwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPT3Bl
+      bkxBTiBSb290IENBMCAXDTI1MDUxNDA4NDcxMFoYDzIwNTUwNTE0MDg0NzEwWjAa
+      MRgwFgYDVQQDDA9PcGVuTEFOIFJvb3QgQ0EwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+      DwAwggIKAoICAQDGibJ04A55kSURTBSKgcBmLnND2I5wws1taKqqU9aaRhB7NtvM
+      Hwh2voH9b1brUiulZaZwTN/9kzd4AnXeKQ+0u5tV7Ofk0fzF2MK47n17TS30Yenq
+      c4NuQEKdpKK/pM3VvOEppR/bqtgyLtDmbDnmFOx+zTj/+smTgouwA+Iier0P4s5O
+      ohYxn/bjOqwQbHbU79VpGBIWv6/kt55AhH7zvsqqKHkrzTxnsRBv3SBIufrjJr9P
+      IhZBLDrqr56P6KgAi0eoutNt2ToiJbE0WfjU7GI1RSiSN5bGj1zXhjNVzQWs1H9Q
+      zRf3c9pl3+haHQZ7FZ1UqiTRewmbNrQ6I9k81au3SttUlb87MyAuDSzatkiq7CjQ
+      8VE1J6te6ZBt2zWpUhHsR/Lg7g3eOw5dL4oZJdK5GgGu/MUajLUXifIqM13Mvg0V
+      TzDhN69VLXLSL0gPcicsQCwJuAza1IC/VqmBGx19fAkyJhOurCXWOgisi0g1+xzP
+      KRphUNwMPUf8vBVOM/Vc6xDIvwVGE3+eWXyhixneFlSpAI03nWWjpwWXihTBoxbf
+      RXO3Y/ilJqrgFN+U4PJcCPA+Wo7ThH0mgX6bOTPcgXMUzT3v3FF6Bx5/PNV3kYrw
+      2yLzribUiS6AGvVGnW4hX2Z6OQvA/aHME8KF+6y6m4pC7FkUjVaRlzWu/wIDAQAB
+      o2MwYTAfBgNVHSMEGDAWgBSUaFuoOPk4QLByZP47kj4p1IbCJjAdBgNVHQ4EFgQU
+      lGhbqDj5OECwcmT+O5I+KdSGwiYwDgYDVR0PAQH/BAQDAgGGMA8GA1UdEwEB/wQF
+      MAMBAf8wDQYJKoZIhvcNAQELBQADggIBAB+/RUC2X6eVoPsFNMkaXO5Iib/ub0Jo
+      WhODQm8j2Mr5dpGXESSpXjfDcqDOLuJbWWoflXBLdr8BsVCBqOA9YgCX0H8Br7dU
+      WmCScixxLW0he592/424EvdwifxcKHZLjv9CKV5Txhqnm2djc5RY/nTH5MYVrIh/
+      If2TNO5ydDP6+vgy9GQ4en04VK7rz+PW17O8l7k9/lOmYptZmHgSDAPj/cT3PlG+
+      McqaI5rMSHeEHlzH+PvgWjtSeEhF4FwFBXroDl4/yb4l2JB8bqAZ3vsOXSkigFcZ
+      h5MXPe+zuSSW+G8iLr4xoi0CFsP2DaHEyxgqP4B1FtE9nFPo6cvWbwqTVT7QSzqf
+      H+jPJuQvpFXeRF5UFegNZTFT5/uFFPamihakFslEYxeJey1y+OJdLcP6ef87ruSt
+      8amsq56OAETYpnW4JFowlEh0C+QwLGHGGY6WrOgHY/90hJmPgXBdBVg/IoOhzbvk
+      5A+LqZDvxV2/rLNfClw8Kr3g5e8obcB6dWgMCy2z+us0H79ucnmhzQKsjpxM9T1n
+      cHovAQfiD3jVqfHULY53avh0wIAjosoTGbe8dyx80quHe+16qWan7C9idXeAYYJX
+      bZt5hs6hLw4I8M1LsjTg6vwsqiaHZpsmDyyQLdFjNJldG7aosfS9F+BIpuwijF+1
+      dashL0CPsbIJ
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIGBzCCA++gAwIBAgICCQYwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPT3Bl
+      bkxBTiBSb290IENBMB4XDTI1MDUxNDA4NTY0MVoXDTQ1MDUxNDA5MjY0MVowJDEi
+      MCAGA1UEAwwZT3BlbkxBTiBTZXJ2ZXIgSXNzdWluZyBDQTCCAiIwDQYJKoZIhvcN
+      AQEBBQADggIPADCCAgoCggIBALSdJpzwPfQM9oHBGt6w8UDLDJNznxI7cpfl0u0x
+      VCHN1YY7onpwxFVkFRzUx/JrQ/tbEGZH19XtngaCZ91KbGbqVao9S32H0tyn2t3e
+      TJ5h+klJ7+7YAbZr8UfOi3nG4bZzNSa5dDBPaNPvI51byKDN7siXXnALV3f0l6lZ
+      gDpLQco/E7ANU3lslUVjVNALfFUEonDyP7XV+lFAyidpjIn6dRn7oYs3SUwkzZUn
+      tYJAhAykmxXMWox+85gDkdb+2O3G8ci0uHVbb0A9LP+MeIhzxHgnnAMfWLfEZexd
+      mEd2PwVHaz/D2Xp/gYrpPDTsbqWjQ9NmgdASwqN5j8BuJ8vHDVBVCztVDltm6JPw
+      3Y6GQPN1LmiSLUzst7VYpydUJRDHYIAKJhT9DYxQ126VfiyMo6Xl4IQO8YZ/J6r8
+      yR7gyvyUiBW+wvvC1bCY5+VuI4P/cY+6iA1qwC1SOWjYlccy+tbfGj9zr32Qf27e
+      9RXSAkcATHen1rc/9AGEeAuSpKrzhmZIIvM4+EtYgbBvf91NkP51zbGpvsAbfWN/
+      ecNmqH9SeyrrVgv68Z34hMijCcvJNyIvloo3nkb/gHYV4tAiwTTrX13Rio/8qNF4
+      nwHLsjw0t7jEyRiXdOciePyhGbtdicuiUxrShzbGY7ID0yNwyTKcJYhorL/8r+YF
+      psXrAgMBAAGjggFLMIIBRzAfBgNVHSMEGDAWgBSUaFuoOPk4QLByZP47kj4p1IbC
+      JjAdBgNVHQ4EFgQUBwUkiaCh5hdY+ZH6O8NmEE/nH5EwDgYDVR0PAQH/BAQDAgGG
+      MBIGA1UdEwEB/wQIMAYBAf8CAQAwRwYDVR0fBEAwPjA8oDqgOIY2aHR0cDovL2Ny
+      bC5jZXJ0aWZpY2F0ZXMub3Blbi1sYW4ub3JnL29wZW5sYW5yb290Y2EuY3JsMIGX
+      BggrBgEFBQcBAQSBijCBhzBEBggrBgEFBQcwAoY4aHR0cDovL2NlcnRzLmNlcnRp
+      ZmljYXRlcy5vcGVuLWxhbi5vcmcvb3BlbmxhbnJvb3RjYS5jZXIwPwYIKwYBBQUH
+      MAGGM2h0dHA6Ly9vY3NwLmNlcnRpZmljYXRlcy5vcGVuLWxhbi5vcmcvb3Blbmxh
+      bnJvb3RjYTANBgkqhkiG9w0BAQsFAAOCAgEAqEk5ZJdpMVr2U0YhmqEU6gqxEeih
+      9MWKcQfmsT/lhf5m5V7VuLMc3r+EBCsPssw60umdQcAU2IPlJXLAeWwdRyY7ZNNw
+      QVgl9GBI/CM2b7x18+12/llCdXW9FOagdChTuuhwRnGTt71jcrJkleQyEYhqwwIE
+      N82hxq4HSZO6XJDev4IsMRF00+qt8biJcf7OVGOSLoyiU6Dm/EzxoB+DZf3HdUc0
+      vzfVjD4Im+yYzqXuwWV6c9oIBQH6obzaqlpg926CtEBFR8E1LQe93ahMvF7pExpI
+      OkE5PTuqONvy7Xn3Ui8NRxHhmm8j/unql6bUTGENz9s68n8Im7weq6awC9Hfu8aG
+      WjcnXI7tsDY5uJEguP5fSwCUrdTE85XgPgPHeKaIwBZsyRZTqVSvbky+c15Yv6IT
+      XLWoA0AUxz9ste3WpqiWCNJVI90MCruSYKdpXGV0KU3QQXJDMKhHJBF5DLpuKibo
+      Ffh9O8pB7B4/tJ76JpAc6Z0rfaQUo2vxSpb3Sbd/IHNcL08zB8Ay+YUBULspxe+1
+      StKthmCzCHI9DOhIgeASyNBpcL7uZPjCXiYGhUuzsFGv4sQ+d267Jyvql/Piw/vY
+      g1k2aVBfdIoIU4TpIEVyQqPz4aAW+0SgL7OM+/zD9jxn3gVdusCpmHcoTzOfZRri
+      H0FGIeDSQydpOJU=
+      -----END CERTIFICATE-----
+    issuer.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIGBzCCA++gAwIBAgICCQYwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPT3Bl
+      bkxBTiBSb290IENBMB4XDTI1MDUxNDA4NTY0MVoXDTQ1MDUxNDA5MjY0MVowJDEi
+      MCAGA1UEAwwZT3BlbkxBTiBTZXJ2ZXIgSXNzdWluZyBDQTCCAiIwDQYJKoZIhvcN
+      AQEBBQADggIPADCCAgoCggIBALSdJpzwPfQM9oHBGt6w8UDLDJNznxI7cpfl0u0x
+      VCHN1YY7onpwxFVkFRzUx/JrQ/tbEGZH19XtngaCZ91KbGbqVao9S32H0tyn2t3e
+      TJ5h+klJ7+7YAbZr8UfOi3nG4bZzNSa5dDBPaNPvI51byKDN7siXXnALV3f0l6lZ
+      gDpLQco/E7ANU3lslUVjVNALfFUEonDyP7XV+lFAyidpjIn6dRn7oYs3SUwkzZUn
+      tYJAhAykmxXMWox+85gDkdb+2O3G8ci0uHVbb0A9LP+MeIhzxHgnnAMfWLfEZexd
+      mEd2PwVHaz/D2Xp/gYrpPDTsbqWjQ9NmgdASwqN5j8BuJ8vHDVBVCztVDltm6JPw
+      3Y6GQPN1LmiSLUzst7VYpydUJRDHYIAKJhT9DYxQ126VfiyMo6Xl4IQO8YZ/J6r8
+      yR7gyvyUiBW+wvvC1bCY5+VuI4P/cY+6iA1qwC1SOWjYlccy+tbfGj9zr32Qf27e
+      9RXSAkcATHen1rc/9AGEeAuSpKrzhmZIIvM4+EtYgbBvf91NkP51zbGpvsAbfWN/
+      ecNmqH9SeyrrVgv68Z34hMijCcvJNyIvloo3nkb/gHYV4tAiwTTrX13Rio/8qNF4
+      nwHLsjw0t7jEyRiXdOciePyhGbtdicuiUxrShzbGY7ID0yNwyTKcJYhorL/8r+YF
+      psXrAgMBAAGjggFLMIIBRzAfBgNVHSMEGDAWgBSUaFuoOPk4QLByZP47kj4p1IbC
+      JjAdBgNVHQ4EFgQUBwUkiaCh5hdY+ZH6O8NmEE/nH5EwDgYDVR0PAQH/BAQDAgGG
+      MBIGA1UdEwEB/wQIMAYBAf8CAQAwRwYDVR0fBEAwPjA8oDqgOIY2aHR0cDovL2Ny
+      bC5jZXJ0aWZpY2F0ZXMub3Blbi1sYW4ub3JnL29wZW5sYW5yb290Y2EuY3JsMIGX
+      BggrBgEFBQcBAQSBijCBhzBEBggrBgEFBQcwAoY4aHR0cDovL2NlcnRzLmNlcnRp
+      ZmljYXRlcy5vcGVuLWxhbi5vcmcvb3BlbmxhbnJvb3RjYS5jZXIwPwYIKwYBBQUH
+      MAGGM2h0dHA6Ly9vY3NwLmNlcnRpZmljYXRlcy5vcGVuLWxhbi5vcmcvb3Blbmxh
+      bnJvb3RjYTANBgkqhkiG9w0BAQsFAAOCAgEAqEk5ZJdpMVr2U0YhmqEU6gqxEeih
+      9MWKcQfmsT/lhf5m5V7VuLMc3r+EBCsPssw60umdQcAU2IPlJXLAeWwdRyY7ZNNw
+      QVgl9GBI/CM2b7x18+12/llCdXW9FOagdChTuuhwRnGTt71jcrJkleQyEYhqwwIE
+      N82hxq4HSZO6XJDev4IsMRF00+qt8biJcf7OVGOSLoyiU6Dm/EzxoB+DZf3HdUc0
+      vzfVjD4Im+yYzqXuwWV6c9oIBQH6obzaqlpg926CtEBFR8E1LQe93ahMvF7pExpI
+      OkE5PTuqONvy7Xn3Ui8NRxHhmm8j/unql6bUTGENz9s68n8Im7weq6awC9Hfu8aG
+      WjcnXI7tsDY5uJEguP5fSwCUrdTE85XgPgPHeKaIwBZsyRZTqVSvbky+c15Yv6IT
+      XLWoA0AUxz9ste3WpqiWCNJVI90MCruSYKdpXGV0KU3QQXJDMKhHJBF5DLpuKibo
+      Ffh9O8pB7B4/tJ76JpAc6Z0rfaQUo2vxSpb3Sbd/IHNcL08zB8Ay+YUBULspxe+1
+      StKthmCzCHI9DOhIgeASyNBpcL7uZPjCXiYGhUuzsFGv4sQ+d267Jyvql/Piw/vY
+      g1k2aVBfdIoIU4TpIEVyQqPz4aAW+0SgL7OM+/zD9jxn3gVdusCpmHcoTzOfZRri
+      H0FGIeDSQydpOJU=
+      -----END CERTIFICATE-----
+    root.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIFFTCCAv2gAwIBAgICAxIwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPT3Bl
+      bkxBTiBSb290IENBMCAXDTI1MDUxNDA4NDcxMFoYDzIwNTUwNTE0MDg0NzEwWjAa
+      MRgwFgYDVQQDDA9PcGVuTEFOIFJvb3QgQ0EwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+      DwAwggIKAoICAQDGibJ04A55kSURTBSKgcBmLnND2I5wws1taKqqU9aaRhB7NtvM
+      Hwh2voH9b1brUiulZaZwTN/9kzd4AnXeKQ+0u5tV7Ofk0fzF2MK47n17TS30Yenq
+      c4NuQEKdpKK/pM3VvOEppR/bqtgyLtDmbDnmFOx+zTj/+smTgouwA+Iier0P4s5O
+      ohYxn/bjOqwQbHbU79VpGBIWv6/kt55AhH7zvsqqKHkrzTxnsRBv3SBIufrjJr9P
+      IhZBLDrqr56P6KgAi0eoutNt2ToiJbE0WfjU7GI1RSiSN5bGj1zXhjNVzQWs1H9Q
+      zRf3c9pl3+haHQZ7FZ1UqiTRewmbNrQ6I9k81au3SttUlb87MyAuDSzatkiq7CjQ
+      8VE1J6te6ZBt2zWpUhHsR/Lg7g3eOw5dL4oZJdK5GgGu/MUajLUXifIqM13Mvg0V
+      TzDhN69VLXLSL0gPcicsQCwJuAza1IC/VqmBGx19fAkyJhOurCXWOgisi0g1+xzP
+      KRphUNwMPUf8vBVOM/Vc6xDIvwVGE3+eWXyhixneFlSpAI03nWWjpwWXihTBoxbf
+      RXO3Y/ilJqrgFN+U4PJcCPA+Wo7ThH0mgX6bOTPcgXMUzT3v3FF6Bx5/PNV3kYrw
+      2yLzribUiS6AGvVGnW4hX2Z6OQvA/aHME8KF+6y6m4pC7FkUjVaRlzWu/wIDAQAB
+      o2MwYTAfBgNVHSMEGDAWgBSUaFuoOPk4QLByZP47kj4p1IbCJjAdBgNVHQ4EFgQU
+      lGhbqDj5OECwcmT+O5I+KdSGwiYwDgYDVR0PAQH/BAQDAgGGMA8GA1UdEwEB/wQF
+      MAMBAf8wDQYJKoZIhvcNAQELBQADggIBAB+/RUC2X6eVoPsFNMkaXO5Iib/ub0Jo
+      WhODQm8j2Mr5dpGXESSpXjfDcqDOLuJbWWoflXBLdr8BsVCBqOA9YgCX0H8Br7dU
+      WmCScixxLW0he592/424EvdwifxcKHZLjv9CKV5Txhqnm2djc5RY/nTH5MYVrIh/
+      If2TNO5ydDP6+vgy9GQ4en04VK7rz+PW17O8l7k9/lOmYptZmHgSDAPj/cT3PlG+
+      McqaI5rMSHeEHlzH+PvgWjtSeEhF4FwFBXroDl4/yb4l2JB8bqAZ3vsOXSkigFcZ
+      h5MXPe+zuSSW+G8iLr4xoi0CFsP2DaHEyxgqP4B1FtE9nFPo6cvWbwqTVT7QSzqf
+      H+jPJuQvpFXeRF5UFegNZTFT5/uFFPamihakFslEYxeJey1y+OJdLcP6ef87ruSt
+      8amsq56OAETYpnW4JFowlEh0C+QwLGHGGY6WrOgHY/90hJmPgXBdBVg/IoOhzbvk
+      5A+LqZDvxV2/rLNfClw8Kr3g5e8obcB6dWgMCy2z+us0H79ucnmhzQKsjpxM9T1n
+      cHovAQfiD3jVqfHULY53avh0wIAjosoTGbe8dyx80quHe+16qWan7C9idXeAYYJX
+      bZt5hs6hLw4I8M1LsjTg6vwsqiaHZpsmDyyQLdFjNJldG7aosfS9F+BIpuwijF+1
+      dashL0CPsbIJ
+      -----END CERTIFICATE-----
+  certsCAs:
+    issuer.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIGBzCCA++gAwIBAgICCQYwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPT3Bl
+      bkxBTiBSb290IENBMB4XDTI1MDUxNDA4NTY0MVoXDTQ1MDUxNDA5MjY0MVowJDEi
+      MCAGA1UEAwwZT3BlbkxBTiBTZXJ2ZXIgSXNzdWluZyBDQTCCAiIwDQYJKoZIhvcN
+      AQEBBQADggIPADCCAgoCggIBALSdJpzwPfQM9oHBGt6w8UDLDJNznxI7cpfl0u0x
+      VCHN1YY7onpwxFVkFRzUx/JrQ/tbEGZH19XtngaCZ91KbGbqVao9S32H0tyn2t3e
+      TJ5h+klJ7+7YAbZr8UfOi3nG4bZzNSa5dDBPaNPvI51byKDN7siXXnALV3f0l6lZ
+      gDpLQco/E7ANU3lslUVjVNALfFUEonDyP7XV+lFAyidpjIn6dRn7oYs3SUwkzZUn
+      tYJAhAykmxXMWox+85gDkdb+2O3G8ci0uHVbb0A9LP+MeIhzxHgnnAMfWLfEZexd
+      mEd2PwVHaz/D2Xp/gYrpPDTsbqWjQ9NmgdASwqN5j8BuJ8vHDVBVCztVDltm6JPw
+      3Y6GQPN1LmiSLUzst7VYpydUJRDHYIAKJhT9DYxQ126VfiyMo6Xl4IQO8YZ/J6r8
+      yR7gyvyUiBW+wvvC1bCY5+VuI4P/cY+6iA1qwC1SOWjYlccy+tbfGj9zr32Qf27e
+      9RXSAkcATHen1rc/9AGEeAuSpKrzhmZIIvM4+EtYgbBvf91NkP51zbGpvsAbfWN/
+      ecNmqH9SeyrrVgv68Z34hMijCcvJNyIvloo3nkb/gHYV4tAiwTTrX13Rio/8qNF4
+      nwHLsjw0t7jEyRiXdOciePyhGbtdicuiUxrShzbGY7ID0yNwyTKcJYhorL/8r+YF
+      psXrAgMBAAGjggFLMIIBRzAfBgNVHSMEGDAWgBSUaFuoOPk4QLByZP47kj4p1IbC
+      JjAdBgNVHQ4EFgQUBwUkiaCh5hdY+ZH6O8NmEE/nH5EwDgYDVR0PAQH/BAQDAgGG
+      MBIGA1UdEwEB/wQIMAYBAf8CAQAwRwYDVR0fBEAwPjA8oDqgOIY2aHR0cDovL2Ny
+      bC5jZXJ0aWZpY2F0ZXMub3Blbi1sYW4ub3JnL29wZW5sYW5yb290Y2EuY3JsMIGX
+      BggrBgEFBQcBAQSBijCBhzBEBggrBgEFBQcwAoY4aHR0cDovL2NlcnRzLmNlcnRp
+      ZmljYXRlcy5vcGVuLWxhbi5vcmcvb3BlbmxhbnJvb3RjYS5jZXIwPwYIKwYBBQUH
+      MAGGM2h0dHA6Ly9vY3NwLmNlcnRpZmljYXRlcy5vcGVuLWxhbi5vcmcvb3Blbmxh
+      bnJvb3RjYTANBgkqhkiG9w0BAQsFAAOCAgEAqEk5ZJdpMVr2U0YhmqEU6gqxEeih
+      9MWKcQfmsT/lhf5m5V7VuLMc3r+EBCsPssw60umdQcAU2IPlJXLAeWwdRyY7ZNNw
+      QVgl9GBI/CM2b7x18+12/llCdXW9FOagdChTuuhwRnGTt71jcrJkleQyEYhqwwIE
+      N82hxq4HSZO6XJDev4IsMRF00+qt8biJcf7OVGOSLoyiU6Dm/EzxoB+DZf3HdUc0
+      vzfVjD4Im+yYzqXuwWV6c9oIBQH6obzaqlpg926CtEBFR8E1LQe93ahMvF7pExpI
+      OkE5PTuqONvy7Xn3Ui8NRxHhmm8j/unql6bUTGENz9s68n8Im7weq6awC9Hfu8aG
+      WjcnXI7tsDY5uJEguP5fSwCUrdTE85XgPgPHeKaIwBZsyRZTqVSvbky+c15Yv6IT
+      XLWoA0AUxz9ste3WpqiWCNJVI90MCruSYKdpXGV0KU3QQXJDMKhHJBF5DLpuKibo
+      Ffh9O8pB7B4/tJ76JpAc6Z0rfaQUo2vxSpb3Sbd/IHNcL08zB8Ay+YUBULspxe+1
+      StKthmCzCHI9DOhIgeASyNBpcL7uZPjCXiYGhUuzsFGv4sQ+d267Jyvql/Piw/vY
+      g1k2aVBfdIoIU4TpIEVyQqPz4aAW+0SgL7OM+/zD9jxn3gVdusCpmHcoTzOfZRri
+      H0FGIeDSQydpOJU=
+      -----END CERTIFICATE-----
+    root.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIFFTCCAv2gAwIBAgICAxIwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPT3Bl
+      bkxBTiBSb290IENBMCAXDTI1MDUxNDA4NDcxMFoYDzIwNTUwNTE0MDg0NzEwWjAa
+      MRgwFgYDVQQDDA9PcGVuTEFOIFJvb3QgQ0EwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+      DwAwggIKAoICAQDGibJ04A55kSURTBSKgcBmLnND2I5wws1taKqqU9aaRhB7NtvM
+      Hwh2voH9b1brUiulZaZwTN/9kzd4AnXeKQ+0u5tV7Ofk0fzF2MK47n17TS30Yenq
+      c4NuQEKdpKK/pM3VvOEppR/bqtgyLtDmbDnmFOx+zTj/+smTgouwA+Iier0P4s5O
+      ohYxn/bjOqwQbHbU79VpGBIWv6/kt55AhH7zvsqqKHkrzTxnsRBv3SBIufrjJr9P
+      IhZBLDrqr56P6KgAi0eoutNt2ToiJbE0WfjU7GI1RSiSN5bGj1zXhjNVzQWs1H9Q
+      zRf3c9pl3+haHQZ7FZ1UqiTRewmbNrQ6I9k81au3SttUlb87MyAuDSzatkiq7CjQ
+      8VE1J6te6ZBt2zWpUhHsR/Lg7g3eOw5dL4oZJdK5GgGu/MUajLUXifIqM13Mvg0V
+      TzDhN69VLXLSL0gPcicsQCwJuAza1IC/VqmBGx19fAkyJhOurCXWOgisi0g1+xzP
+      KRphUNwMPUf8vBVOM/Vc6xDIvwVGE3+eWXyhixneFlSpAI03nWWjpwWXihTBoxbf
+      RXO3Y/ilJqrgFN+U4PJcCPA+Wo7ThH0mgX6bOTPcgXMUzT3v3FF6Bx5/PNV3kYrw
+      2yLzribUiS6AGvVGnW4hX2Z6OQvA/aHME8KF+6y6m4pC7FkUjVaRlzWu/wIDAQAB
+      o2MwYTAfBgNVHSMEGDAWgBSUaFuoOPk4QLByZP47kj4p1IbCJjAdBgNVHQ4EFgQU
+      lGhbqDj5OECwcmT+O5I+KdSGwiYwDgYDVR0PAQH/BAQDAgGGMA8GA1UdEwEB/wQF
+      MAMBAf8wDQYJKoZIhvcNAQELBQADggIBAB+/RUC2X6eVoPsFNMkaXO5Iib/ub0Jo
+      WhODQm8j2Mr5dpGXESSpXjfDcqDOLuJbWWoflXBLdr8BsVCBqOA9YgCX0H8Br7dU
+      WmCScixxLW0he592/424EvdwifxcKHZLjv9CKV5Txhqnm2djc5RY/nTH5MYVrIh/
+      If2TNO5ydDP6+vgy9GQ4en04VK7rz+PW17O8l7k9/lOmYptZmHgSDAPj/cT3PlG+
+      McqaI5rMSHeEHlzH+PvgWjtSeEhF4FwFBXroDl4/yb4l2JB8bqAZ3vsOXSkigFcZ
+      h5MXPe+zuSSW+G8iLr4xoi0CFsP2DaHEyxgqP4B1FtE9nFPo6cvWbwqTVT7QSzqf
+      H+jPJuQvpFXeRF5UFegNZTFT5/uFFPamihakFslEYxeJey1y+OJdLcP6ef87ruSt
+      8amsq56OAETYpnW4JFowlEh0C+QwLGHGGY6WrOgHY/90hJmPgXBdBVg/IoOhzbvk
+      5A+LqZDvxV2/rLNfClw8Kr3g5e8obcB6dWgMCy2z+us0H79ucnmhzQKsjpxM9T1n
+      cHovAQfiD3jVqfHULY53avh0wIAjosoTGbe8dyx80quHe+16qWan7C9idXeAYYJX
+      bZt5hs6hLw4I8M1LsjTg6vwsqiaHZpsmDyyQLdFjNJldG7aosfS9F+BIpuwijF+1
+      dashL0CPsbIJ
+      -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWGW_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWGW_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWGW_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWGW_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWGW_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWGW_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owgw:
+      - name: config
+        mountPath: /owgw-data/owgw.properties
+        subPath: owgw.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-config
+      - name: certs
+        mountPath: /owgw-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-certs
+      - name: certs-cas
+        mountPath: /owgw-data/certs/cas
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-certs-cas
+      - name: persist
+        mountPath: /owgw-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owgw.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owgw-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-owgw-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owgw.fullname" . }}-owgw-restapi-tls
+
+owsec:
+  # https://telecominfraproject.atlassian.net/browse/WIFI-5840
+  checks:
+    owsec:
+      readiness:
+        exec:
+          command: ["true"]
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 15Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  certs:
+    restapi-ca.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWSEC_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWSEC_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWSEC_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWSEC_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWSEC_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWSEC_ROOT/certs/restapi-certs/tls.key
+    mailer.hostname: email-smtp.us-east-2.amazonaws.com
+    openwifi.certificates.allowmismatch: "false"
+
+  volumes:
+    owsec:
+      - name: config
+        mountPath: /owsec-data/owsec.properties
+        subPath: owsec.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsec.fullname" . }}-config
+      - name: certs
+        mountPath: /owsec-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsec.fullname" . }}-certs
+      - name: persist
+        mountPath: /owsec-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owsec.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owsec-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
+
+owgwui:
+  services:
+    owgwui:
+      type: NodePort
+
+  ingresses:
+    default:
+      enabled: true
+      annotations:
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/group.name: wlan-cicd
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+        alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_302"}}'
+      paths:
+      - path: /*
+        serviceName: owgwui
+        servicePort: http
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 30Mi
+    limits:
+      cpu: 10m
+      memory: 30Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+owfms:
+  # https://telecominfraproject.atlassian.net/browse/WIFI-5840
+  checks:
+    owfms:
+      readiness:
+        exec:
+          command: ["true"]
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 80Mi
+    limits:
+      cpu: 100m
+      memory: 160Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  certs:
+    restapi-ca.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+    # This has no effect as template based config is not enabled (see configProperties)
+    FIRMWAREDB_MAXAGE: "360"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWFMS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWFMS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWFMS_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWFMS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWFMS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWFMS_ROOT/certs/restapi-certs/tls.key
+    firmwaredb.maxage: 360
+
+  volumes:
+    owfms:
+      - name: config
+        mountPath: /owfms-data/owfms.properties
+        subPath: owfms.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owfms.fullname" . }}-config
+      - name: certs
+        mountPath: /owfms-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owfms.fullname" . }}-certs
+      - name: persist
+        mountPath: /owfms-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owfms.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owfms-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owfms.fullname" . }}-owfms-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owfms.fullname" . }}-owfms-restapi-tls
+
+owprov:
+  checks:
+    owprov:
+      readiness:
+        exec:
+          command: ["true"]
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 20Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  certs:
+    restapi-ca.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWPROV_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWPROV_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWPROV_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWPROV_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWPROV_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWPROV_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owprov:
+      - name: config
+        mountPath: /owprov-data/owprov.properties
+        subPath: owprov.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owprov.fullname" . }}-config
+      - name: certs
+        mountPath: /owprov-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owprov.fullname" . }}-certs
+      - name: persist
+        mountPath: /owprov-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owprov.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owprov-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owprov.fullname" . }}-owprov-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owprov.fullname" . }}-owprov-restapi-tls
+
+owprovui:
+  services:
+    owprovui:
+      type: NodePort
+
+  ingresses:
+    default:
+      enabled: true
+      annotations:
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/group.name: wlan-cicd
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:289708231103:certificate/2cc8c764-11fd-411d-bf7d-a93f488f3f6c
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+        alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_302"}}'
+      paths:
+      - path: /*
+        serviceName: owprovui
+        servicePort: http
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+owanalytics:
+  checks:
+    owanalytics:
+      readiness:
+        exec:
+          command: ["true"]
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 100m
+      memory: 500Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  certs:
+    restapi-ca.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWANALYTICS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWANALYTICS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWANALYTICS_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWANALYTICS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWANALYTICS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWANALYTICS_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owanalytics:
+      - name: config
+        mountPath: /owanalytics-data/owanalytics.properties
+        subPath: owanalytics.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-config
+      - name: certs
+        mountPath: /owanalytics-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-certs
+      - name: persist
+        mountPath: /owanalytics-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owanalytics.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owanalytics-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-owanalytics-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-owanalytics-restapi-tls
+
+owsub:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 100m
+      memory: 500Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  certs:
+    restapi-ca.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWSUB_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWSUB_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWSUB_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWSUB_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWSUB_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWSUB_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owsub:
+      - name: config
+        mountPath: /owsub-data/owsub.properties
+        subPath: owsub.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-config
+      - name: certs
+        mountPath: /owsub-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-certs
+      - name: persist
+        mountPath: /owsub-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owsub.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owsub-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.crt
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
+
+kafka:
+  volumePermissions:
+    enabled: true
+  commonAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+  readinessProbe:
+    initialDelaySeconds: 45
+  livenessProbe:
+    initialDelaySeconds: 60
+  heapOpts: -Xmx1024m -Xms1024m
+  kraft:
+    enabled: true
+  zookeeper:
+    enabled: false
+  controller:
+    replicaCount: 1
+    persistence:
+      size: 20Gi
+    extraConfig: |-
+      maxMessageBytes = 1048588
+      offsets.topic.replication.factor = 1
+      transaction.state.log.replication.factor = 1
+    extraEnvVars:
+      - name: ALLOW_PLAINTEXT_LISTENER
+        value: "yes"
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 750m
+        memory: 2Gi
+  listeners:
+    client:
+      protocol: PLAINTEXT
+      containerPort: 9092
+    controller:
+      protocol: "PLAINTEXT"
+  broker:
+    persistence:
+      size: 20Gi
+    replicaCount: 0
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 750m
+        memory: 2Gi
+
+clustersysteminfo:
+  enabled: true
+  delay: 60 # delaying to wait for AWS Route53 DNS propagation
+
+haproxy:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 50Mi
+    limits:
+      cpu: 50m
+      memory: 50Mi
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+      service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,5913,16001,17001,16009,16006,17006"
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+
+restapiCerts:
+  enabled: true

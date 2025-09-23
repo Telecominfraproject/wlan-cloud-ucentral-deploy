@@ -2,6 +2,6 @@
 chart/charts/*
 chart/Chart.lock
 chart/environment-values/wlan-cloud-ucentral-deploy/
-/docker-compose/certs/
-/docker-compose/*_data
-/docker-compose/owls/*_data
+docker-compose/certs/websocket*pem
+docker-compose/*_data
+docker-compose/owls/*_data
