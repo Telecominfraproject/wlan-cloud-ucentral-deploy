@@ -54,10 +54,9 @@ kafka:
   fullnameOverride: kafka
   image:
     repository: bitnamilegacy/kafka
-  defaultInitContainers:
-    volumePermissions:
-      image:
-        repository: bitnamilegacy/os-shell
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
   autoDiscovery:
     volumePermissions:
       image:
