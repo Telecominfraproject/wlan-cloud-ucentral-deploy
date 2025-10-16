@@ -144,7 +144,7 @@ The following table lists the configurable parameters that overrides microservic
 | `kafka.enabled` | boolean | Enables [kafka](https://github.com/bitnami/charts/blob/master/bitnami/kafka/) deployment | `true` |
 | `kafka.fullnameOverride` | string | Overrides Kafka Kubernetes service name so it could be predictable and set in microservices configs | `'kafka'` |
 | `kafka.image.registry` | string | Kafka Docker image registry | `'docker.io'` |
-| `kafka.image.repository` | string | Kafka Docker image repository | `'bitnami/kafka'` |
+| `kafka.image.repository` | string | Kafka Docker image repository | `'bitnamilegacy/kafka'` |
 | `kafka.image.tag` | string | Kafka Docker image tag | `'2.8.0-debian-10-r43'` |
 | `kafka.minBrokerId` | number | Sets Kafka minimal broker ID (useful for multi-node Kafka installations) | `100` |
 | `clustersysteminfo.enabled` | boolean | Enables post-install check that makes sure that all services are working correctly using systeminfo RESTAPI method | `false` |

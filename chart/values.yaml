@@ -52,6 +52,20 @@ owsub:
 kafka:
   enabled: true
   fullnameOverride: kafka
+  image:
+    repository: bitnamilegacy/kafka
+  defaultInitContainers:
+    volumePermissions:
+      image:
+        repository: bitnamilegacy/os-shell
+  autoDiscovery:
+    volumePermissions:
+      image:
+        repository: bitnamilegacy/kubectl
+  metrics:
+    jmx:
+      image:
+        repository: bitnamilegacy/jmx-exporter
 
 # clustersysteminfo check
 clustersysteminfo:
@@ -108,6 +122,8 @@ owlsui:
 
 # HAproxy (https://github.com/bitnami/charts/tree/master/bitnami/haproxy)
 haproxy:
+  image:
+    repository: bitnamilegacy/haproxy
   enabled: true
   fullnameOverride: proxy
   replicaCount: 1
@@ -402,6 +418,14 @@ restapiCerts:
   clusterDomain: cluster.local
 
 postgresql:
+  image:
+    repository: bitnamilegacy/postgresql
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  metrics:
+    image:
+      repository: bitnamilegacy/postgres-exporter
   enabled: false
   nameOverride: pgsql
   fullnameOverride: pgsql
@@ -416,6 +440,18 @@ postgresql:
       - owsub
 
 postgresql-ha:
+  postgresql:
+    image:
+      repository: bitnamilegacy/postgresql-repl
+  pgpool:
+    image:
+      repository: bitnamilegacy/pgpool
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  metrics:
+    image:
+      repository: bitnamilegacy/postgres-exporter
   enabled: false
   nameOverride: pgsql
   fullnameOverride: pgsql

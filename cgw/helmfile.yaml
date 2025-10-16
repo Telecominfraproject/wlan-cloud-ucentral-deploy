@@ -63,6 +63,20 @@ releases:
     group: base
     app: kafka
   values:
+    - image:
+        repository: bitnamilegacy/kafka
+    - defaultInitContainers:
+        volumePermissions:
+          image:
+            repository: bitnamilegacy/os-shell
+    - autoDiscovery:
+        volumePermissions:
+          image:
+            repository: bitnamilegacy/kubectl
+    - metrics:
+        jmx:
+          image:
+            repository: bitnamilegacy/jmx-exporter
     - fullnameOverride: kafka
     - volumePermissions:
         enabled: true
@@ -131,6 +145,14 @@ releases:
     group: base
     app: postgres
   values:
+    - image:
+        repository: bitnamilegacy/postgresql
+    - volumePermissions:
+        image:
+          repository: bitnamilegacy/os-shell
+    - metrics:
+        image:
+          repository: bitnamilegacy/postgres-exporter
     - fullnameOverride: pgsql
     # workaround for: postgresql.conf file not detected. Generating it...
     # cp: cannot create regular file '/bitnami/postgresql/conf/postgresql.conf': Permission denied
@@ -173,6 +195,23 @@ releases:
     group: base
     app: redis
   values:
+    - image:
+        repository: bitnamilegacy/redis
+    - sentinel:
+        image:
+          repository: bitnamilegacy/redis-sentinel
+    - metrics:
+        image:
+          repository: bitnamilegacy/redis-exporter
+    - volumePermissions:
+        image:
+          repository: bitnamilegacy/os-shell
+    - kubectl:
+        image:
+          repository: bitnamilegacy/kubectl
+    - sysctl:
+        image:
+          repository: bitnamilegacy/os-shell
     - architecture: standalone
     - auth:
         enabled: false

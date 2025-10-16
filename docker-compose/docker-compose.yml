@@ -196,7 +196,7 @@ services:
       - "16106:16106"
 
   kafka:
-    image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
+    image: "docker.io/bitnamilegacy/kafka:${KAFKA_TAG}"
     networks:
       openwifi:
     env_file:
@@ -206,7 +206,7 @@ services:
       - kafka_data:/bitnami/kafka
 
   init-kafka:
-    image: "docker.io/bitnami/kafka:${KAFKA_TAG}"
+    image: "docker.io/bitnamilegacy/kafka:${KAFKA_TAG}"
     networks:
       openwifi:
     depends_on:
