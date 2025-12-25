@@ -73,7 +73,7 @@ clustersysteminfo:
   images:
     clustersysteminfo:
       repository: tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo
-      tag: v4.2.0-RC1
+      tag: v4.2.0
       pullPolicy: Always
 #      regcred:
 #        registry: tip-tip-wlan-cloud-ucentral.jfrog.io
