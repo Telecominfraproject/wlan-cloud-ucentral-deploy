@@ -1,4 +1,5 @@
 *.swp
+tmp/
 chart/charts/*
 chart/Chart.lock
 chart/environment-values/wlan-cloud-ucentral-deploy/

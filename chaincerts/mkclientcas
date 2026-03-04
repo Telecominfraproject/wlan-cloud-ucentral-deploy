@@ -1,0 +1,94 @@
+#!/bin/bash
+# This script is used to generate the clientcas.pem files.
+
+function help {
+    echo "Usage: $0 [-h] [-d] [-D] [-i] [-o <file>]"
+    echo "  -h    Show this help text"
+    echo "  -d    Use Digicert certificates"
+    echo "  -D    Use Docker Compose certificates"
+    echo "  -i    Use insta.pem for AP-NOS"
+    echo "  -o    Output file (- for stdout)"
+}
+
+set -e
+digicert="false"
+dco="false"
+output="/dev/stdout"
+while getopts ":dDIo:" opt; do
+    case $opt in
+        d)
+            digicert="true"
+            ;;
+        D)
+            dco="true"
+            insta="false"
+            ;;
+        h)
+            help
+            exit
+            ;;
+        I)
+            insta="true"
+            dco="false"
+            ;;
+        o)
+            output="$OPTARG"
+            if [[ "$output" == "-" ]]; then
+                output="/dev/stdout"
+            fi
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            help
+            exit 1
+            ;;
+    esac
+done
+
+# Available cert files:
+#   OpenLAN_Demo_Birth_CA.pem
+#   OpenLAN_Demo_Controller_CA.pem
+#   OpenLAN_Demo_Operating_CA.pem
+#   OpenLAN_Demo_Root_CA.pem
+#   OpenLAN_Prod_Birth_Issuing_CA.pem
+#   OpenLAN_Prod_Device_Issuing_CA.pem
+#   OpenLAN_Prod_Root_CA.pem
+#   OpenLAN_Prod_Server_Issuing_CA.pem
+#   TIP_Issuing_CA.pem
+#   TIP_Root_CA.pem
+
+> "$output"
+
+# Docker compose:
+if [[ "$dco" == "true" ]]; then
+    > "$output"
+    if [[ "$digicert" == "true" ]] ; then
+        cat TIP*.pem >> "$output"
+    fi
+    cat OpenLAN_Prod*.pem >> "$output"
+    cat OpenLAN_Demo*.pem >> "$output"
+    exit 0
+# insta.pem for AP-NOS
+elif [[ "$insta" == "true" ]]; then
+    files="OpenLAN_Demo_Birth_CA.pem OpenLAN_Demo_Root_CA.pem"
+    cat $files >> "$output"
+    files="OpenLAN_Prod_Root_CA.pem OpenLAN_Prod_Server_Issuing_CA.pem"
+    cat $files >> "$output"
+    exit 0
+fi
+
+# Kubernetes:
+dt=$(date)
+echo "    # Generated: $dt" >> "$output"
+if [[ "$digicert" == "true" ]] ; then
+    files=$(ls TIP*.pem)
+    echo "$files" | sed -e 's/^/    # /' >> "$output"
+fi
+files=$(ls OpenLAN_Prod*.pem OpenLAN_Demo*.pem)
+echo "$files" | sed -e 's/^/    # /' >> "$output"
+echo "    clientcas.pem: |" >> "$output"
+if [[ "$1" == "digicert" ]]; then
+    sed -e 's/^/      /' TIP*.pem >> "$output"
+fi
+sed -e 's/^/      /' OpenLAN_Prod*.pem >> "$output"
+sed -e 's/^/      /' OpenLAN_Demo*.pem >> "$output"
