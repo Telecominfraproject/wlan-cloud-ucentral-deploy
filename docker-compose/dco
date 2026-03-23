@@ -39,6 +39,13 @@ elif [[ "$1" == "relaunch" || "$1" == "rel" ]] ; then
     $cmd down
     sleep 5
     $cmd up -d
+elif [[ "$1" == "upgrade" ]] ; then
+    set -x
+    $cmd down
+    sleep 5
+    $cmd pull
+    sleep 5
+    $cmd up -d
 else
     set -x
     $cmd "$@"

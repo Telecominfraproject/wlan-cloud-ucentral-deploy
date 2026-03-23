@@ -72,6 +72,8 @@ if [[ "$dco" == "true" ]]; then
 elif [[ "$insta" == "true" ]]; then
     files="OpenLAN_Demo_Birth_CA.pem OpenLAN_Demo_Root_CA.pem"
     cat $files >> "$output"
+    files="OpenLAN_Prod_Birth_Issuing_CA.pem OpenLAN_Prod_Device_Issuing_CA.pem"
+    cat $files >> "$output"
     files="OpenLAN_Prod_Root_CA.pem OpenLAN_Prod_Server_Issuing_CA.pem"
     cat $files >> "$output"
     exit 0
